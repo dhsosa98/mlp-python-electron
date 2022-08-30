@@ -1,0 +1,4 @@
+/front/node_modules
+/front/.webpack
+/backend
+/server/__pycache__
