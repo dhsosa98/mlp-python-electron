@@ -20,7 +20,7 @@ Electron: Electron's main.ts and renderer.ts files can be found in the project's
 
 React: React files can be found in the ./src/ folder.
 
-Python: Python scripts can be found in the ./server folder and used on events via REST calls.
+Python: Python scripts can be found in the ./server/ folder and used on events via REST calls.
 
 ## Running
 
