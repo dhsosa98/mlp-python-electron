@@ -8,8 +8,9 @@ export class Api {
       return response.data
    }
 
-   public static async getMLPAnswer(matrix: any){
-      const response = await axios.post('http://localhost:8000/mlp_answer', { matrix })
+   public static async getMLPAnswer(matrix: any, model: string){
+      const response = await axios.post('http://localhost:8000/mlp_answer', { matrix, model: model.toUpperCase() })
+      console.log(model)
       return response.data
    }
 

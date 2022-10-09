@@ -1,11 +1,10 @@
 from typing import Any
 import uvicorn
-
-
+import numpy as np
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
-from core import shuffle, mlp_answer
+from m_core import shuffle, mlp_answer
 
 class Matrix(BaseModel):
     matrix: Any
@@ -13,6 +12,7 @@ class Matrix(BaseModel):
 
 class Matrix_A(BaseModel):
     matrix: Any
+    model: str
 
 origins = [
     "http://localhost",
@@ -32,13 +32,13 @@ app.add_middleware(
 )
 
 @app.post("/distortion_matrix")
-def read_item(matrix: Matrix):
+def distortion_matrix(matrix: Matrix):
     return shuffle(matrix.matrix, matrix.distortion)
 
 
 @app.post("/mlp_answer")
-def update_item(matrix: Matrix_A):
-    return mlp_answer(matrix)
+def get_mlp_answer(matrix: Matrix_A):
+    return mlp_answer(matrix.matrix, matrix.model)
 
 
 def serve():

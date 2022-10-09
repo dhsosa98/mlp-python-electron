@@ -1,3 +1,7 @@
 fastapi
 uvicorn
 pyinstaller
+pandas
+numpy
+dill
+faker

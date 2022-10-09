@@ -69,6 +69,8 @@ const defaultMatrixes = {
   f: [...fMatrix],
 };
 
+const models = {'a': '100', 'b': '500', 'c': '1000'};
+
 const calculateDistortion = (
   matrix: number[][],
   actualMatrixKey: keyof typeof defaultMatrixes
@@ -115,6 +117,7 @@ const DistortionComponent: FC<any> = ({ percentage }) => {
 };
 
 const ProductsRoute: FC<IRoute> = () => {
+  const [model, setModel] = useState<string>("a");
   const [distortion, setDistortion] = useState(0);
 
   const [percentage, setPercentage] = useState(0);
@@ -154,7 +157,7 @@ const ProductsRoute: FC<IRoute> = () => {
 
   const handleSubmitMLPAnswer = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const answer = await Api.getMLPAnswer(matrix);
+    const answer = await Api.getMLPAnswer(matrix, model);
     setAnswer(answer);
   };
 
@@ -171,6 +174,11 @@ const ProductsRoute: FC<IRoute> = () => {
   const handleChangeDistortion = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setDistortion(Number(e.currentTarget.value));
+  };
+
+  const handleChangeModel = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    e.preventDefault();
+    setModel(e.currentTarget.value);
   };
 
   const [matrix, setMatrix] = useState<number[][]>([...initialMatrix]);
@@ -230,6 +238,11 @@ const ProductsRoute: FC<IRoute> = () => {
         >
           Submit
         </button>
+        <select onChange={handleChangeModel}>
+          {Object.entries(models).map((model) => (
+            <option value={model[0]}>{"Model "+model[0]+'-'+model[1]+" Datasets"}</option>
+          ))}
+        </select>
         <select onChange={handleChangeDefaultMatrixes}>
           {Object.keys(defaultMatrixes).map((key) => {
             return (

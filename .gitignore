@@ -2,3 +2,6 @@
 /front/.webpack
 /backend
 /server/__pycache__
+/server/core/__pycache__
+/server/core/entities/__pycache__
+/server/core/utils/__pycache__
