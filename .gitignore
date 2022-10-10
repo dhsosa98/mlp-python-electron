@@ -5,3 +5,5 @@
 /server/core/__pycache__
 /server/core/entities/__pycache__
 /server/core/utils/__pycache__
+/server/core/models/__pycache__
+/server/api/__pycache__

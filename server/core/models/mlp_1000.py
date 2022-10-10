@@ -1,13 +1,13 @@
 import numpy as np
-from entities import Model, neural_network
-from utils import loadDatasets, splitIntoTestingDataset, splitIntoTrainingDataset, sigm, cost
+from ..entities import Model, neural_network
+from ..utils import loadDatasets, splitIntoTestingDataset, splitIntoTrainingDataset, sigm, cost
 import dill
 import os
 model_name = 'model1000'
 
 absolute_path = os.path.abspath(os.path.dirname('datasets'))
 
-path1000 = absolute_path+'/datasets/letras_distorsionadas1000.csv'
+path1000 = absolute_path+'/core//datasets/letras_distorsionadas1000.csv'
 
 n=102
 epoch = 20
@@ -38,7 +38,7 @@ modelR = model.train(X_test, Y_test, False)
 prediction = neural_net.get_prediction(modelR)
 print(neural_net.accuracy(prediction, Y_test))
 
-outfile = absolute_path+'/models/saves/'+model_name+'.pickle';
+outfile = absolute_path+'/core/models/saves/'+model_name+'.pickle';
 # Save the trained model as a pickle string.
 with open(outfile, 'wb') as pickle_file:
   dill.dump(model, pickle_file)

@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from m_core import shuffle, mlp_answer
 
+
 class Matrix(BaseModel):
     matrix: Any
     distortion: int
@@ -43,7 +44,7 @@ def get_mlp_answer(matrix: Matrix_A):
 
 def serve():
     """Serve the web application."""
-    uvicorn.run(app)
+    uvicorn.run(app, port=8000)
 
 if __name__ == "__main__":
     serve()

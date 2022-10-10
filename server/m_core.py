@@ -1,12 +1,8 @@
 import json
 import math
 import random
-import dill
-import os
-from core.main import saved_model_A, saved_model_B, saved_model_C
+from api.main import saved_model_A, saved_model_B, saved_model_C
 import numpy as np
-import sys
-sys.path.insert(0, '/core')
 
 def shuffle(matrix, percentage:int):
     """
