@@ -1,19 +1,20 @@
 from typing import Any, Optional
 import uvicorn
-import numpy as np
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from m_core import shuffle, mlp_answer
 from core.models import trainModelA, trainModelB, trainModelC
-
+from api.main import list_savedModels
+from core.datasets.generate import generate_dataset
+import sys
 
 class Matrix(BaseModel):
-    matrix: Optional[list[int]]
+    matrix: Any
     distortion: int
 
-class Matrix_A(BaseModel):
-    matrix: Optional[list[int]]
+class GetPredict(BaseModel):
+    matrix: Any
     model: str
 
 class Model(BaseModel):
@@ -23,6 +24,9 @@ class Model(BaseModel):
     epoch: Optional[int] = 20
     hl_topology: Optional[list[int]] = [5]
     act_f: Optional[str] = 'lineal' #lineal or sigm
+
+class GenerateDataset(BaseModel):
+    type: str
 
 origins = [
     "http://localhost",
@@ -45,6 +49,26 @@ app.add_middleware(
 def root():
     return {"Hello": "World"}
 
+@app.get('/models')
+def get_models(): 
+        return {
+        'models': list_savedModels()
+    }
+
+@app.post('/generate_datasets')
+def generate_datasets(generateDataset: GenerateDataset):
+    if generateDataset.type == 'A':
+        generate_dataset(100)
+    elif generateDataset.type == 'B':
+        generate_dataset(500)
+    else:
+        generate_dataset(1000)
+    return {
+        'message': 'Dataset generated'
+    }
+
+
+
 @app.post("/train_model")
 def train_model(model: Model):
     if model.type == "A":
@@ -60,13 +84,16 @@ def distortion_matrix(matrix: Matrix):
 
 
 @app.post("/mlp_answer")
-def get_mlp_answer(matrix: Matrix_A):
-    return mlp_answer(matrix.matrix, matrix.model)
+def get_mlp_answer(predict: GetPredict):
+    return mlp_answer(predict.matrix, predict.model)
 
 
 def serve():
     """Serve the web application."""
-    uvicorn.run('main:app', port=8001, host='127.0.0.1', reload=True)
+    if getattr(sys, 'frozen', False):
+        uvicorn.run(app)
+    else:
+        uvicorn.run('main:app', reload=True, port=8000)
 
 if __name__ == "__main__":
     serve()

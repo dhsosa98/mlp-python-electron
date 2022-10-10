@@ -31,9 +31,8 @@ const createWindow = (): void => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY + "#/");
 
   // Open the DevTools.
-  if (isDev) {
-    mainWindow.webContents.openDevTools();
-  }
+  
+  mainWindow.webContents.openDevTools();
 
   ipcMain.handle("OPEN_MODAL", (_event) => {
     let win = new BrowserWindow({

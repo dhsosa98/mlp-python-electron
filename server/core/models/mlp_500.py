@@ -17,11 +17,9 @@ def trainModelB(lr=0.5, momentum=0.5, epoch=20, hl_topology = [5], act_f='lineal
 
   topology = initialLayer + hl_topology + outputLayer
 
-  model_name = 'model500,'+str(lr)+str(momentum)+str(epoch)+'top.'+', '.join(list(map(str, topology)))+','+act_f.__name__
+  model_name = 'model500,'+str(lr)+','+str(momentum)+','+str(epoch)+','+'; '.join(list(map(str, topology)))+','+act_f.__name__
 
-  absolute_path = os.path.abspath(os.path.dirname('mlp-python-electron'))
-
-  path500 = absolute_path+'./core/datasets/letras_distorsionadas100.csv'
+  path500 = os.path.dirname(__file__)+'/../datasets/letras_distorsionadas500.csv'
 
   n=102
 
@@ -48,22 +46,22 @@ def trainModelB(lr=0.5, momentum=0.5, epoch=20, hl_topology = [5], act_f='lineal
   prediction = neural_net.get_prediction(modelR)
   # print(neural_net.accuracy(prediction, Y_test))
 
-  outfile = absolute_path+'/core/models/saves/'+model_name+'.pickle';
+  outfile = os.path.dirname(__file__)+'/saves/'+model_name+'.pickle';
   # Save the trained model as a pickle string.
   with open(outfile, 'wb') as pickle_file:
     dill.dump(model, pickle_file)
 
   return {
     'model_name': model_name,
-    'accuracy': neural_net.accuracy(prediction, Y_test),
-    'MSE_test': cost(modelR, Y_test),
-    'MSE_train': cost(result, Y_train),
+    'accuracy': round(neural_net.accuracy(prediction, Y_test), 2),
+    'MSE_test': round(cost(modelR, Y_test), 2),
+    'MSE_train': round(cost(result, Y_train), 2),
     'training_cases': len(Y_train),
     'test_cases': len(Y_test),
     'amount_of_epochs': epoch,
     'learning_rate': lr,
     'momentum': momentum,
-    'hidden_layers': hl_topology,
+    'topology': topology,
     'activation_function': act_f.__name__
   }
 

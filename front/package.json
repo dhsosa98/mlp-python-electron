@@ -7,7 +7,6 @@
   "scripts": {
     "start": "electron-forge start",
     "build": "electron-forge package",
-    "prebuild": "cd ../server && build.bat",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx ."

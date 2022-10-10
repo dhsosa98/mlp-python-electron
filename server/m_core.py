@@ -1,7 +1,7 @@
 import json
 import math
 import random
-from api.main import saved_model_A, saved_model_B, saved_model_C, get_savedModel
+from api.main import get_savedModelA, get_savedModelB, get_savedModelC, get_savedModel
 import numpy as np
 
 def shuffle(matrix, percentage:int):
@@ -24,11 +24,11 @@ def shuffle(matrix, percentage:int):
 
 def select_model(model):
     if model == "A":
-        return saved_model_A
+        return get_savedModelA()
     elif model == "B":
-        return saved_model_B
+        return get_savedModelB()
     elif model == "C":
-        return saved_model_C
+        return get_savedModelC()
     else: 
         return get_savedModel(model)
 
