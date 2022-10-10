@@ -1,48 +1,71 @@
 import numpy as np
 from ..entities import Model, neural_network
-from ..utils import loadDatasets, splitIntoTestingDataset, splitIntoTrainingDataset, sigm, cost
+from ..utils import loadDatasets, splitIntoTestingDataset, splitIntoTrainingDataset, sigm, cost, lineal
 import dill
 import os
 
-model_name = 'model100'
+def trainModelA(lr=0.5, momentum=0.5, epoch=20, hl_topology = [5], act_f='lineal'):
 
-absolute_path = os.path.abspath(os.path.dirname('mlp-python-electron'))
+  if(act_f == 'lineal'):
+    act_f = lineal
+  else:
+    act_f = sigm
 
-path100 = absolute_path+'./core/datasets/letras_distorsionadas100.csv'
+  initialLayer = [100]
 
-n=102
-epoch = 20
+  outputLayer = [3]
 
-data100 = loadDatasets(path100)
+  topology = initialLayer + hl_topology + outputLayer
 
-data100 = np.array(data100)
+  model_name = 'model100,'+str(lr)+','+str(momentum)+','+str(epoch)+','+'top.'+', '.join(list(map(str, topology)))+','+act_f.__name__
+  absolute_path = os.path.abspath(os.path.dirname('mlp-python-electron'))
 
-np.random.shuffle(data100)
+  path100 = absolute_path+'./core/datasets/letras_distorsionadas100.csv'
 
-X_test, Y_test = splitIntoTestingDataset(data100, n)
-X_train, Y_train = splitIntoTrainingDataset(data100, n)
+  n=102
 
-epoch = 20
-topology = [n-2, 5, 3]
+  data100 = loadDatasets(path100)
 
-X_test, Y_test = splitIntoTestingDataset(data100, n)
-X_train, Y_train = splitIntoTrainingDataset(data100, n)
+  data100 = np.array(data100)
 
-#Creamos la red neuronal
-neural_net = neural_network(topology, sigm)
+  np.random.shuffle(data100)
 
-model = Model(neural_net.nn, cost, 0.5, 0.5)
-for i in range (epoch):
- result = model.train(X_train, Y_train)
+  X_test, Y_test = splitIntoTestingDataset(data100, n)
+  X_train, Y_train = splitIntoTrainingDataset(data100, n)
 
-modelR = model.train(X_test, Y_test, False)
-prediction = neural_net.get_prediction(modelR)
-print(neural_net.accuracy(prediction, Y_test))
 
-outfile = absolute_path+'/core/models/saves/'+model_name+'.pickle';
-# Save the trained model as a pickle string.
-with open(outfile, 'wb') as pickle_file:
-  dill.dump(model, pickle_file)
+  X_test, Y_test = splitIntoTestingDataset(data100, n)
+  X_train, Y_train = splitIntoTrainingDataset(data100, n)
 
+  #Creamos la red neuronal
+  neural_net = neural_network(topology, act_f)
+
+  model = Model(neural_net.nn, cost, lr, momentum)
+
+  for i in range (epoch):
+    result = model.train(X_train, Y_train)
+
+  modelR = model.train(X_test, Y_test, False)
+  prediction = neural_net.get_prediction(modelR)
+  # print(neural_net.accuracy(prediction, Y_test))
+
+  outfile = absolute_path+'/core/models/saves/'+model_name+'.pickle';
+  # Save the trained model as a pickle string.
+  with open(outfile, 'wb') as pickle_file:
+    dill.dump(model, pickle_file)
+
+  return {
+    'model_name': model_name,
+    'accuracy': neural_net.accuracy(prediction, Y_test),
+    'MSE_test': cost(modelR, Y_test),
+    'MSE_train': cost(result, Y_train),
+    'training_cases': len(Y_train),
+    'test_cases': len(Y_test),
+    'amount_of_epochs': epoch,
+    'learning_rate': lr,
+    'momentum': momentum,
+    'hidden_layers': hl_topology,
+    'activation_function': act_f.__name__
+  }
 
 

@@ -1,7 +1,7 @@
 import json
 import math
 import random
-from api.main import saved_model_A, saved_model_B, saved_model_C
+from api.main import saved_model_A, saved_model_B, saved_model_C, get_savedModel
 import numpy as np
 
 def shuffle(matrix, percentage:int):
@@ -27,8 +27,10 @@ def select_model(model):
         return saved_model_A
     elif model == "B":
         return saved_model_B
-    else:
+    elif model == "C":
         return saved_model_C
+    else: 
+        return get_savedModel(model)
 
 def mlp_answer(matrix, model="A"):
     classes = {
@@ -37,15 +39,23 @@ def mlp_answer(matrix, model="A"):
         2: "f",
     }   
 
+    if (matrix==None):
+        matrix= np.zeros((10,10))
+    
+
     matrix = np.array(matrix)
     matrix = matrix.flatten()
     matrix = np.array([matrix])
 
     model = select_model(model)
-    model = saved_model_A.train(matrix, '', False)
+    if not model:
+        return {
+            "error": "Model not found"
+        }
+    model = model.train(matrix, '', False)
 
     prediction = np.argmax(model, 1)
     prediction = prediction[0]
     
-    return json.dumps(classes[prediction])
+    return { "class": classes[prediction] }
 

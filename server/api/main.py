@@ -30,3 +30,11 @@ outfileC = os.path.join(dirname, './model1000.pickle')
 with open(outfileC, 'rb') as pickle_file:
   saved_model_C = dill.load(pickle_file)
 
+def get_savedModel(name):
+  outfileN = os.path.join(dirname, './'+name+'.pickle')
+
+  if os.path.isfile(outfileN):
+    with open(outfileN, 'rb') as pickle_file:
+        saved_model_N = dill.load(pickle_file)
+        return saved_model_N
+  return None

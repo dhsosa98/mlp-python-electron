@@ -10,6 +10,11 @@ def sigm(x, deriv=False):
 
 # lineal = (lambda x: (0.5*x+4), lambda x: (0.5))
 
+def lineal(x, deriv=False):
+        if(deriv==True):
+                return 1*(x>0)
+        return np.maximum(0, x)
+
 # relu = (lambda x: (np.maximum(0, x)), lambda x: 1*(x>0))
 
 #Funcion de coste 
