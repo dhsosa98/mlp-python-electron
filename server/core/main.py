@@ -4,10 +4,16 @@ import numpy as np
 import sys
 import os 
 
-absolute_path = os.path.abspath(os.path.dirname('core'))
-sys.path.insert(0, r'C:\Users\Diego\mlp_electron\server\core')
-print(sys.path)
+from sys import platform
 
+if platform == "linux" or platform == "linux2":
+  # linux
+  os.chdir('../../mlp-python-electron')
+  sys.path.insert(0, rf'{os.getcwd()}/server/core')
+elif platform == "win32":
+  #windows
+  os.chdir(r'..\..\mlp-python-electron')
+  sys.path.insert(0, rf'{os.getcwd()}\server\core')
 dirname = os.path.dirname(__file__)+'/models/saves/'
 outfileA = os.path.join(dirname, './model100.pickle')
 
