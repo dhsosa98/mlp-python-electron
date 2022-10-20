@@ -1,15 +1,11 @@
 import numpy as np
 from ..entities import Model, neural_network
-from ..utils import loadDatasets, splitIntoTestingDataset, splitIntoTrainingDataset, sigm, cost,lineal
+from ..utils import loadDatasets, splitIntoTestingDataset, splitIntoTrainingDataset, splitIntoValidationDataset, cost
 import dill
 import os
+import pandas as pd
 
-def trainModelB(lr=0.5, momentum=0.5, epoch=20, hl_topology = [5], act_f='lineal'):
-
-  if(act_f == 'lineal'):
-    act_f = lineal
-  else:
-    act_f = sigm
+def trainModelB(lr=0.5, momentum=0.5, epoch=20, hl_topology = [5], val_percentage=0.1, save=False):
 
   initialLayer = [100]
 
@@ -17,53 +13,53 @@ def trainModelB(lr=0.5, momentum=0.5, epoch=20, hl_topology = [5], act_f='lineal
 
   topology = initialLayer + hl_topology + outputLayer
 
-  model_name = 'model500,'+str(lr)+','+str(momentum)+','+str(epoch)+','+'; '.join(list(map(str, topology)))+','+act_f.__name__
+  model_name = 'model500,'+str(lr)+','+str(momentum)+','+str(epoch)+','+'; '.join(list(map(str, topology)))+','+str(val_percentage)
 
-  path500 = os.path.dirname(__file__)+'/../datasets/letras_distorsionadas500.csv'
+  path = os.path.dirname(__file__)+'/../datasets/letras_distorsionadas500.csv'
+  if not os.path.isfile(path):
+      return {
+          'message': 'Dataset not found'
+      }
 
   n=102
 
-  data500 = loadDatasets(path500)
+  data = loadDatasets(path)
 
-  data500 = np.array(data500)
+  data = np.array(data)
 
-  np.random.shuffle(data500)
-
-  X_test, Y_test = splitIntoTestingDataset(data500, n)
-  X_train, Y_train = splitIntoTrainingDataset(data500, n)
-
-  X_test, Y_test = splitIntoTestingDataset(data500, n)
-  X_train, Y_train = splitIntoTrainingDataset(data500, n)
-
-  #Creamos la red neuronal
-  neural_net = neural_network(topology, sigm)
+  X_val, Y_val, data_et = splitIntoValidationDataset(data, n, val_percentage)
+  X_train, Y_train = splitIntoTrainingDataset(data_et, n)
+  neural_net = neural_network(topology)
 
   model = Model(neural_net.nn, cost, lr, momentum)
+
   for i in range (epoch):
     result = model.train(X_train, Y_train)
 
-  modelR = model.train(X_test, Y_test, False)
-  prediction = neural_net.get_prediction(modelR)
-  # print(neural_net.accuracy(prediction, Y_test))
+  result_v = model.train(X_val, Y_val, False)
+  prediction_v = neural_net.get_prediction(result_v)
 
-  outfile = os.path.dirname(__file__)+'/saves/'+model_name+'.pickle';
-  # Save the trained model as a pickle string.
-  with open(outfile, 'wb') as pickle_file:
-    dill.dump(model, pickle_file)
+  if save==True:
+    outfile = os.path.dirname(__file__)+'/saves/'+model_name+'.pickle';
+    # Save the trained model as a pickle string.
+    with open(outfile, 'wb') as pickle_file:
+      dill.dump(model, pickle_file)
+    
+    return {
+      'saved': True,
+      'message': 'Model saved successfully',
+    }
 
   return {
     'model_name': model_name,
-    'accuracy': round(neural_net.accuracy(prediction, Y_test), 2),
-    'MSE_test': round(cost(modelR, Y_test), 2),
-    'MSE_train': round(cost(result, Y_train), 2),
+    'accuracy_val': round(neural_net.accuracy(prediction_v, Y_val), 2),
+    'MSE_train': round(cost(result, Y_train), 4),
+    'MSE_val': round(cost(result_v, Y_val), 4),
     'training_cases': len(Y_train),
-    'test_cases': len(Y_test),
+    'validation_cases': len(Y_val),
     'amount_of_epochs': epoch,
     'learning_rate': lr,
     'momentum': momentum,
     'topology': topology,
-    'activation_function': act_f.__name__
   }
-
-
 

@@ -22,3 +22,11 @@ def splitIntoTrainingDataset(data, n):
   Y = one_hot(data[0])
   X = data[2:n].T
   return X, Y
+
+def splitIntoValidationDataset(data, n, val_percentage):
+  m = int(val_percentage * data[:,1].size)
+  data_et = data[m:data[:,1].size]
+  data = data[0:m].T
+  Y = one_hot(data[0])
+  X = data[2:n].T
+  return X, Y, data_et

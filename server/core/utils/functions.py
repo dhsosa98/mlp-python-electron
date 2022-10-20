@@ -1,6 +1,6 @@
+#Funciones de activacion
 import numpy as np
 
-#Funciones de activacion
 def sigm(x, deriv=False):
         if(deriv==True):
                 return x*(1-x)
@@ -12,8 +12,8 @@ def sigm(x, deriv=False):
 
 def lineal(x, deriv=False):
         if(deriv==True):
-                return 1*(x>0)
-        return np.maximum(0, x)
+                return 0.1
+        return x*0.1
 
 # relu = (lambda x: (np.maximum(0, x)), lambda x: 1*(x>0))
 

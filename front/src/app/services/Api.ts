@@ -20,7 +20,7 @@ export class Api {
       }
       const response = await axios.post('http://localhost:8000/mlp_answer', { matrix, model })
       console.log(model)
-      return response.data.class
+      return response.data
    }
 
    public static async getMLPModels(){
@@ -36,6 +36,16 @@ export class Api {
 
    public static async generateDatasets(type: string){
       const response = await axios.post('http://localhost:8000/generate_datasets', { type })
+      return response.data
+   }
+
+   public static async deleteMLPModel(model: string){
+      const response = await axios.post('http://localhost:8000/delete_model', { model })
+      return response.data
+   }
+
+   public static async testMLPModel(model: string){
+      const response = await axios.post('http://localhost:8000/test_model', { model })
       return response.data
    }
 }

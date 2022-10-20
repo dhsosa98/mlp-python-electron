@@ -1,21 +1,33 @@
 import numpy as np
 from .neural_layer import neural_layer
+from ..utils.functions import lineal, sigm
 
+#Aca creamos la capa de la red neuronal
 class neural_network():
-    def __init__(self, topology, act_f):
+    def __init__(self, topology):
         self.topology = topology
-        self.nn = self.create_nn(act_f)
+        self.nn = self.create_nn()
 
-    def create_nn(self, act_f):
+    def create_nn(self):
         nn = []
-        for l, layer in enumerate(self.topology[:-1]):
-            # if l==0:
-            #   nn.append(neural_layer(topology[l], topology[l+1], lineal)) # Cuantas neuronas tiene y cuantas salidas necesita
-            # else:
-            #   nn.append(neural_layer(topology[l], topology[l+1], sigm))
-            nn.append(neural_layer(self.topology[l], self.topology[l+1], act_f))
+        #Este for recorre solo hasta la ANTEULTIMA capa (osea la ultima capa oculta)
+        for l, layer in enumerate(self.topology[:-1]): #100,5,3
+            if l==len(self.topology) -2:
+              nn.append(neural_layer(self.topology[l], self.topology[l+1], sigm))# Cuantas neuronas tiene y cuantas salidas necesita
+            #cuando se recorrieron todas (arriba) lo de abajo se hace para la CAPA DE SALIDA
+            else:
+              nn.append(neural_layer(self.topology[l], self.topology[l+1], lineal))
+              
 
         return nn
+
+    def print_nn(self):
+      print('Red Neuronal: ')
+      for l, layer in enumerate(self.nn):
+        print('Capa actual: ', l)
+        print('W: ',self.nn[l].W.shape)
+        print('b: ',self.nn[l].b.shape)
+        print('act_f: ',self.nn[l].act_f.__name__)
     
     def get_prediction(self, model):
         return np.argmax(model, 1)

@@ -1,5 +1,5 @@
 import React, { FC, SyntheticEvent, useState, useEffect } from "react";
-import { Api } from "../../services/Api";
+import { Api } from "../../../services/Api";
 import styled, { keyframes, css } from "styled-components";
 import { Link } from "react-router-dom";
 
@@ -129,16 +129,12 @@ const Predict: FC<IRoute> = () => {
 
   useEffect(() => {
     Api.getMLPModels().then((res) => {
-      let modelsStr = res.models.map((model: any) => {
-        model = Object.values(model)
-        model[0] = defaultModels[model[0] as keyof typeof defaultModels]
-      if (model[4]){
-        model[4] = model[4].join('; ')
+      if (res.models.length>0){
+        setModels(res.models);
+        setModel(res.models[0]);
+        return
       }
-      model = model.filter(Boolean).join(',')
-      return model
-    });
-      setModels(modelsStr);
+      setModels([]);
     });
   }, []);
 
@@ -178,7 +174,8 @@ const Predict: FC<IRoute> = () => {
   const handleSubmitMLPAnswer = async (e: SyntheticEvent) => {
     e.preventDefault();
     const answer = await Api.getMLPAnswer(matrix, model);
-    setAnswer(answer);
+    console.log(answer);
+    setAnswer(answer.class);
   };
 
   const handleChangeDefaultMatrixes = (
@@ -205,7 +202,7 @@ const Predict: FC<IRoute> = () => {
 
   return (
     <div className="flex flex-col justify-center p-10">
-      <Link className='font-bold ms-font-xl bg-gradient-to-br from-gray-900 to-gray-500 py-4 px-8 hover:opacity-80 rounded-sm text-center max-w-[100px]' to="/">Home</Link>
+      <Link className='font-bold ms-font-xl bg-gradient-to-br from-gray-900 to-gray-500 py-4 px-8 hover:opacity-80 rounded-sm text-center max-w-[100px]' to="/models">Back</Link>
       <div className="flex justify-center gap-10">
         <div className="grid justify-center">
           <div className=" grid grid-rows-10 grid-cols-10 h-[400px] aspect-square gap-3">

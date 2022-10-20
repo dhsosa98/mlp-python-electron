@@ -18,7 +18,7 @@ const Home2: FC<IRoute> = () => {
                 </div>
                 <Link className='font-bold ms-font-xl bg-gradient-to-br from-green-900 to-green-500 py-4 px-8 hover:opacity-80 rounded-sm text-center' to="/generate-datasets">Generate Datasets</Link>
                 <Link className=' font-bold ms-font-xl bg-gradient-to-br from-blue-900 to-blue-500 py-4 px-8 hover:opacity-80 rounded-sm text-center' to="/train-model">Train Model</Link>
-                <Link className='font-bold ms-font-xl bg-gradient-to-br from-gray-900 to-gray-500 py-4 px-8 hover:opacity-80 rounded-sm text-center' to="/predict">Predict</Link>
+                <Link className='font-bold ms-font-xl bg-gradient-to-br from-gray-900 to-gray-500 py-4 px-8 hover:opacity-80 rounded-sm text-center' to="/models">Models</Link>
             </div>
         </div>
     )

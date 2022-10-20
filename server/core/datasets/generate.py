@@ -62,8 +62,7 @@ def generate_dataset(cantObs):
   # una de las letras.
   ejemplo = []
   selectorLetra = 0
-  # Armamos el header del archivo
-  # DEPRECATTED salida.append(['letra', 'dist', 'bit0', 'bit1', 'bit2', 'bit3', 'bit4', 'bit5', 'bit6', 'bit7', 'bit8', 'bit9'])
+
   # Bucle de cantidad de observaciones
   for obs in range(0, cantObs):
     if sinDist > 0:
@@ -71,47 +70,43 @@ def generate_dataset(cantObs):
       sinDist = sinDist - 1
     else:
       # Aleatorizamos la distorsión entre 1 y 30 (porque aca se hacen solo los distorcionados)
-      distorsion = random.randint(0,31)
+      distorsion = random.randint(1,30)
 
     # Elegimos las letras del array de letras en orden
     letra = copy.deepcopy(letrasArray[selectorLetra])
-    # for j in range(0,9):
-    #     letra[j][1] = distorsion
+
     #No voy a cambiar la celda 2 veces (disminuye distorsion)
     noRepetirCelda = []
-    contraro = 0
-    for i in range(0, distorsion):
+    i = 1
+    while i <= distorsion:
       # Bit aleatorio en X (columnas de la 1 a la 10)
       distX = random.randint(2, 11)
       # Bit aleatorio en Y (filas de la 0 a la 9)
       distY = random.randint(0, 9)
       if (distY, distX) not in noRepetirCelda:
-        # Si el contenido es == 0.0, entonces le cargamos 1.0 y visceversa
+        # Si el contenido es == 0, entonces le cargamos 1 y visceversa
         if letra[distY][distX] == 0:
           letra[distY][distX] = 1;
+        
         else:
           letra[distY][distX] = 0;
         noRepetirCelda.append((distY, distX))
-      else:
-        contraro = contraro + 1
-        i = i-1
+        i = i + 1
+
     #pasamos la letra en forma de matriz a una simple fila
     auxLetra = np.array(letra)
     auxLetra = auxLetra.T[2:12].T.flatten()
     letra = copy.deepcopy(letrasArray[selectorLetra][0][0])
     auxLetra = np.append([letra, distorsion], auxLetra, axis=0)
     salida.append(auxLetra);
-    # print(salida)
     # Pasamos a la siguiente letra
     if selectorLetra < (len(letrasArray) - 1):
       selectorLetra = selectorLetra + 1
     else:
       selectorLetra = 0
+
+  np.random.shuffle(salida)
   # Una vez que finalizamos el bucle, cargamos este arreglo de salida a un .csv 
   df_letras_distorsionadas = pd.DataFrame(salida);
   df_letras_distorsionadas.to_csv(rf'{os.path.dirname(__file__)}/letras_distorsionadas' + str(cantObs) + '.csv', index=False)
-  # Muestro el contenido de letrasArray después de la ejecución del bucle porque estuve teniendo problemas con
-  # la asignación en este lenguaje del orto. En vez de asignar por copia lo hacía por referencia y se me modificaba
-  # la letra original, así que tuve que ver como chota hacer que no pase eso y puse esto pa verificar nomas.
-  # Igual lo dejo comentado porque sino no queda tan fachero.
-  # print(letrasArray);
+  return True

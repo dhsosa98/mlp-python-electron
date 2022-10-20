@@ -16,11 +16,12 @@ const TrainModel: FC<IRoute> = () => {
   const [momentum, setMomentum] = useState(0.5);
   const [epochs, setEpochs] = useState(20);
   const [type, setType] = useState("A");
-  const [act_f, setAct_f] = useState("lineal");
+  const [valPercentage, setValPercentage] = useState(0.1);
   const [hidden_layers, setHidden_layers] = useState(1);
   const [hidden_nodes1, setHidden_nodes1] = useState(5);
   const [hidden_nodes2, setHidden_nodes2] = useState(5);
   const [message, setMessage] = useState("");
+  const [save, setSave] = useState(false);
 
   const addRate = (num: number, callback: any) => {
     if (typeof num !== "number" || isNaN(num) || num > 1) {
@@ -32,7 +33,11 @@ const TrainModel: FC<IRoute> = () => {
 
   const constructMessage = (message: any) => {
     let messageString = "";
-    messageString += `Model Succesful trained with lr: ${message.learning_rate}, momentum: ${message.momentum}, epochs: ${message.amount_of_epochs}, training_cases: ${message.training_cases}, test_cases: ${message.test_cases}, act_f: ${message.activation_function}, topology: ${message.topology.join(', ')}, Estadistics: accuracy: ${message.accuracy}, MSE_train: ${message.MSE_train}, MSE_test: ${message.MSE_test}`;
+    if (message.saved) {
+      messageString = message.message;
+      return messageString;
+    }
+    messageString += `Model Succesful trained with lr: ${message.learning_rate}, momentum: ${message.momentum}, epochs: ${message.amount_of_epochs}, training_cases: ${message.training_cases}, validation_cases: ${message.validation_cases}, topology: ${message.topology.join(', ')}, Estadistics: accuracy: ${message.accuracy_val} MSE_train: ${message.MSE_train}, MSE_val: ${message.MSE_val}`;
     return messageString;
   };
 
@@ -44,9 +49,11 @@ const TrainModel: FC<IRoute> = () => {
     if (hidden_layers === 2) {
         hl_topology.push(hidden_nodes2)
     } 
-    const train = { lr, momentum, epochs, type, act_f, hl_topology };
+    const train = { lr, momentum, epochs, type, val_percentage: valPercentage, hl_topology, save };
     const trainMessage = await Api.trainMLP(train);
+    console.log(trainMessage);
     setMessage(constructMessage(trainMessage)); 
+    setSave(false);
 };
 
   return (
@@ -61,6 +68,14 @@ const TrainModel: FC<IRoute> = () => {
             <option value="A">Model A-100Datasets</option>
             <option value="B">Model B-500Datasets</option>
             <option value="C">Model C-1000Datasets</option>
+          </select>
+        </div>
+        <div className="grid gap-2">
+          <label>Validation Dataset Percentage</label>
+          <select value={valPercentage} onChange={(e)=>{setValPercentage(Number(e.target.value))}}>
+            <option value={0.1}>0.1</option>
+            <option value={0.2}>0.2</option>
+            <option value={0.3}>0.3</option>
           </select>
         </div>
         <div className="grid gap-2">
@@ -108,15 +123,11 @@ const TrainModel: FC<IRoute> = () => {
             <input type="number" name="hidden_nodes2" id="hidden_nodes2" value={hidden_nodes2} min={5} max={10} onChange={(e)=>setHidden_nodes2(Number(e.target.value))} />
         </div>
         )}
-        <div className="grid gap-2">
-          <label>Activation Function</label>
-          <select value={act_f} onChange={(e)=>{setAct_f(e.target.value)}}>
-            <option value="lineal">Lineal</option>
-            <option value="sigmoid">Sigmoid</option>
-          </select>
-        </div>
         <div className="grid gap-2 text-white">
             <button type="submit" className="font-bold ms-font-xl bg-gradient-to-br from-blue-900 to-blue-500 py-4 px-8 hover:opacity-80 rounded-sm text-center">Train</button>
+        </div>
+        <div className="grid gap-2 text-white">
+            <button type="submit" onClick={()=>setSave(true)} className="font-bold ms-font-xl bg-gradient-to-br from-blue-700 to-blue-300 py-4 px-8 hover:opacity-80 rounded-sm text-center">Save</button>
         </div>
       </form>
       </div>
