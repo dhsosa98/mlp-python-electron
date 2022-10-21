@@ -10,7 +10,7 @@ class Model():
     self.out = [(None, None)]
 
   def gradient_descent(self, l):
-    self.neural_net[l].b = self.neural_net[l].b - np.mean(self.deltas[0], axis=0, keepdims=True) * self.lr
+    self.neural_net[l].b = self.neural_net[l].b - self.deltas[0] * self.lr
     weightDelta = (self.out[l][1].T @ self.deltas[0] * self.lr) + (self.neural_net[l].previousDeltaWeight * self.m) #out [l][1] @ deltas[0] es el gradiente de los pesos de esa capa
     self.neural_net[l].W =  self.neural_net[l].W - weightDelta  
     self.neural_net[l].previousDeltaWeight = weightDelta #Guardamos el cambio de los pesos de esa iteracion
@@ -33,7 +33,7 @@ class Model():
       #esto lo hace primero (ultima capa, osea primera mirando de atras a adelante)
       if l == len(self.neural_net) -1: #
       #calcular delta ultima capa
-        self.deltas.insert(0, self.cost_function(a, Y, True) * self.neural_net[l].act_f(a, True)) #agregamelo al principio con el indice 0 siempre (first in first out)
+        self.deltas.insert(0, self.cost_function(a, Y, True)) #agregamelo al principio con el indice 0 siempre (first in first out)
       else:
         self.deltas.insert(0, self.deltas[0] @ _W.T * self.neural_net[l].act_f(a, True)) 
 
@@ -42,10 +42,19 @@ class Model():
       self.gradient_descent(l)
 
 
-  def train(self, X, Y, train=True): #lr es el hiperparametro learning rate en el descenso del gradiente (factor por el cual multiplicamos al vector gradiente y te permite saber en q grado estas actualizando tu parametro en base a la inf q nos otorga el gradiente)
-    self.forward_pass(X)
-    if train:
-      self.backward_pass(Y)           
-    return self.out[-1][1]
+  def train(self, X, Y, train=True):
+    result = []
+    for x, y in zip(X, Y):
+        x.shape += (1,)
+        y.shape += (1,)
+        y = y.T #1x3
+        x = x.T #1x100 #lr es el hiperparametro learning rate en el descenso del gradiente (factor por el cual multiplicamos al vector gradiente y te permite saber en q grado estas actualizando tu parametro en base a la inf q nos otorga el gradiente)
+        self.forward_pass(x)
+        if train:
+          self.backward_pass(y)           
+        result.append(self.out[-1][1])
+    result = np.array(result)
+    result = result[:, 0, :]
+    return result
 
 
