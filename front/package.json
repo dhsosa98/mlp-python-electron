@@ -1,6 +1,6 @@
 {
-  "name": "my-new-app",
-  "productName": "my-new-app",
+  "name": "mlp-perceptron",
+  "productName": "MLP Perceptron",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": ".webpack/main",
@@ -12,57 +12,7 @@
     "lint": "eslint --ext .ts,.tsx ."
   },
   "keywords": [],
-  "author": {
-    "name": "loricode",
-    "email": "ajcampillo07@gmail.com"
-  },
   "license": "MIT",
-  "config": {
-    "forge": {
-      "packagerConfig": {},
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "mlp-electron"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ],
-      "plugins": [
-        [
-          "@electron-forge/plugin-webpack",
-          {
-            "mainConfig": "./webpack.main.config.js",
-            "devContentSecurityPolicy": "default-src 'self' 'unsafe-eval' 'unsafe-inline' http://localhost:* ws://localhost:*;",
-            "renderer": {
-              "config": "./webpack.renderer.config.js",
-              "entryPoints": [
-                {
-                  "html": "./src/index.html",
-                  "js": "./src/renderer.ts",
-                  "name": "main_window"
-                }
-              ]
-            }
-          }
-        ]
-      ]
-    }
-  },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.63",
     "@electron-forge/maker-deb": "^6.0.0-beta.63",
@@ -96,9 +46,11 @@
     "@fluentui/react": "^8.64.4",
     "@types/styled-components": "^5.1.26",
     "axios": "^0.27.2",
+    "copy-webpack-plugin": "^11.0.0",
     "electron-is-dev": "^2.0.0",
     "electron-rebuild": "^3.2.9",
     "electron-squirrel-startup": "^1.0.0",
+    "fs-extra": "^10.1.0",
     "mysql2": "^2.3.3",
     "python-shell": "^2.0.2",
     "react": "^17.0.2",

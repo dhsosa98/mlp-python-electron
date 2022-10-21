@@ -1,3 +1,3 @@
 @echo off
-pyinstaller main.spec -y --distpath ../backend
+pyinstaller main.spec -y --distpath ../mlp-perceptron
 rmdir /S /Q build
