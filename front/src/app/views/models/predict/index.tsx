@@ -212,12 +212,13 @@ const Predict: FC<IRoute> = () => {
       </Link>
       <div className="flex justify-center text-gray-900 font-bold text-2xl">
         <div className="px-5 py-2 my-5 max-w-[200px] text-2xl text-center bg-white shadow-sm shadow-gray-100 rounded-md">
-          Generate Datasets
+          Predict
         </div>
       </div>
-      <div className="flex justify-center gap-10 ">
+      <div className="flex flex-col gap-5">
+      <div className="flex justify-center gap-10">
         <div className="grid justify-center">
-          <div className=" grid grid-rows-10 grid-cols-10 h-[400px] aspect-square gap-3">
+          <div className=" grid grid-rows-10 grid-cols-10 h-[370px] aspect-square gap-2">
             {matrix.map((row: number[], rowIndex: number) => (
               <>
                 {row.map((cell: number, cellIndex: number) => {
@@ -235,25 +236,25 @@ const Predict: FC<IRoute> = () => {
           </div>
         </div>
         {actualMatrixKey !== "_" && (
-          <div className="flex flex-col justify-center">
+          <CardComponent className="flex flex-col justify-center">
             <DistortionInputComponent
               distortion={distortion}
               handleChangeDistortion={handleChangeDistortion}
               handleSubmit={handleSubmit}
             />
             <DistortionComponent percentage={percentage} />
-          </div>
+          </CardComponent>
         )}
       </div>
       {answer !== "" && (
-        <div className="flex justify-center mt-5">
-          <div className="bg-white text-center p-3 max-w-max text-lg">
+        <CardComponent className="flex justify-center">
+          <div className="bg-white shadow-sm shadow-gray-100 text-center p-3 max-w-max text-lg">
             Your Letter is: <span className="font-bold">{answer}</span>
           </div>
-        </div>
+        </CardComponent>
       )}
-      <div className="w-full flex flex-col items-center p-10 justify-center gap-3 ">
-        <div className="bg-white shadow-md shadow-gray-100 rounded-md p-10 flex flex-col gap-5">
+      <div className="w-full flex flex-col items-center justify-center gap-3 ">
+        <div className="bg-white shadow-md shadow-gray-100 rounded-md p-5 flex flex-col gap-5">
           {models.length > 0 ? (
             <>
               <div className="flex gap-4">
@@ -318,6 +319,7 @@ const Predict: FC<IRoute> = () => {
               <label className=" font-semibold">Please add one</label>
             </div>
           )}
+          </div>
         </div>
       </div>
     </div>
@@ -410,3 +412,17 @@ const DistortionInputComponent: FC<any> = ({
     </div>
   );
 };
+
+const CardComponent = styled.div`
+  animation: myAnim 0.4s ease-in 0s 1 normal forwards;
+  @keyframes myAnim {
+    0% {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+`

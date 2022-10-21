@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { successAlert } from "../../../utils/sweetalert";
 import { Api } from "../../../services/Api";
+import styled from "styled-components";
 
 interface IRoute {
   path: string;
@@ -45,7 +46,7 @@ const DeleteModel: FC<IRoute> = () => {
   return (
     <div className='grid justify-center items-center h-[100vh] p-10 m-5'>
       <Link className='font-bold ms-font-xl bg-white py-4 px-8 hover:opacity-80 rounded-full text-center absolute top-10' to="/models">Back</Link>
-      <form className='flex flex-col gap-10 bg-white shadow-md shadow-gray-100 rounded-md p-10' onSubmit={handleDeleteModel}>
+      <CardComponent className='flex flex-col gap-10 bg-white shadow-md shadow-gray-100 rounded-md p-10' onSubmit={handleDeleteModel}>
         {models.length > 0 ? (
           <>
             <label className="font-bold">Select a Model</label>
@@ -60,9 +61,22 @@ const DeleteModel: FC<IRoute> = () => {
             <label className="font-bold">There is not models</label>
             <label className=" font-semibold">Please add one</label>
           </div>)}
-      </form>
+      </CardComponent>
     </div>
   )
 }
 
 export default DeleteModel;
+
+const CardComponent = styled.form`
+  animation: myAnim2 0.4s ease-in 0s 1 normal forwards;
+  @keyframes myAnim2 {
+    0% {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }`
