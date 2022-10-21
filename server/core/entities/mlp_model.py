@@ -43,6 +43,7 @@ class Model():
 
 
   def train(self, X, Y, train=True):
+   
     result = []
     for x, y in zip(X, Y):
         x.shape += (1,)

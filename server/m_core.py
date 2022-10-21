@@ -52,7 +52,7 @@ def mlp_answer(matrix, model="A"):
         return {
             "error": "Model not found"
         }
-    model = model.train(matrix, '', False)
+    model = model.train(matrix, np.zeros((1, 3)), False)
 
     prediction = np.argmax(model, 1)
     prediction = prediction[0]
