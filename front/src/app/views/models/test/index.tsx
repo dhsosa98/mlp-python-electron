@@ -71,7 +71,7 @@ const TrainModel: FC<IRoute> = () => {
           </button>
       </>
       ) : (
-        <div className="text-center flex flex-col gap-2">
+        <div className="text-center flex flex-col gap-2 text-xl">
         <label className="font-bold">There is not models</label>
         <label className=" font-semibold">Please add one</label>
         </div>

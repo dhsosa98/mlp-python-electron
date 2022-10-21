@@ -63,15 +63,15 @@ const TrainModel: FC<IRoute> = () => {
       <div className="grid grid-cols-auto justify-center items-center p-10 gap-10">
         <div>
           <form onSubmit={handleSubmit} className=' grid px-10 py-5 bg-white shadow-md shadow-gray-100 rounded-md gap-4'>
-            <div className="flex justify-center text-gray-900 font-bold text-lg">
-              <div className="px-5 py-2 my-5 max-w-[200px] text-center">Generate and Train Model</div>
+            <div className="flex justify-center text-gray-900 font-bold">
+              <div className="px-5 py-2 my-5 max-w-[200px] text-center text-2xl">Generate and Train Model</div>
             </div>
             <div className="grid gap-2">
-              <label className="font-bold" htmlFor="model">Model</label>
+              <label className="font-bold" htmlFor="model">Dataset</label>
               <select className=" outline-1 outline-stone-100 p-2" value={type} onChange={(e) => setType(e.target.value)}>
-                <option value="A">Model A-100Datasets</option>
-                <option value="B">Model B-500Datasets</option>
-                <option value="C">Model C-1000Datasets</option>
+                <option value="A">A-100Datasets</option>
+                <option value="B">B-500Datasets</option>
+                <option value="C">C-1000Datasets</option>
               </select>
             </div>
             <div className="grid gap-2">

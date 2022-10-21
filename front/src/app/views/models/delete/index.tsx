@@ -56,7 +56,7 @@ const DeleteModel: FC<IRoute> = () => {
             </select>
             <button className="text-white font-normal text-lg bg-red-500 px-8 py-4 rounded-md hover:bg-red-700" type="submit">Delete</button>
           </>) : (
-          <div className="text-center flex flex-col gap-2">
+          <div className="text-center flex flex-col gap-2 text-xl">
             <label className="font-bold">There is not models</label>
             <label className=" font-semibold">Please add one</label>
           </div>)}

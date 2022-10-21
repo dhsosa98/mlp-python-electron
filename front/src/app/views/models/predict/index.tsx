@@ -156,6 +156,7 @@ const Predict: FC<IRoute> = () => {
     setMatrix(initialMatrix);
     setPercentage(0);
     setDistortion(0);
+    setAnswer("");
     setActualMatrixKey("_");
   };
 
@@ -299,7 +300,7 @@ const Predict: FC<IRoute> = () => {
               </div>
             </>
           ) : (
-            <div className="text-center flex flex-col gap-2">
+            <div className="text-center flex flex-col gap-2 text-xl">
               <label className="font-bold">There is not models</label>
               <label className=" font-semibold">Please add one</label>
             </div>)}
