@@ -44,7 +44,7 @@ const TrainModel: FC<IRoute> = () => {
   const handleTestModel = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const response = await Api.testMLPModel(model)
-    await infoAlert('Test Model', constructMessage(response));
+    await infoAlert('Model Tested', constructMessage(response));
   };
   return (
     <div className="grid justify-center items-center h-[100vh] p-10">
