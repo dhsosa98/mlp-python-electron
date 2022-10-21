@@ -20,7 +20,7 @@ const GenerateDatasets: FC<IRoute> = () => {
     };
 
     return (
-        <div className="p-10 grid">
+        <div className="p-10 grid h-[100vh] m-5">
             <Link className='font-bold ms-font-xl bg-white py-4 px-8 hover:opacity-80 rounded-full text-center absolute top-10' to="/">Home</Link>
             <div className='grid justify-center items-center'>
                 <div className='flex flex-col gap-10 text-white bg-white shadow-md shadow-gray-100 rounded-md p-10'>

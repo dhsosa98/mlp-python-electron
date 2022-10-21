@@ -43,13 +43,13 @@ const DeleteModel: FC<IRoute> = () => {
     });
   };
   return (
-    <div className='grid justify-center items-center h-[100vh] p-10'>
+    <div className='grid justify-center items-center h-[100vh] p-10 m-5'>
       <Link className='font-bold ms-font-xl bg-white py-4 px-8 hover:opacity-80 rounded-full text-center absolute top-10' to="/models">Back</Link>
       <form className='flex flex-col gap-10 bg-white shadow-md shadow-gray-100 rounded-md p-10' onSubmit={handleDeleteModel}>
         {models.length > 0 ? (
           <>
             <label className="font-bold">Select a Model</label>
-            <select className=" outline-1 outline-stone-100 p-2" onChange={handleChangeModel}>
+            <select className=" outline-1 outline-stone-100 p-4 border border-gray-100" onChange={handleChangeModel}>
               {models?.map((model) => (
                 <option key={model} value={model}>{model}</option>
               ))}

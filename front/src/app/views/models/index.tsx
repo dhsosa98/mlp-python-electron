@@ -11,7 +11,7 @@ interface IRoute {
 
 const Models: FC<IRoute> = () => {
     return (
-        <div className='grid justify-center items-center gap-40 p-10'>
+        <div className='grid justify-center items-center gap-40 p-10 h-[100vh] m-5'>
             <Link className='font-bold ms-font-xl bg-white py-4 px-8 hover:opacity-80 rounded-full text-center absolute top-10' to="/">Home</Link>
             <div className='flex flex-col gap-10 text-white bg-white shadow-md shadow-gray-100 rounded-md p-10'>
             <div className="flex justify-center text-gray-900 font-bold text-lg">

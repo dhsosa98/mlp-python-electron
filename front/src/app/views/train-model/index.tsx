@@ -38,7 +38,7 @@ const TrainModel: FC<IRoute> = () => {
       messageString = message.message;
       return messageString;
     }
-    messageString += `lr: ${message.learning_rate}, momentum: ${message.momentum}, epochs: ${message.amount_of_epochs}, training_cases: ${message.training_cases}, validation_cases: ${message.validation_cases}, topology: ${message.topology.join(', ')}, Estadistics: accuracy: ${message.accuracy_val} MSE_train: ${message.MSE_train}, MSE_val: ${message.MSE_val}`;
+    messageString += `lr: ${message.learning_rate}, momentum: ${message.momentum}, epochs: ${message.amount_of_epochs}, training_cases: ${message.training_cases}, validation_cases: ${message.validation_cases}, topology: ${message.topology.join(', ')}, Stats: accuracy: ${message.accuracy_val}, MSE_train: ${message.MSE_train}, MSE_val: ${message.MSE_val}`;
     return messageString;
   };
 
@@ -58,7 +58,7 @@ const TrainModel: FC<IRoute> = () => {
   };
 
   return (
-    <div className="p-10">
+    <div className="p-10 m-5">
       <Link className='font-bold ms-font-xl bg-white py-4 px-8 hover:opacity-80 rounded-full text-center ' to="/">Home</Link>
       <div className="grid grid-cols-auto justify-center items-center p-10 gap-10">
         <div>
@@ -66,9 +66,11 @@ const TrainModel: FC<IRoute> = () => {
             <div className="flex justify-center text-gray-900 font-bold">
               <div className="px-5 py-2 my-5 max-w-[200px] text-center text-2xl">Generate and Train Model</div>
             </div>
+            <div className="grid sm:grid-cols-2 grid-cols-1 gap-10">
+            <div>
             <div className="grid gap-2">
               <label className="font-bold" htmlFor="model">Dataset</label>
-              <select className=" outline-1 outline-stone-100 p-2" value={type} onChange={(e) => setType(e.target.value)}>
+              <select className=" outline-1 outline-stone-100 p-2 border border-gray-100" value={type} onChange={(e) => setType(e.target.value)}>
                 <option value="A">A-100Datasets</option>
                 <option value="B">B-500Datasets</option>
                 <option value="C">C-1000Datasets</option>
@@ -76,7 +78,7 @@ const TrainModel: FC<IRoute> = () => {
             </div>
             <div className="grid gap-2">
               <label className="font-bold" >Validation Dataset Percentage</label>
-              <select className=" outline-1 outline-stone-100 p-2" value={valPercentage} onChange={(e) => { setValPercentage(Number(e.target.value)) }}>
+              <select className=" outline-1 outline-stone-100 p-2 border border-gray-100" value={valPercentage} onChange={(e) => { setValPercentage(Number(e.target.value)) }}>
                 <option value={0.1}>10%</option>
                 <option value={0.2}>20%</option>
                 <option value={0.3}>30%</option>
@@ -84,12 +86,12 @@ const TrainModel: FC<IRoute> = () => {
             </div>
             <div className="grid gap-2">
               <label className="font-bold" htmlFor="epochs">Epochs</label>
-              <input className=" outline-1 outline-stone-100 p-2" type="number" name="epochs" id="epochs" value={epochs} min={1} onChange={(e) => setEpochs(Number(e.target.value))} />
+              <input className=" outline-1 outline-stone-100 p-2 border border-gray-100" type="number" name="epochs" id="epochs" value={epochs} min={1} onChange={(e) => setEpochs(Number(e.target.value))} />
             </div>
             <div className="grid gap-2">
               <label className="font-bold" >Learning Rate</label>
               <input
-                className=" outline-1 outline-stone-100 p-2"
+                className=" outline-1 outline-stone-100 p-2 border border-gray-100"
                 type="range"
                 min={0}
                 max={1}
@@ -97,12 +99,14 @@ const TrainModel: FC<IRoute> = () => {
                 value={lr}
                 onChange={(e) => addRate(parseFloat(e.target.value), setLr)}
               />
-              <span>{lr}</span>
+              <span className="text-center font-semibold">{lr}</span>
             </div>
+            </div>
+            <div>
             <div className="grid gap-2">
               <label className="font-bold" >Momentum</label>
               <input
-                className=" outline-1 outline-stone-100 p-2"
+                className=" outline-1 outline-stone-100 p-2 border border-gray-100"
                 type="range"
                 min={0}
                 max={1}
@@ -110,25 +114,27 @@ const TrainModel: FC<IRoute> = () => {
                 value={momentum}
                 onChange={(e) => addRate(parseFloat(e.target.value), setMomentum)}
               />
-              {momentum}
+              <span className="text-center font-semibold">{momentum}</span>
             </div>
             <div className="grid gap-2">
               <label className="font-bold" >Hidden Layers</label>
-              <select className=" outline-1 outline-stone-100 p-2" value={hidden_layers} onChange={(e) => setHidden_layers(Number(e.target.value))}>
+              <select className=" outline-1 outline-stone-100 p-2 border border-gray-100" value={hidden_layers} onChange={(e) => setHidden_layers(Number(e.target.value))}>
                 <option value={1}>1</option>
                 <option value={2}>2</option>
               </select>
             </div>
             <div className="grid gap-2">
               <label className="font-bold" >Hidden Nodes for Layer 1</label>
-              <input className=" outline-1 outline-stone-100 p-2" type="number" name="hidden_nodes1" id="hidden_nodes1" value={hidden_nodes1} min={5} max={10} onChange={(e) => setHidden_nodes1(Number(e.target.value))} />
+              <input className=" outline-1 outline-stone-100 p-2 border border-gray-100" type="number" name="hidden_nodes1" id="hidden_nodes1" value={hidden_nodes1} min={5} max={10} onChange={(e) => setHidden_nodes1(Number(e.target.value))} />
             </div>
             {hidden_layers === 2 && (
               <div className="grid gap-2">
                 <label className="font-bold" >Hidden Nodes for Layer 2</label>
-                <input className=" outline-1 outline-stone-100 p-2" type="number" name="hidden_nodes2" id="hidden_nodes2" value={hidden_nodes2} min={5} max={10} onChange={(e) => setHidden_nodes2(Number(e.target.value))} />
+                <input className=" outline-1 outline-stone-100 p-2 border border-gray-100" type="number" name="hidden_nodes2" id="hidden_nodes2" value={hidden_nodes2} min={5} max={10} onChange={(e) => setHidden_nodes2(Number(e.target.value))} />
               </div>
             )}
+            </div>
+            </div>
             <div className="grid gap-2 text-white">
               <button type="submit" className="font-bold ms-font-xl bg-gradient-to-br from-blue-900 to-blue-500 py-4 px-8 hover:opacity-80 rounded-md text-center">Train</button>
             </div>

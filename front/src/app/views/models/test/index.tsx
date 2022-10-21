@@ -38,7 +38,7 @@ const TrainModel: FC<IRoute> = () => {
       message = res.message;
       return message;
     }
-    message += `Model: ${res.model_name} with test_cases: ${res.test_cases}, Estadistics: accuracy: ${res.accuracy_test} MSE_test: ${res.MSE_test}`;
+    message += `Model: ${res.model_name} with test_cases: ${res.test_cases}, Stats: accuracy: ${res.accuracy_test}, MSE_test: ${res.MSE_test}`;
     return message;
   };
   const handleTestModel = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -47,7 +47,7 @@ const TrainModel: FC<IRoute> = () => {
     await infoAlert('Model Tested', constructMessage(response));
   };
   return (
-    <div className="grid justify-center items-center h-[100vh] p-10">
+    <div className="grid justify-center items-center h-[100vh] p-10 m-5">
       <Link
         className="font-bold ms-font-xl bg-white py-4 px-8 hover:opacity-80 rounded-full text-center absolute top-10"
         to="/models"
@@ -59,7 +59,7 @@ const TrainModel: FC<IRoute> = () => {
       (
       <>
         <label className="font-bold">Select a Model</label>
-          <select className=" outline-1 outline-stone-100 p-2" onChange={handleChangeModel}>
+          <select className=" outline-1 outline-stone-100 p-4 border border-gray-100" onChange={handleChangeModel}>
             {models?.map((model) => (
               <option key={model} value={model}>
                 {model}
