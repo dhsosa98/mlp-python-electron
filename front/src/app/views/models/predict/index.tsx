@@ -70,7 +70,6 @@ const defaultMatrixes = {
   f: [...fMatrix],
 };
 
-
 const calculateDistortion = (
   matrix: number[][],
   actualMatrixKey: keyof typeof defaultMatrixes
@@ -109,14 +108,14 @@ const createMatrix = (matrix: number[][], row: number, cell: number) => {
 const DistortionComponent: FC<any> = ({ percentage }) => {
   return (
     <div className="flex justify-center">
-      <div className="bg-white p-5 m-2 max-w-max">
-        <div className="">Distortion: {percentage}%</div>
+      <div className="p-5 m-2 max-w-max">
+        <div>Distortion: <span className="font-bold">{percentage}%</span></div>
       </div>
     </div>
   );
 };
 
-const defaultModels ={'A': 'model100', 'B': 'model500', 'C': 'model1000'}
+const defaultModels = { A: "model100", B: "model500", C: "model1000" };
 
 const Predict: FC<IRoute> = () => {
   const [model, setModel] = useState<string>("A");
@@ -129,10 +128,10 @@ const Predict: FC<IRoute> = () => {
 
   useEffect(() => {
     Api.getMLPModels().then((res) => {
-      if (res.models.length>0){
+      if (res.models.length > 0) {
         setModels(res.models);
         setModel(res.models[0]);
-        return
+        return;
       }
       setModels([]);
     });
@@ -202,8 +201,13 @@ const Predict: FC<IRoute> = () => {
 
   return (
     <div className="flex flex-col justify-center p-10">
-      <Link className='font-bold ms-font-xl bg-gradient-to-br from-gray-900 to-gray-500 py-4 px-8 hover:opacity-80 rounded-sm text-center max-w-[100px]' to="/models">Back</Link>
-      <div className="flex justify-center gap-10">
+      <Link
+        className="font-bold ms-font-xl bg-white py-4 px-8 hover:opacity-80 rounded-full text-center absolute top-10"
+        to="/models"
+      >
+        Back
+      </Link>
+      <div className="flex justify-center gap-10 ">
         <div className="grid justify-center">
           <div className=" grid grid-rows-10 grid-cols-10 h-[400px] aspect-square gap-3">
             {matrix.map((row: number[], rowIndex: number) => (
@@ -235,51 +239,71 @@ const Predict: FC<IRoute> = () => {
       </div>
       {answer !== "" && (
         <div className="flex justify-center mt-5">
-          <div className="bg-white text-center p-3 max-w-max font-bold">
-            Your Letter is: {answer}
+          <div className="bg-white text-center p-3 max-w-max text-lg">
+            Your Letter is: <span className="font-bold">{answer}</span>
           </div>
         </div>
       )}
-      <div className="w-full flex p-10 justify-center gap-3">
-        <button
-          className="bg-red-500 text-white px-4 py-2"
-          onClick={handleReset}
-        >
-          Reset
-        </button>
-        <button
-          className="bg-green-600 text-white px-4 py-2"
-          onClick={handleSubmitMLPAnswer}
-        >
-          Submit
-        </button>
-        <select onChange={handleChangeModel}>
-          {models.map((model) => (
-            <option value={model}>{model}</option>
-          ))}
-        </select>
-        <select onChange={handleChangeDefaultMatrixes}>
-          {Object.keys(defaultMatrixes).map((key) => {
-            return (
-              <>
-                {key === "_" ? (
-                  <option
-                    key={key}
-                    disabled
-                    selected={actualMatrixKey === "_"}
-                    value={key}
-                  >
-                    {"Select a Matrix"}
-                  </option>
-                ) : (
-                  <option key={key} value={key}>
-                    {key}
-                  </option>
-                )}
-              </>
-            );
-          })}
-        </select>
+      <div className="w-full flex flex-col items-center p-10 justify-center gap-3 ">
+        <div className="bg-white shadow-md shadow-gray-100 rounded-md p-10 flex flex-col gap-5">
+          {models.length > 0 ? (
+            <>
+              <div className="flex gap-4">
+                <div className="flex flex-col gap-2">
+                  <label className="font-bold">Select a Model</label>
+                  <select className=" outline-1 outline-stone-100 p-2" onChange={handleChangeModel}>
+                    {models.map((model) => (
+                      <option value={model}>{model}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="font-bold">Select a Matrix</label>
+                  <select className=" outline-1 outline-stone-100 p-2" onChange={handleChangeDefaultMatrixes}>
+                    {Object.keys(defaultMatrixes).map((key) => {
+                      return (
+                        <>
+                          {key === "_" ? (
+                            <option
+                              key={key}
+                              disabled
+                              selected={actualMatrixKey === "_"}
+                              value={key}
+                            >
+                              {"Matrix"}
+                            </option>
+                          ) : (
+                            <option key={key} value={key}>
+                              {key}
+                            </option>
+                          )}
+                        </>
+                      );
+                    })}
+                  </select>
+                </div>
+              </div>
+              <div className="flex gap-10 justify-center">
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded-md"
+                  onClick={handleReset}
+                >
+                  Reset
+                </button>
+                <button
+                  className="bg-green-600 text-white px-4 py-2 rounded-md"
+                  onClick={handleSubmitMLPAnswer}
+                >
+                  Submit
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className="text-center flex flex-col gap-2">
+              <label className="font-bold">There is not models</label>
+              <label className=" font-semibold">Please add one</label>
+            </div>)}
+        </div>
       </div>
     </div>
   );
@@ -315,9 +339,8 @@ const RotatedCell: FC<any> = ({
     <Rotate
       rotating={isRotating}
       cell={cell}
-      className={` justify-center items-center flex ${
-        cell ? "bg-sky-500" : "bg-white"
-      }`}
+      className={` justify-center items-center flex ${cell ? "bg-sky-600" : "bg-gray-100"
+        }`}
       key={cellIndex}
       onClick={handleRotate}
     />
@@ -350,18 +373,20 @@ const DistortionInputComponent: FC<any> = ({
   handleSubmit,
 }) => {
   return (
-    <div className="flex bg-white p-5 m-2 flex-col max-w-max justify-center text-center">
-      {"Select the Distortion Manually:"}
-      <input
-        value={distortion}
-        min={0}
-        max={30}
-        type="range"
-        onChange={handleChangeDistortion}
-      />
-      <strong>{distortion}</strong>
+    <div className="flex bg-white shadow-md shadow-gray-100 rounded-md p-10 m-2 flex-col max-w-max justify-center text-center gap-2">
+      <div className="flex flex-col gap-2">
+        <label className="font-bold">{"Select the Distortion Manually:"}</label>
+        <input
+          value={distortion}
+          min={0}
+          max={30}
+          type="range"
+          onChange={handleChangeDistortion}
+        />
+        <strong>{distortion}</strong>
+      </div>
       <button
-        className="bg-blue-400 text-white px-4 py-2"
+        className="bg-blue-500 text-white px-4 py-2 rounded-md font-bold"
         onClick={handleSubmit}
       >
         Distort

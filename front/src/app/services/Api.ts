@@ -35,6 +35,7 @@ export class Api {
    }
 
    public static async generateDatasets(type: string){
+      console.log(type)
       const response = await axios.post('http://localhost:8000/generate_datasets', { type })
       return response.data
    }

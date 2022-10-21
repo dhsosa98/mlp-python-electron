@@ -24,7 +24,7 @@ const createWindow = (): void => {
     },
   });
 
-  mainWindow.setBackgroundColor("#343B38");
+  // mainWindow.setBackgroundColor("#343B38");
   mainWindow.removeMenu();
 
   // and load the index.html of the app.
