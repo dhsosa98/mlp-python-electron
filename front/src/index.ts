@@ -16,6 +16,7 @@ const isDev = require("electron-is-dev");
 const createWindow = (): void => {
   // Create the browser window.
   const mainWindow: BrowserWindow = new BrowserWindow({
+    icon: path.join(__dirname, "../../icon.png"),
     height: 600,
     width: 800,
     webPreferences: {
@@ -32,7 +33,9 @@ const createWindow = (): void => {
 
   // Open the DevTools.
   
-  mainWindow.webContents.openDevTools();
+  if (isDev) {
+    mainWindow.webContents.openDevTools();
+  }
 
   ipcMain.handle("OPEN_MODAL", (_event) => {
     let win = new BrowserWindow({
@@ -59,6 +62,35 @@ app.on("ready", createWindow);
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
+
+
+// In this file you can include the rest of your app's specific main process
+// code. You can also put them in separate files and import them here.
+import { PythonShell } from "python-shell";
+import path from "path";
+
+let python: any = null;
+const startPython = () => {
+if (isDev) {
+    const options = {
+      scriptPath: path.join(__dirname, "../../../server"),
+    };
+    python = new PythonShell("main.py", options);
+    return python;
+} 
+    const options = {
+      pythonPath: path.join(
+        __dirname,
+        "../../../../../../py/server.exe"
+      ),
+    };
+    python = new PythonShell(".", options);
+    return python;
+};
+app.on('ready', ()=> startPython() );
+
+app.on("will-quit", () => python.kill())
+
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
@@ -72,35 +104,3 @@ app.on("activate", () => {
     createWindow();
   }
 });
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
-import { PythonShell } from "python-shell";
-import path from "path";
-
-let python = null;
-
-if (isDev) {
-  const startPython = () => {
-    const options = {
-      scriptPath: path.join(__dirname, "../../../server"),
-    };
-    console.log(options);
-    python = new PythonShell("main.py", options);
-    return python;
-  };
-  startPython();
-} else {
-  const startPython = () => {
-    const options = {
-      pythonPath: path.join(
-        __dirname,
-        "../../../../../../../backend/py/server.exe"
-      ),
-    };
-    console.log(options);
-    python = new PythonShell(".", options);
-    return python;
-  };
-  startPython();
-}

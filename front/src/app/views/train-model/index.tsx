@@ -1,7 +1,8 @@
 import { FC, useState } from "react";
 import { Link } from "react-router-dom";
-import { infoAlert } from "../../utils/sweetalert";
+import { infoAlert, successAlert } from "../../utils/sweetalert";
 import { Api } from "../../services/Api";
+import styled from "styled-components";
 
 
 interface IRoute {
@@ -32,14 +33,15 @@ const TrainModel: FC<IRoute> = () => {
     }
   };
 
-  const constructMessage = (message: any) => {
+  const constructMessage = async (message: any) => {
     let messageString = "";
     if (message.saved) {
       messageString = message.message;
-      return messageString;
+      await successAlert(messageString);
+      return;
     }
     messageString += `lr: ${message.learning_rate}, momentum: ${message.momentum}, epochs: ${message.amount_of_epochs}, training_cases: ${message.training_cases}, validation_cases: ${message.validation_cases}, topology: ${message.topology.join(', ')}, Stats: accuracy: ${message.accuracy_val}, MSE_train: ${message.MSE_train}, MSE_val: ${message.MSE_val}`;
-    return messageString;
+    await infoAlert('Model Successful trained',messageString);
   };
 
 
@@ -53,7 +55,7 @@ const TrainModel: FC<IRoute> = () => {
     const train = { lr, momentum, epochs, type, val_percentage: valPercentage, hl_topology, save };
     const trainMessage = await Api.trainMLP(train);
     console.log(trainMessage);
-    await infoAlert('Model Successful trained', constructMessage(trainMessage));
+    constructMessage(trainMessage)
     setSave(false);
   };
 
@@ -62,7 +64,7 @@ const TrainModel: FC<IRoute> = () => {
       <Link className='font-bold ms-font-xl bg-white py-4 px-8 hover:opacity-80 rounded-full text-center ' to="/">Home</Link>
       <div className="grid grid-cols-auto justify-center items-center p-10 gap-10">
         <div>
-          <form onSubmit={handleSubmit} className=' grid px-10 py-5 bg-white shadow-md shadow-gray-100 rounded-md gap-4'>
+          <CardComponent onSubmit={handleSubmit} className=' grid px-10 py-5 bg-white shadow-md shadow-gray-100 rounded-md gap-4'>
             <div className="flex justify-center text-gray-900 font-bold">
               <div className="px-5 py-2 my-5 max-w-[200px] text-center text-2xl">Generate and Train Model</div>
             </div>
@@ -141,10 +143,24 @@ const TrainModel: FC<IRoute> = () => {
             <div className="grid gap-2 text-white">
               <button type="submit" onClick={() => setSave(true)} className="font-bold ms-font-xl bg-gradient-to-br from-gray-700 to-gray-300 py-4 px-8 hover:opacity-80 rounded-md text-center">Save</button>
             </div>
-          </form>
+          </CardComponent>
         </div>
       </div>
     </div>
   );
 };
 export default TrainModel;
+
+const CardComponent = styled.form`
+  animation: myAnim 0.4s ease-in 0s 1 normal forwards;
+  @keyframes myAnim {
+    0% {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+`
