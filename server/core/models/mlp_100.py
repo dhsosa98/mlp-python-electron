@@ -32,9 +32,15 @@ def trainModelA(lr=0.5, momentum=0.5, epoch=20, hl_topology = [5], val_percentag
   neural_net = neural_network(topology)
 
   model = Model(neural_net.nn, cost, lr, momentum)
+  plot_v = []
+  plot_train = []
 
   for i in range (epoch):
     result = model.train(X_train, Y_train)
+    result_v = model.train(X_val, Y_val, False)
+    plot_v.append({'y': round(cost(result_v, Y_val), 4), 'x': i+1})
+    plot_train.append({'y': round(cost(result, Y_train), 4), 'x': i+1})
+
 
   result_v = model.train(X_val, Y_val, False)
   prediction_v = neural_net.get_prediction(result_v)
@@ -61,5 +67,6 @@ def trainModelA(lr=0.5, momentum=0.5, epoch=20, hl_topology = [5], val_percentag
     'learning_rate': lr,
     'momentum': momentum,
     'topology': topology,
+    'plot_data': {'val': plot_v, 'train': plot_train},
   }
 

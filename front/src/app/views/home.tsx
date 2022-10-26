@@ -30,7 +30,7 @@ export function Home() {
 }
 
 const Separator = styled.div`
-  position: absolute;
+  position: fixed;
   background: #579ce6;
   height: 50vh;
   width: 100%;

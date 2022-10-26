@@ -29,7 +29,6 @@ export class Api {
    }
 
    public static async trainMLP(train: any){
-      console.log(train)
       const response = await axios.post('http://localhost:8000/train_model', train)
       return response.data
    }
