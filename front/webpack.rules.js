@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = [
   // Add support for native node modules
   {
@@ -27,10 +29,10 @@ module.exports = [
     },
   },
   {
-    test: /\.(jpg|png|woff|woff2|eot|ttf)$/,
-    loader: "url-loader",
+    test: /\.(png|jpe?g|gif)$/i,
+    loader: 'file-loader',
     options: {
-      name: "[path][name].[ext]",
+      name: '[path][name].[ext]',
     },
-  },
+  }
 ];

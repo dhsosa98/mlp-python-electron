@@ -2,6 +2,25 @@ import React, { FC, SyntheticEvent, useState, useEffect } from "react";
 import { Api } from "../../../services/Api";
 import styled, { keyframes, css } from "styled-components";
 import { Link } from "react-router-dom";
+import constructTooltipMessage from "../../../utils/tooltipMessage";
+import ReactTooltip from "react-tooltip";
+import StyledContainer from "../../../components/shared/containers/Container";
+import StyledCard from "../../../components/shared/cards/Card";
+import NotFoundModels from "../../../components/NotFoundModels";
+import StyledSelect from "../../../components/inputs/Select";
+import Cell from "../../../components/RotatedCell";
+import BigButton from "../../../components/buttons/BigButton";
+import StyledBackLink from "../../../components/buttons/BackLink";
+import TooltipIcon from "../../../components/TooltipIcon";
+import StyledDefaultButton from "../../../components/buttons/DefaultButton";
+import {
+  initialMatrix,
+  defaultMatrixes
+} from "../../../constants/matrixes";
+import { calculateDistortion } from "../../../utils/calculateDistortion";
+import Loader from "../../../components/shared/loaders/Loader";
+import { useTranslation } from 'react-i18next';
+
 
 interface IRoute {
   path: string;
@@ -11,88 +30,6 @@ interface IRoute {
   props?: unknown;
 }
 
-const initialMatrix = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-];
-
-const dMatrix = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-  [0, 0, 0, 1, 1, 1, 1, 1, 0, 0],
-  [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
-  [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
-  [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
-  [0, 0, 0, 1, 1, 1, 1, 1, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-];
-
-const bMatrix = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
-  [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
-  [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
-  [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
-  [0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-];
-
-const fMatrix = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 1, 1, 0, 0, 0],
-  [0, 0, 0, 0, 1, 0, 0, 1, 0, 0],
-  [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-  [0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
-  [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-];
-
-const defaultMatrixes = {
-  _: [...initialMatrix],
-  b: [...bMatrix],
-  d: [...dMatrix],
-  f: [...fMatrix],
-};
-
-const calculateDistortion = (
-  matrix: number[][],
-  actualMatrixKey: keyof typeof defaultMatrixes
-) => {
-  if (typeof actualMatrixKey !== "string") {
-    return 0;
-  }
-  if (actualMatrixKey === "_") {
-    return 0;
-  }
-  const actualMatrix = defaultMatrixes[actualMatrixKey];
-  return matrix.reduce((acc1, row, rowIndex) => {
-    return (
-      acc1 +
-      row.reduce((acc2, cell, cellIndex) => {
-        if (cell !== actualMatrix[rowIndex][cellIndex]) {
-          return acc2 + 1;
-        }
-        return acc2;
-      }, 0)
-    );
-  }, 0);
-};
 
 const createMatrix = (matrix: number[][], row: number, cell: number) => {
   return matrix.map((r, rowIndex) => {
@@ -106,18 +43,17 @@ const createMatrix = (matrix: number[][], row: number, cell: number) => {
 };
 
 const DistortionComponent: FC<any> = ({ percentage }) => {
+  const { t: T } = useTranslation();
   return (
     <div className="flex justify-center">
       <div className="p-5 m-2 max-w-max">
         <div>
-          Distortion: <span className="font-bold">{percentage}%</span>
+          {T("Distortion")}: <span className="font-bold">{percentage}%</span>
         </div>
       </div>
     </div>
   );
 };
-
-const defaultModels = { A: "model100", B: "model500", C: "model1000" };
 
 const Predict: FC<IRoute> = () => {
   const [model, setModel] = useState<string>("A");
@@ -128,14 +64,24 @@ const Predict: FC<IRoute> = () => {
 
   const [models, setModels] = useState<any[]>([]);
 
+  const [tooltipMessage, setTooltipMessage] = useState<string>("");
+
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+
+  const { t: T } = useTranslation();
+
   useEffect(() => {
+    setIsLoaded(true);
     Api.getMLPModels().then((res) => {
       if (res.models.length > 0) {
         setModels(res.models);
         setModel(res.models[0]);
+        setTooltipMessage(constructTooltipMessage(res.models[0], T));
         return;
       }
       setModels([]);
+    }).finally(() => {
+      setIsLoaded(false);
     });
   }, []);
 
@@ -162,7 +108,7 @@ const Predict: FC<IRoute> = () => {
     setActualMatrixKey("_");
   };
 
-  const handleSubmit = async (e: SyntheticEvent) => {
+  const handleSubmitDistortion = async (e: SyntheticEvent) => {
     e.preventDefault();
     const matrixDistorted = await Api.getMatrixDistortioned(matrix, distortion);
     setMatrix(matrixDistorted);
@@ -174,10 +120,14 @@ const Predict: FC<IRoute> = () => {
   };
 
   const handleSubmitMLPAnswer = async (e: SyntheticEvent) => {
+    try{
     e.preventDefault();
     const answer = await Api.getMLPAnswer(matrix, model);
     console.log(answer);
     setAnswer(answer.class);
+    }catch(e){
+      console.log(e);
+    }
   };
 
   const handleChangeDefaultMatrixes = (
@@ -198,203 +148,152 @@ const Predict: FC<IRoute> = () => {
   const handleChangeModel = (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
     setModel(e.currentTarget.value);
+    setTooltipMessage(constructTooltipMessage(e.currentTarget.value, T));
   };
 
   const [matrix, setMatrix] = useState<number[][]>([...initialMatrix]);
 
+  if (isLoaded) {
+    return (
+      <StyledContainer>
+        <StyledCard>
+          <div className="p-10">
+            <Loader />
+          </div>
+        </StyledCard>
+      </StyledContainer>
+    )
+  }
+
   return (
-    <div className="flex flex-col justify-center p-10 m-5">
-      <Link
-        className="font-bold ms-font-xl bg-white py-4 px-8 hover:opacity-80 rounded-full text-center absolute top-10"
-        to="/models"
-      >
-        Back
-      </Link>
-      <div className="flex justify-center text-gray-900 font-bold text-2xl">
-        <div className="px-5 py-2 my-5 max-w-[200px] text-2xl text-center bg-white shadow-sm shadow-gray-100 rounded-md">
-          Predict
-        </div>
-      </div>
+    <StyledContainer>
+      <StyledBackLink to="/models">{T("Back")}</StyledBackLink>
       <div className="flex flex-col gap-5">
-      <div className="flex justify-center gap-10">
-        <div className="grid justify-center">
-          <div className=" grid grid-rows-10 grid-cols-10 h-[370px] aspect-square gap-2">
-            {matrix.map((row: number[], rowIndex: number) => (
-              <>
-                {row.map((cell: number, cellIndex: number) => {
-                  return (
-                    <RotatedCell
-                      cell={cell}
-                      cellIndex={cellIndex}
-                      handleChangeMatrix={handleChangeMatrix}
-                      rowIndex={rowIndex}
-                    />
-                  );
-                })}
-              </>
-            ))}
+        <div className="flex justify-center gap-10">
+          <div className="grid justify-center">
+            <div className=" grid grid-rows-10 grid-cols-10 h-[370px] aspect-square gap-2">
+              {matrix.map((row: number[], rowIndex: number) => (
+                <>
+                  {row.map((cell: number, cellIndex: number) => {
+                    return (
+                      <Cell
+                        cell={cell}
+                        cellIndex={cellIndex}
+                        handleChangeMatrix={handleChangeMatrix}
+                        rowIndex={rowIndex}
+                      />
+                    );
+                  })}
+                </>
+              ))}
+            </div>
           </div>
-        </div>
-        {actualMatrixKey !== "_" && (
-          <CardComponent className="flex flex-col justify-center">
-            <DistortionInputComponent
-              distortion={distortion}
-              handleChangeDistortion={handleChangeDistortion}
-              handleSubmit={handleSubmit}
-            />
-            <DistortionComponent percentage={percentage} />
-          </CardComponent>
-        )}
-      </div>
-      {answer !== "" && (
-        <CardComponent className="flex justify-center">
-          <div className="bg-white shadow-sm shadow-gray-100 text-center p-3 max-w-max text-lg">
-            Your Letter is: <span className="font-bold">{answer}</span>
-          </div>
-        </CardComponent>
-      )}
-      <div className="w-full flex flex-col items-center justify-center gap-3 ">
-        <div className="bg-white shadow-md shadow-gray-100 rounded-md p-5 flex flex-col gap-5">
-          {models.length > 0 ? (
-            <>
-              <div className="flex gap-4">
-                <div className="flex flex-col gap-2">
-                  <label className="font-bold">Select a Model</label>
-                  <select
-                    className=" outline-1 outline-stone-100 border border-gray-100 p-2"
-                    onChange={handleChangeModel}
-                  >
-                    {models.map((model) => (
-                      <option value={model}>{model}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="font-bold">Select a Matrix</label>
-                  <select
-                    className=" outline-1 outline-stone-100 border border-gray-100 p-2"
-                    onChange={handleChangeDefaultMatrixes}
-                  >
-                    {Object.keys(defaultMatrixes).map((key) => {
-                      return (
-                        <>
-                          {key === "_" ? (
-                            <option
-                              key={key}
-                              disabled
-                              selected={actualMatrixKey === "_"}
-                              value={key}
-                            >
-                              {"Matrix"}
-                            </option>
-                          ) : (
-                            <option key={key} value={key}>
-                              {key}
-                            </option>
-                          )}
-                        </>
-                      );
-                    })}
-                  </select>
-                </div>
-              </div>
-              <div className="flex gap-10 justify-center">
-                <button
-                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
-                  onClick={handleReset}
-                >
-                  Reset
-                </button>
-                <button
-                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
-                  onClick={handleSubmitMLPAnswer}
-                >
-                  Submit
-                </button>
-              </div>
-            </>
-          ) : (
-            <div className="text-center flex flex-col gap-2 text-xl">
-              <label className="font-bold">There is not models</label>
-              <label className=" font-semibold">Please add one</label>
+          {actualMatrixKey !== "_" && (
+            <div>
+              <DistortionInputComponent
+                distortion={distortion}
+                handleChangeDistortion={handleChangeDistortion}
+                onSubmit={handleSubmitDistortion}
+              />
+              <DistortionComponent percentage={percentage} />
             </div>
           )}
+        </div>
+        {answer !== "" && (
+          <StyledCard>
+            <h3 className="font-bold text-xl text-center">{T("Answer")}</h3>
+            <h4>
+              {T("The prediction is")} <span className="font-bold">{answer}</span>
+            </h4>
+          </StyledCard>
+        )}
+        <div className="w-full flex flex-col items-center justify-center gap-3 ">
+          <div className="bg-white shadow-md shadow-gray-100 rounded-md p-5 flex flex-col gap-5">
+            {models.length > 0 ? (
+              <>
+                <div className="flex gap-4">
+                  <div className="flex flex-col gap-2">
+                    <label className="font-bold inline-flex">
+                      {T("Select a Model")}{" "}
+                      <TooltipIcon tooltipMessage={tooltipMessage} />
+                    </label>
+                    <select
+                      className=" outline-1 outline-stone-100 border border-gray-100 p-2"
+                      onChange={handleChangeModel}
+                    >
+                      {models.map((model) => (
+                        <option value={model}>{model}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label className="font-bold">{T("Select a Matrix")}</label>
+                    <select
+                      className=" outline-1 outline-stone-100 border border-gray-100 p-2"
+                      onChange={handleChangeDefaultMatrixes}
+                    >
+                      {Object.keys(defaultMatrixes).map((key) => {
+                        return (
+                          <>
+                            {key === "_" ? (
+                              <option
+                                key={key}
+                                disabled
+                                selected={actualMatrixKey === "_"}
+                                value={key}
+                              >
+                                {T("Matrix")}
+                              </option>
+                            ) : (
+                              <option key={key} value={key}>
+                                {key}
+                              </option>
+                            )}
+                          </>
+                        );
+                      })}
+                    </select>
+                  </div>
+                </div>
+                <div className="flex gap-10 justify-center">
+                  <StyledDefaultButton
+                    className="bg-red-500 hover:bg-red-600"
+                    onClick={handleReset}
+                  >
+                    {T("Reset")}
+                  </StyledDefaultButton>
+                  <StyledDefaultButton
+                    className="bg-green-600 hover:bg-green-700"
+                    onClick={handleSubmitMLPAnswer}
+                  >
+                    {T("Predict")}
+                  </StyledDefaultButton>
+                </div>
+              </>
+            ) : (
+              <NotFoundModels />
+            )}
           </div>
         </div>
       </div>
-    </div>
+    </StyledContainer>
   );
 };
 
 export default Predict;
 
-const animationTime = 500;
-
-const RotatedCell: FC<any> = ({
-  cell,
-  cellIndex,
-  handleChangeMatrix,
-  rowIndex,
-}) => {
-  const [isRotating, setIsRotating] = useState<boolean>(false);
-
-  const handleRotate = (e: any) => {
-    e.preventDefault();
-    if (isRotating) {
-      return;
-    }
-    setIsRotating(true);
-    setTimeout(() => {
-      handleChangeMatrix(rowIndex, cellIndex);
-    }, animationTime / 2);
-    setTimeout(() => {
-      setIsRotating(false);
-    }, animationTime);
-  };
-
-  return (
-    <Rotate
-      rotating={isRotating}
-      cell={cell}
-      className={` justify-center items-center shadow-sm shadow-gray-300 flex ${
-        cell ? "bg-sky-600" : "bg-white"
-      }`}
-      key={cellIndex}
-      onClick={handleRotate}
-    />
-  );
-};
-
-// Create the keyframes
-const rotateAnimation = keyframes`
-  from {
-    transform: rotateY(0deg);
-  }
-  to {
-    transform: rotateY(180deg);
-  }
-`;
-
-// Here we create a component that will rotate everything we pass in over two seconds
-const Rotate: any = styled.div`
-  ${(props: any) =>
-    props.rotating &&
-    css`
-      animation: ${rotateAnimation} ${(animationTime / 1000).toString() + "s"}
-        linear;
-    `}
-`;
-
 const DistortionInputComponent: FC<any> = ({
   distortion,
   handleChangeDistortion,
-  handleSubmit,
+  onSubmit,
 }) => {
+  const { t: T } = useTranslation();
   return (
-    <div className="flex bg-white shadow-sm shadow-gray-100 rounded-md p-10 m-2 flex-col max-w-max justify-center text-center gap-2">
-      <div className="flex flex-col gap-2">
-        <label className="font-bold">{"Select the Distortion Manually"}</label>
+    <StyledCard onSubmit={onSubmit}>
+      <div className="flex flex-col gap-2 justify-center items-center">
+        <label className="font-bold">{T("Select the Distortion Manually")}</label>
         <input
+          className="w-full"
           value={distortion}
           min={0}
           max={30}
@@ -403,26 +302,12 @@ const DistortionInputComponent: FC<any> = ({
         />
         <strong>{distortion}</strong>
       </div>
-      <button
-        className="bg-blue-500 text-white px-4 py-2 rounded-md font-bold"
-        onClick={handleSubmit}
+      <StyledDefaultButton
+        className="bg-sky-500 hover:bg-sky-700"
+        type="submit"
       >
-        Distort
-      </button>
-    </div>
+        {T("Distort")}
+      </StyledDefaultButton>
+    </StyledCard>
   );
 };
-
-const CardComponent = styled.div`
-  animation: myAnim 0.4s ease-in 0s 1 normal forwards;
-  @keyframes myAnim {
-    0% {
-      opacity: 0;
-      transform: translateX(50px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-`

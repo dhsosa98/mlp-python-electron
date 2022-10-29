@@ -19,6 +19,6 @@
      ]
     }
   },
-  "include": ["src/**/*", "./src/**/*.ts"]
+  "include": ["src/**/*", "./src/**/*.ts", "index.d.ts"]
   
 }

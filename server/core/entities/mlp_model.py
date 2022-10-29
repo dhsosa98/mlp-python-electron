@@ -1,61 +1,126 @@
 import numpy as np
+from ..utils.functions import sigm, lineal, cost
 #Definimos el algoritmo de entrenamiento
-class Model():
-  def __init__(self, neural_net, cost_function, lr, m):
-    self.neural_net = neural_net
-    self.cost_function = cost_function
-    self.lr = lr
-    self.m = m
-    self.deltas = []
-    self.out = [(None, None)]
+class Red_Neuronal:
+    def __init__(self, hl_topology):
+      self.plot_data = {'val': [], 'train': []}
+      self.W = []
+      self.b = []
+      self.prevDeltaW = []
+      self.hl_topology = hl_topology
 
-  def gradient_descent(self, l):
-    self.neural_net[l].b = self.neural_net[l].b - self.deltas[0] * self.lr
-    weightDelta = (self.out[l][1].T @ self.deltas[0] * self.lr) + (self.neural_net[l].previousDeltaWeight * self.m) #out [l][1] @ deltas[0] es el gradiente de los pesos de esa capa
-    self.neural_net[l].W =  self.neural_net[l].W - weightDelta  
-    self.neural_net[l].previousDeltaWeight = weightDelta #Guardamos el cambio de los pesos de esa iteracion
+      ################# Inicializamos los pesos ################# 
 
-  def forward_pass(self, X):
-    self.out = [(None, X)] #la capa anterior no existe, y X es la entrada 
-    for l, layer in enumerate(self.neural_net):
-      #z es suma ponderada q se ejecuta en la primera capa X = 70x100 .  W = 100x5 = 70, 5
-      z = self.out[-1][1] @ (self.neural_net[l].W) + self.neural_net[l].b #capa anterior y X en la primera iteracion
-      #a es la salida de la capa 1 y las demas
-      a = self.neural_net[l].act_f(z) #funcion de act con la z
-      self.out.append((z, a)) #ojo, out tiene 3 valores, no 2 como nuestra red
-
-  def backward_pass(self, Y):
-    self.deltas = []
-    for l in reversed(range(0, len(self.neural_net))):
-      #se le suma 1 porque out tiene 3 valores, el primero no importa (None, X), nunca llega a el, solo recorre 2 veces (len*red_neuronal)
-      z = self.out[l+1][0] #z (suma ponderada) es el indice 0
-      a = self.out[l+1][1] #a (activacion) es el indice 1
-      #esto lo hace primero (ultima capa, osea primera mirando de atras a adelante)
-      if l == len(self.neural_net) -1: #
-      #calcular delta ultima capa
-        self.deltas.insert(0, self.cost_function(a, Y, True)) #agregamelo al principio con el indice 0 siempre (first in first out)
-      else:
-        self.deltas.insert(0, self.deltas[0] @ _W.T * self.neural_net[l].act_f(a, True)) 
-
-      #calcular delta capa previa
-      _W = self.neural_net[l].W
-      self.gradient_descent(l)
+      # W de la primera capa oculta (cuyas entradas son X)
+      self.W.append(np.random.uniform(-0.5,0.5,(100, hl_topology[0])))
+      self.b.append(np.random.uniform(-0.5,0.5,(1, hl_topology[0])))
+      self.prevDeltaW.append(np.zeros((100, hl_topology[0])))
 
 
-  def train(self, X, Y, train=True):
-   
-    result = []
-    for x, y in zip(X, Y):
-        x.shape += (1,)
-        y.shape += (1,)
-        y = y.T #1x3
-        x = x.T #1x100 #lr es el hiperparametro learning rate en el descenso del gradiente (factor por el cual multiplicamos al vector gradiente y te permite saber en q grado estas actualizando tu parametro en base a la inf q nos otorga el gradiente)
-        self.forward_pass(x)
-        if train:
-          self.backward_pass(y)           
-        result.append(self.out[-1][1])
-    result = np.array(result)
-    result = result[:, 0, :]
-    return result
+      # W de las capas ocultas del medio.
+      for i in range(len(hl_topology) -1):
+        self.W.append(np.random.uniform(-0.5,0.5,(hl_topology[i], hl_topology[i+1])))
+        self.b.append(np.random.uniform(-0.5,0.5,(1, hl_topology[i+1])))
+        self.prevDeltaW.append(np.zeros((hl_topology[i], hl_topology[i+1])))
+
+
+      # W de la capa de salida
+      
+      self.W.append(np.random.uniform(-0.5,0.5,(hl_topology[-1], 3)))
+      self.b.append(np.random.uniform(-0.5,0.5,(1, 3)))
+      self.prevDeltaW.append(np.zeros((hl_topology[-1], 3)))
+
+  
+    ################# Forward propagation
+    def forward(self, X):
+      self.z = []
+      self.a = []
+      self.z.append(X)
+      self.a.append(X)
+      
+      for i in range(len(self.hl_topology)):
+        #1x100 @ 100x5 = 1x5
+        self.z.append(np.dot(self.a[-1], self.W[i]) + self.b[i])
+        self.a.append(lineal(self.z[-1]))   
+
+      #Calculo a y z para la ULTIMA capa
+      # 1x5 @ 5x3 = 1x3
+      self.z.append(np.dot(self.a[-1], self.W[-1]) + self.b[-1])
+      self.a.append(sigm(self.z[-1])) 
+      return self.a[-1]
+
+    def backward(self, Y):
+      self.gradienteW = []
+      self.gradienteb = []
+      self.deltaPeso = []
+      self.deltas = []
+
+      ##### TODO ESTO PARA LA CAPA DE SALIDA
+      # El error lo calculamos restando la clase predecida con la clase real y multiplicando por la derivada de sigm de esa salida
+      self.deltas.append((cost(self.a[-1], Y, True)) * sigm(self.a[-1], True))
+
+      # El cambio en el peso lo calculamos como el producto matricial de la salida 
+      # de la ultima capa oculta, por el delta anteriormente calculado  
+      #y tmb le agregamos el momentummmm
+      self.gradienteW.append(np.dot(self.a[-2].T, self.deltas[-1]))
+
+      # Y bueno el parametro bayas es dsp actualizarlo a el mismo menos el delta por lr
+      self.gradienteb.append(self.deltas[-1])
+
+      ##### DESDE ACA LOS DELTAS PARA LAS CAPAS OCULTAS
+
+      #Recorremos de atras para adelante, le hago hasta -1 para al final hacer el W entre la capa de entrada y la primera oculta
+      for i in range(len(self.hl_topology), 0, -1):
+        # Nuevo delta = Ultimo delta calculado por la transpuesta de la matriz de pesos de la capa donde estamos parados
+        # por la derivada de sus funciones de activacion
+        # print('primero',self.deltas[-1].shape, pW.T.shape, self.a[i].shape)
+        self.deltas.append(np.dot(self.deltas[-1], self.W[i].T) * lineal(self.a[i], True)) 
+        #1x3 @ 3x10 = 1x10
+        #1x10 @ 10x10 = 1x10
+
+        # El cambio en el peso lo calculamos como la salida de la capa anterior a la que estamos ahora, por el ultimo delta calculado
+        # print('segundo',self.a[i-1].T.shape, self.deltas[-1].shape, self.prevDeltaW[i-1].shape)
+        self.gradienteW.append(np.dot(self.a[i-1].T, self.deltas[-1]))
+        #10x1 @ 1x10 = 10x10
+        #100x1 @ 1x10 = 100x10
+
+        # Y bueno el parametro bayas es dsp actualizarlo a el mismo menos el delta por lr
+        self.gradienteb.append(self.deltas[-1])
+        # print('resguardo peso', self.W[i-1].shape)
+          
+      # Como nos movimos de atras para adelante, ahoras revertimos el orden (para actualizar pesos y bayas)
+      
+      self.gradienteW.reverse()
+      self.gradienteb.reverse()
+      self.deltas.reverse()
+
+    # Actualizamos los W y b
+    def update(self, lr, m):
+      for i in range(len(self.hl_topology) + 1):
+        deltaWeight = self.gradienteW[i] * lr + self.prevDeltaW[i] * m
+        self.W[i] = self.W[i] - deltaWeight
+        self.prevDeltaW[i] = deltaWeight
+        self.b[i] = self.b[i] - self.gradienteb[i] * lr
+
+    #Definimos la funcion para utilizar solo el forward (en realidad se usa al usar la funcion MSE)
+    def predict(self, X, Y):
+      return self.forward(X)
+
+    def train(self, X, Y, lr, m):
+      for x, y in zip(X, Y):
+          x.shape += (1,)
+          y.shape += (1,)
+          y = y.T #1x3
+          x = x.T #1x100 #lr es el hiperparametro learning rate en el descenso del gradiente (factor por el cual multiplicamos al vector gradiente y te permite saber en q grado estas actualizando tu parametro en base a la inf q nos otorga el gradiente)
+          self.forward(x)
+          self.backward(y)    
+          self.update(lr, m)       
+    
+    def get_prediction(self, model):
+        return np.argmax(model, 1)
+
+    def accuracy(self, prediction, Y):
+        Y_arg = np.argmax(Y, 1)
+        return (np.sum(prediction == Y_arg) / Y_arg.size)*100
 
 

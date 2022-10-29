@@ -1,7 +1,11 @@
 module.exports = {
     "packagerConfig": {
-        "icon": "./icon.png",
+        "name": "MLP Perceptron",
+        "icon": "./assets/icon.ico",
         "executableName": "MLP Perceptron",
+        "extraResource": [
+          "assets"
+        ]
       },
       "makers": [
         {

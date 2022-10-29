@@ -3,6 +3,17 @@ import { Link } from "react-router-dom";
 import { successAlert } from "../../../utils/sweetalert";
 import { Api } from "../../../services/Api";
 import styled from "styled-components";
+import constructTooltipMessage from "../../../utils/tooltipMessage";
+import ReactTooltip from "react-tooltip";
+import StyledContainer from "../../../components/shared/containers/Container";
+import StyledCard from "../../../components/shared/cards/Card";
+import NotFoundModels from "../../../components/NotFoundModels";
+import StyledSelect from "../../../components/inputs/Select";
+import BigButton from "../../../components/buttons/BigButton";
+import StyledBackLink from "../../../components/buttons/BackLink";
+import TooltipIcon from "../../../components/TooltipIcon";
+import Loader from "../../../components/shared/loaders/Loader";
+import { useTranslation } from 'react-i18next';
 
 interface IRoute {
   path: string;
@@ -13,70 +24,74 @@ interface IRoute {
 }
 
 const DeleteModel: FC<IRoute> = () => {
+  const { t: T } = useTranslation();
+
   const [models, setModels] = useState<any[]>([]);
 
   const [update, setUpdate] = useState<boolean>(false);
 
   const [model, setModel] = useState<string>('');
 
+  const [tooltipMessage, setTooltipMessage] = useState<string>("");
+
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+
+
   useEffect(() => {
+    setIsLoaded(true);
     Api.getMLPModels().then((res) => {
       if (res.models.length > 0) {
         setModels(res.models);
         setModel(res.models[0]);
-        return
+        setTooltipMessage(constructTooltipMessage(res.models[0], T));
+        return;
       }
       setModels([]);
-    });
+    }).finally(() => setIsLoaded(false));
   }, [update]);
 
   const handleChangeModel = (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
     setModel(e.currentTarget.value);
+    setTooltipMessage(constructTooltipMessage(e.currentTarget.value, T));
   };
 
   const handleDeleteModel = (e: React.FormEvent<HTMLFormElement>) => {
+    setIsLoaded(true);
     e.preventDefault();
     Api.deleteMLPModel(model).then((res) => {
       console.log(res);
       setUpdate((update) => !update);
-      successAlert('Model Deleted Successfully');
-    });
+      successAlert(T('Model Successfully Deleted'));
+    }).finally(() => setIsLoaded(false));
   };
+
+  if (isLoaded) {
+    return (
+      <StyledContainer>
+        <StyledCard>
+          <div className="p-10">
+          <Loader/>
+          </div>
+        </StyledCard>
+      </StyledContainer>
+    );
+  }
+
   return (
-    <div className='grid justify-center items-center h-[100vh] p-10 m-5'>
-      <Link className='font-bold ms-font-xl bg-white py-4 px-8 hover:opacity-80 rounded-full text-center absolute top-10' to="/models">Back</Link>
-      <CardComponent className='flex flex-col gap-10 bg-white shadow-md shadow-gray-100 rounded-md p-10' onSubmit={handleDeleteModel}>
+    <StyledContainer>
+      <StyledBackLink to='/models'>{T("Back")}</StyledBackLink>
+      <StyledCard onSubmit={handleDeleteModel}>
         {models.length > 0 ? (
           <>
-            <label className="font-bold">Select a Model</label>
-            <select className=" outline-1 outline-stone-100 p-4 border border-gray-100" onChange={handleChangeModel}>
-              {models?.map((model) => (
-                <option key={model} value={model}>{model}</option>
-              ))}
-            </select>
-            <button className="text-white font-normal text-lg bg-red-500 px-8 py-4 rounded-md hover:bg-red-700" type="submit">Delete</button>
+            <label className="font-bold inline-flex">{T("Select a Model")} <TooltipIcon tooltipMessage={tooltipMessage} /></label>
+            <StyledSelect list={models} onChange={handleChangeModel} />
+            <BigButton className="bg-red-500 hover:bg-red-700" type="submit">{T("Delete")}</BigButton>
           </>) : (
-          <div className="text-center flex flex-col gap-2 text-xl">
-            <label className="font-bold">There is not models</label>
-            <label className=" font-semibold">Please add one</label>
-          </div>)}
-      </CardComponent>
-    </div>
+          <NotFoundModels />)}
+      </StyledCard>
+    </StyledContainer>
   )
 }
 
 export default DeleteModel;
-
-const CardComponent = styled.form`
-  animation: myAnim2 0.4s ease-in 0s 1 normal forwards;
-  @keyframes myAnim2 {
-    0% {
-      opacity: 0;
-      transform: translateX(50px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }`

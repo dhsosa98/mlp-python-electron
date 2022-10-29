@@ -1,9 +1,19 @@
 import { FC, useState } from "react";
-import { Link } from "react-router-dom";
-import { infoAlert, successAlert } from "../../utils/sweetalert";
+import { errorAlert, infoAlert, successAlert } from "../../utils/sweetalert";
 import { Api } from "../../services/Api";
-import styled from "styled-components";
-import { Plot, Heading, LineSeries, Axis, Legend } from "react-plot";
+import TrainResults from "../../components/TrainResults";
+import MSEPlot from "../../components/MSEPlot";
+import FormItem from "../../components/forms/FormItem";
+import TitleContainer from "../../components/shared/containers/TittleContainer";
+import TwoColsContainer from "../../components/shared/containers/TwoColsContainer";
+import StyledDefaultButton from "../../components/buttons/DefaultButton";
+import FormColumn from "../../components/forms/FormColumn";
+import StyledContainer from "../../components/shared/containers/Container";
+import StyledBackLink from "../../components/buttons/BackLink";
+import StyledCard from "../../components/shared/cards/Card";
+import StyledSelect from "../../components/inputs/Select";
+import ButtonLoader from "../../components/shared/loaders/ButtonLoader";
+import { useTranslation } from 'react-i18next';
 
 
 interface IRoute {
@@ -25,6 +35,23 @@ const TrainModel: FC<IRoute> = () => {
   const [hidden_nodes2, setHidden_nodes2] = useState(5);
   const [plotData, setPlotData] = useState({ val: [], train: [] });
   const [save, setSave] = useState(false);
+  const { t: T } = useTranslation();
+  const [result, setResult] = useState({
+    model_name: "",
+    learning_rate: "",
+    momentum: "",
+    amount_of_epochs: "",
+    val_percentage: "",
+    topology: [],
+    training_cases: "",
+    validation_cases: "",
+    accuracy_train: "",
+    accuracy_val: "",
+    MSE_train: "",
+    MSE_val: "",
+  });
+
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const addRate = (num: number, callback: any) => {
     if (typeof num !== "number" || isNaN(num) || num > 1) {
@@ -34,169 +61,198 @@ const TrainModel: FC<IRoute> = () => {
     }
   };
 
+  const addNeuron = (num: number, callback: any) => {
+    if (typeof num !== "number" || isNaN(num) || num >= 10) {
+      callback(10);
+      return;
+    }
+
+    callback(num);
+  };
+
   const constructMessage = async (message: any) => {
     let messageString = "";
     if (message.saved) {
       messageString = message.message;
-      await successAlert(messageString);
+      await successAlert(T(messageString));
       return;
     }
-    messageString += `lr: ${message.learning_rate}, momentum: ${message.momentum}, epochs: ${message.amount_of_epochs}, training_cases: ${message.training_cases}, validation_cases: ${message.validation_cases}, topology: ${message.topology.join(', ')}, Stats: accuracy: ${message.accuracy_val}, MSE_train: ${message.MSE_train}, MSE_val: ${message.MSE_val}`;
-    await infoAlert('Model Successful trained', messageString);
+    await successAlert(T("Model Successfully Trained"));
   };
 
-
-
   const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    let hl_topology = [hidden_nodes1]
-    if (hidden_layers === 2) {
-      hl_topology.push(hidden_nodes2)
+    setIsLoaded(true);
+    try {
+      e.preventDefault();
+      let hl_topology = [hidden_nodes1];
+      if (hidden_layers === 2) {
+        hl_topology.push(hidden_nodes2);
+      }
+      const train = {
+        lr,
+        momentum,
+        epochs,
+        type,
+        val_percentage: valPercentage,
+        hl_topology,
+        save,
+      };
+      const trainMessage = await Api.trainMLP(train);
+      await constructMessage(trainMessage);
+      if (trainMessage.results) {
+        setResult(trainMessage.results);
+        setPlotData(trainMessage.plot_data);
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }, 500);
+      }
+    } catch (err) {
+      if (err.response.data.detail){
+      await errorAlert(T(err.response.data.detail));
+      }
+    } finally {
+      setIsLoaded(false);
+      setSave(false);
     }
-    const train = { lr, momentum, epochs, type, val_percentage: valPercentage, hl_topology, save };
-    const trainMessage = await Api.trainMLP(train);
-    console.log(trainMessage);
-    constructMessage(trainMessage)
-    setPlotData(trainMessage.plot_data);
-    setSave(false);
   };
 
   return (
-    <div className="p-10 m-5">
-      <Link className='font-bold ms-font-xl bg-white py-4 px-8 hover:opacity-80 rounded-full text-center ' to="/">Home</Link>
-      <div className="grid grid-cols-auto justify-center items-center p-10 gap-10">
-        <div>
-          <CardComponent onSubmit={handleSubmit} className=' grid px-10 py-5 bg-white shadow-md shadow-gray-100 rounded-md gap-4'>
-            <div className="flex justify-center text-gray-900 font-bold">
-              <div className="px-5 py-2 my-5 max-w-[200px] text-center text-2xl">Generate and Train Model</div>
-            </div>
-            <div className="grid sm:grid-cols-2 grid-cols-1 gap-10">
-              <div>
-                <div className="grid gap-2">
-                  <label className="font-bold" htmlFor="model">Dataset</label>
-                  <select className=" outline-1 outline-stone-100 p-2 border border-gray-100" value={type} onChange={(e) => setType(e.target.value)}>
-                    <option value="A">A-100Datasets</option>
-                    <option value="B">B-500Datasets</option>
-                    <option value="C">C-1000Datasets</option>
-                  </select>
-                </div>
-                <div className="grid gap-2">
-                  <label className="font-bold" >Validation Dataset Percentage</label>
-                  <select className=" outline-1 outline-stone-100 p-2 border border-gray-100" value={valPercentage} onChange={(e) => { setValPercentage(Number(e.target.value)) }}>
-                    <option value={0.1}>10%</option>
-                    <option value={0.2}>20%</option>
-                    <option value={0.3}>30%</option>
-                  </select>
-                </div>
-                <div className="grid gap-2">
-                  <label className="font-bold" htmlFor="epochs">Epochs</label>
-                  <input className=" outline-1 outline-stone-100 p-2 border border-gray-100" type="number" name="epochs" id="epochs" value={epochs} min={1} onChange={(e) => setEpochs(Number(e.target.value))} />
-                </div>
-                <div className="grid gap-2">
-                  <label className="font-bold" >Learning Rate</label>
-                  <input
-                    className=" outline-1 outline-stone-100 p-2 border border-gray-100"
-                    type="range"
-                    min={0}
-                    max={1}
-                    step={0.01}
-                    value={lr}
-                    onChange={(e) => addRate(parseFloat(e.target.value), setLr)}
-                  />
-                  <span className="text-center font-semibold">{lr}</span>
-                </div>
-              </div>
-              <div>
-                <div className="grid gap-2">
-                  <label className="font-bold" >Momentum</label>
-                  <input
-                    className=" outline-1 outline-stone-100 p-2 border border-gray-100"
-                    type="range"
-                    min={0}
-                    max={1}
-                    step={0.01}
-                    value={momentum}
-                    onChange={(e) => addRate(parseFloat(e.target.value), setMomentum)}
-                  />
-                  <span className="text-center font-semibold">{momentum}</span>
-                </div>
-                <div className="grid gap-2">
-                  <label className="font-bold" >Hidden Layers</label>
-                  <select className=" outline-1 outline-stone-100 p-2 border border-gray-100" value={hidden_layers} onChange={(e) => setHidden_layers(Number(e.target.value))}>
-                    <option value={1}>1</option>
-                    <option value={2}>2</option>
-                  </select>
-                </div>
-                <div className="grid gap-2">
-                  <label className="font-bold" >Hidden Nodes for Layer 1</label>
-                  <input className=" outline-1 outline-stone-100 p-2 border border-gray-100" type="number" name="hidden_nodes1" id="hidden_nodes1" value={hidden_nodes1} min={5} max={10} onChange={(e) => setHidden_nodes1(Number(e.target.value))} />
-                </div>
-                {hidden_layers === 2 && (
-                  <div className="grid gap-2">
-                    <label className="font-bold" >Hidden Nodes for Layer 2</label>
-                    <input className=" outline-1 outline-stone-100 p-2 border border-gray-100" type="number" name="hidden_nodes2" id="hidden_nodes2" value={hidden_nodes2} min={5} max={10} onChange={(e) => setHidden_nodes2(Number(e.target.value))} />
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="grid gap-2 text-white">
-              <button type="submit" className="font-bold ms-font-xl bg-gradient-to-br from-blue-900 to-blue-500 py-4 px-8 hover:opacity-80 rounded-md text-center">Train</button>
-            </div>
-            <div className="grid gap-2 text-white">
-              <button type="submit" onClick={() => setSave(true)} className="font-bold ms-font-xl bg-gradient-to-br from-gray-700 to-gray-300 py-4 px-8 hover:opacity-80 rounded-md text-center">Save</button>
-            </div>
-          </CardComponent>
-        </div>
-        {plotData.val.length > 0 &&
-          <CardComponent className=' grid px-10 py-5 bg-white shadow-md shadow-gray-100 rounded-md gap-4'>
-            <h2 className="font-bold px-5 py-2 my-5 text-center text-2xl">MSE by Epochs</h2>
-            <div className="grid justify-center">
-            <Plot
-              width={300}
-              height={320}
-            >
-              <LineSeries data={plotData.val}
-                label="Validation Dataset"
-                lineStyle={{ stroke: 'red', strokeWidth: 2 }}
-                xAxis="x"
-                yAxis="y" />
-              <LineSeries data={plotData.train}
-                label="Training Dataset"
-                lineStyle={{ stroke: '#e28484', strokeWidth: 2 }}
-                xAxis="x"
-                yAxis="y" />
-              <Axis
-                id="x"
-                position="bottom"
-                lineStyle={{ stroke: '#e3e7ea', strokeWidth: 2, strokeOpacity: 0.5 }}
-                label="Epoch"
+    <StyledContainer>
+      <StyledBackLink to="/">{T("Home")}</StyledBackLink>
+      {plotData.val.length > 0 && (
+        <TwoColsContainer>
+          <TrainResults result={result} />
+          <MSEPlot plotData={plotData} />
+        </TwoColsContainer>
+      )}
+      <StyledCard onSubmit={handleSubmit}>
+        <TitleContainer>{T("Generate and Train Model")}</TitleContainer>
+        <TwoColsContainer>
+          <FormColumn>
+            <FormItem label={T("Dataset")}>
+              <StyledSelect
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+              >
+                <option value="A">A-100 {T("Datasets")}</option>
+                <option value="B">B-500 {T("Datasets")}</option>
+                <option value="C">C-1000 {T("Datasets")}</option>
+              </StyledSelect>
+            </FormItem>
+            <FormItem label={T("Validation Dataset Percentage")}>
+              <StyledSelect
+                value={valPercentage}
+                onChange={(e: any) => {
+                  setValPercentage(Number(e.target.value));
+                }}
+              >
+                <option value={0.1}>10%</option>
+                <option value={0.2}>20%</option>
+                <option value={0.3}>30%</option>
+              </StyledSelect>
+            </FormItem>
+            <FormItem label={T("Epochs")}>
+              <input
+                className=" outline-1 outline-stone-100 p-2 border border-gray-100"
+                type="number"
+                name="epochs"
+                id="epochs"
+                value={epochs || 1}
+                min={1}
+                onChange={(e) => setEpochs(Number(e.target.value))}
               />
-              <Axis
-                id="y"
-                position="left"
-                lineStyle={{ stroke: '#e3e7ea', strokeWidth: 2, strokeOpacity: 0.5 }}
-                label="MSE"
+            </FormItem>
+            <FormItem label={T("Learning Rate")}>
+              <input
+                className=" outline-1 outline-stone-100 p-2 border border-gray-100"
+                type="range"
+                min={0}
+                max={1}
+                step={0.01}
+                value={lr}
+                onChange={(e) => addRate(parseFloat(e.target.value), setLr)}
               />
-              <Legend position="top" />
-            </Plot>
-            </div>
-          </CardComponent>}
-      </div>
-    </div>
+              <span className="text-center font-semibold">{lr}</span>
+            </FormItem>
+          </FormColumn>
+          <FormColumn>
+            <FormItem label={T("Momentum")}>
+              <input
+                className=" outline-1 outline-stone-100 p-2 border border-gray-100"
+                type="range"
+                min={0}
+                max={1}
+                step={0.01}
+                value={momentum}
+                onChange={(e) =>
+                  addRate(parseFloat(e.target.value), setMomentum)
+                }
+              />
+              <span className="text-center font-semibold">{momentum}</span>
+            </FormItem>
+            <FormItem label={T("Hidden Layers")}>
+              <StyledSelect
+                value={hidden_layers}
+                onChange={(e) => setHidden_layers(Number(e.target.value))}
+              >
+                <option value={1}>1</option>
+                <option value={2}>2</option>
+              </StyledSelect>
+            </FormItem>
+            <FormItem label={T("Hidden Nodes for Layer 1")}>
+              <input
+                className=" outline-1 outline-stone-100 p-2 border border-gray-100"
+                type="number"
+                name="hidden_nodes1"
+                id="hidden_nodes1"
+                value={hidden_nodes1}
+                min={5}
+                max={10}
+                onChange={(e) =>
+                  addNeuron(Number(e.currentTarget.value), setHidden_nodes1)
+                }
+              />
+            </FormItem>
+            {hidden_layers === 2 && (
+              <FormItem label={T("Hidden Nodes for Layer 2")}>
+                <input
+                  className=" outline-1 outline-stone-100 p-2 border border-gray-100"
+                  type="number"
+                  name="hidden_nodes2"
+                  id="hidden_nodes2"
+                  value={hidden_nodes2}
+                  min={5}
+                  max={10}
+                  onChange={(e) =>
+                    addNeuron(Number(e.currentTarget.value), setHidden_nodes2)
+                  }
+                />
+              </FormItem>
+            )}
+          </FormColumn>
+        </TwoColsContainer>
+        <FormItem>
+          <StyledDefaultButton
+            type="submit"
+            className="bg-gradient-to-br from-sky-900 to-sky-500 hover:opacity-80"
+            disabled={isLoaded}
+          >
+            {T("Train Model")} {isLoaded && <ButtonLoader />}
+          </StyledDefaultButton>
+        </FormItem>
+        <FormItem>
+          <StyledDefaultButton
+            type="submit"
+            onClick={() => setSave(true)}
+            className="bg-gradient-to-br from-gray-700 to-gray-300 hover:opacity-80"
+            disabled={isLoaded}
+          >
+            {T("Save Model")} {isLoaded && <ButtonLoader />}
+          </StyledDefaultButton>
+        </FormItem>
+      </StyledCard>
+    </StyledContainer>
   );
 };
-export default TrainModel;
 
-const CardComponent = styled.form`
-  animation: myAnim 0.4s ease-in 0s 1 normal forwards;
-  @keyframes myAnim {
-    0% {
-      opacity: 0;
-      transform: translateX(50px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-`
+export default TrainModel;

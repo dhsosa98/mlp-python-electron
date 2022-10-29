@@ -1,6 +1,10 @@
 import { FC } from 'react';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import TitleContainer from '../../components/shared/containers/TittleContainer';
+import StyledContainer from '../../components/shared/containers/Container';
+import StyledCard from '../../components/shared/cards/Card';
+import StyledLink from '../../components/buttons/Link';
+import StyledBackLink from '../../components/buttons/BackLink';
+import { useTranslation } from 'react-i18next';
 
 interface IRoute {
     path: string;
@@ -11,35 +15,19 @@ interface IRoute {
 }
 
 const Models: FC<IRoute> = () => {
+    const { t: T } = useTranslation();
     return (
-        <div className='grid justify-center items-center gap-40 p-10 h-[100vh] m-5'>
-            <Link className='font-bold ms-font-xl bg-white py-4 px-8 hover:opacity-80 rounded-full text-center absolute top-10' to="/">Home</Link>
-            <CardComponent className='flex flex-col gap-10 text-white bg-white shadow-md shadow-gray-100 rounded-md p-10'>
-                <div className="flex justify-center text-gray-900 font-bold text-lg">
-                    <div className="px-5 py-2 my-5 max-w-[200px] text-2xl">Models</div>
-                </div>
-                <div className='w-[200px] flex flex-col gap-10'>
-                    <Link className='w-full font-bold ms-font-xl bg-gradient-to-br from-green-900 to-green-500 py-4 px-8 hover:opacity-80 rounded-md text-center' to="models/test">Test</Link>
-                    <Link className='w-full font-bold ms-font-xl bg-gradient-to-br from-blue-900 to-blue-500 py-4 px-8 hover:opacity-80 rounded-md text-center' to="models/predict">Predict</Link>
-                    <Link className='w-full font-bold ms-font-xl bg-gradient-to-br from-red-900 to-red-500 py-4 px-8 hover:opacity-80 rounded-md text-center' to="models/delete">Delete</Link>
-                </div>
-            </CardComponent>
-        </div>
+        <StyledContainer>
+            <StyledBackLink to="/">{T("Home")}</StyledBackLink>
+            <StyledCard>
+                <TitleContainer>{T("Models")}</TitleContainer>
+                    <StyledLink className='bg-sky-700 hover:bg-sky-800' to="models/test">{T("Charts and Test")}</StyledLink>
+                    <StyledLink className='bg-sky-500 hover:bg-sky-600' to="models/predict">{T("Predict")}</StyledLink>
+                    <StyledLink className='bg-red-500 hover:bg-red-700' to="models/delete">{T("Delete Models")}</StyledLink>
+            </StyledCard>
+        </StyledContainer>
     )
 }
 
 export default Models;
 
-const CardComponent = styled.div`
-  animation: myAnim2 0.4s ease-in 0s 1 normal forwards;
-  @keyframes myAnim2 {
-    0% {
-      opacity: 0;
-      transform: translateX(50px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-`

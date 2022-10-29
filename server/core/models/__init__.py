@@ -1,3 +1,2 @@
-from .mlp_100 import *
-from .mlp_500  import *
-from .mlp_1000 import *
+from .train_mlp import *
+from .test_mlp import *
