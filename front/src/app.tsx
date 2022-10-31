@@ -16,6 +16,7 @@ import ESFlag from '../assets/es.png';
 import ENFlag from '../assets/en.png';
 import ES from './locale/es.json';
 import EN from './locale/en.json';
+import {useState, useRef, useEffect} from 'react';
 
 const resources = {
   en: EN,
@@ -27,19 +28,80 @@ i18n.use(initReactI18next).init({
   lng: "en",
 })
 
-function App() {
+const DropDown = () => {
+  const keys = ["en", "es"];
+
   let { i18n } = useTranslation();
+
+  const languages = {
+    en: {
+      icon: ENFlag,
+      text: "English"
+    },
+    es: {
+      icon: ESFlag,
+      text: "Español"
+    }
+  }
+
+  const [language, setLanguage] = useState<('es'|'en')>("en");
+
+  const [toggle , setToggle] = useState(false);
+
+  const ref = useRef<HTMLDivElement>(null);
+
+  const handleClickOutside = (event: any) => {
+    if (ref.current && !ref.current.contains(event.target)) {
+        setToggle(false);
+    }
+};
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside, true);
+    return () => {
+        document.removeEventListener('click', handleClickOutside, true);
+    };
+}, []);
+
+  return (
+    <div className={`rtc-dropdown ${(toggle ? 'toggle' : '')}`}>
+    {keys.length > 0 &&
+      (
+        <button type="button" className="rtc-dropdown-toggle" onClick={() => setToggle(toggle => !toggle )}>
+          <img src={languages[language].icon} alt="Flag" />
+          {languages[language].text}
+        </button>
+      )}
+    <div ref={ref} className="rtc-dropdown-menu">
+      {keys.map((key: 'es' | 'en') => (
+        <button
+          key={key}
+          type="button"
+          className="rtc-btn"
+          data-selected={(key === language)}
+          onClick={() => {
+            i18n.changeLanguage(key);
+            setLanguage(key);
+          }}
+        >
+          <img src={languages[key].icon} alt="Flag" className="rtc-flag" />
+          {languages[key].text}
+        </button>
+      ))}
+    </div>
+  </div>
+);
+}
+
+function App() {
   return (
     <HashRouter >
         
         <Separator>
           <Wave/>
         </Separator>
-        <div>
-          <div className="max-w-[80px] fixed right-0 cursor-pointer">
-          <img src={ESFlag} height="64px" alt="ES" onClick={() => i18n.changeLanguage("es")} />
-          <img src={ENFlag} height="64px" alt="EN" onClick={() => i18n.changeLanguage("en")} />
-          </div>
+        <div className="fixed top-10 right-10 z-50 shadow-sm shadow-grey-100 ">
+        <DropDown/>
         </div>
         <Route exact path="/"  component={Home} />
         <Route exact path="/models"  component={Models} />

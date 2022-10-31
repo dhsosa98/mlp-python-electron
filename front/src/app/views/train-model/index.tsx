@@ -234,7 +234,7 @@ const TrainModel: FC<IRoute> = () => {
         <FormItem>
           <StyledDefaultButton
             type="submit"
-            className="bg-gradient-to-br from-sky-900 to-sky-500 hover:opacity-80"
+            className="bg-gradient-to-br from-sky-900 to-sky-500 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
             disabled={isLoaded}
           >
             {T("Train Model")} {isLoaded && <ButtonLoader />}
@@ -244,7 +244,7 @@ const TrainModel: FC<IRoute> = () => {
           <StyledDefaultButton
             type="submit"
             onClick={() => setSave(true)}
-            className="bg-gradient-to-br from-gray-700 to-gray-300 hover:opacity-80"
+            className="bg-gradient-to-br from-gray-700 to-gray-300 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
             disabled={isLoaded}
           >
             {T("Save Model")} {isLoaded && <ButtonLoader />}

@@ -1,7 +1,7 @@
 import numpy as np
 from ..entities import Red_Neuronal
 from fastapi import HTTPException
-from ..utils import loadDatasets, splitIntoTrainingDataset, splitIntoValidationDataset, cost
+from ..utils import loadDatasets, splitDatasets, cost
 import dill
 import os
 import pandas as pd
@@ -9,13 +9,19 @@ import pandas as pd
 
 def trainModel(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percentage=0.1, save=False, dataset='letras_distorsionadas1000.csv'):
 
+    models = {
+        'letras_distorsionadas100.csv': 'model100',
+        'letras_distorsionadas500.csv': 'model500',
+        'letras_distorsionadas1000.csv': 'model1000'
+    }
+
     initialLayer = [100]
 
     outputLayer = [3]
 
     topology = initialLayer + hl_topology + outputLayer
 
-    model_name = 'model100,'+str(lr)+','+str(momentum)+','+str(epoch) + \
+    model_name = models[dataset]+','+str(lr)+','+str(momentum)+','+str(epoch) + \
         ','+'; '.join(list(map(str, topology)))+','+str(val_percentage)
 
     path = os.path.dirname(__file__) + \
@@ -29,9 +35,10 @@ def trainModel(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percentage=0
 
     data = np.array(data)
 
-    X_val, Y_val, data_et = splitIntoValidationDataset(data, n, val_percentage)
-    X_train, Y_train = splitIntoTrainingDataset(data_et, n)
+    _X, _Y, X_train, Y_train, X_val, Y_val = splitDatasets(data, n, val_percentage)
 
+    print(X_train.shape, Y_train.shape, X_val.shape, Y_val.shape)
+    
     model = Red_Neuronal(hl_topology)
     plot_v = []
     plot_train = []
