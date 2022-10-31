@@ -10,7 +10,7 @@ interface Props {
 const StyledCard: FC<Props>  = ({ children, onSubmit }) => {
     return (
         <div className='flex justify-center'>
-        <CardComponent onSubmit={onSubmit} className='flex flex-col bg-white shadow-sm shadow-gray-200 max-w-lg rounded-md p-10 gap-5'>
+        <CardComponent onSubmit={onSubmit} className='flex flex-col bg-white shadow-sm shadow-gray-200 sm:max-w-lg max-w-[300px] rounded-md p-10 gap-5'>
             {children}
         </CardComponent>
         </div>

@@ -6,7 +6,7 @@ interface Props {
 
 const StyledContainer: FC<Props> = ({children}) => {
     return (
-        <div className='grid justify-center items-center gap-10 p-10 h-[90vh] m-5 text-gray-900' >
+        <div className='grid justify-center items-center gap-10 sm:p-10 pt-20 h-[90vh] m-5 text-gray-900' >
             {children}
         </div>
     )

@@ -14,7 +14,7 @@ const MSEPlot: FC<Props> = ({plotData}) => {
               <h2 className="font-bold px-5 py-2 text-center text-2xl">{T("Line Chart: MSE vs Epochs")}</h2>
               <div className="grid justify-center">
                 <Plot
-                  width={300}
+                  width={280}
                   height={320}
                 >
                   <LineSeries data={plotData.val}

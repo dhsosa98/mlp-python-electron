@@ -51,7 +51,11 @@ ul.rtc-translator {
     display: inline-block;
   }
 
-  div.rtc-dropdown:hover {
+  button.rtc-dropdown-toggle:hover {
+    opacity: 0.8;
+  }
+
+  div.toggle > .rtc-dropdown-toggle{
     opacity: 0.8;
   }
   
