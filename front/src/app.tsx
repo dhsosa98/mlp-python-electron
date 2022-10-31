@@ -100,7 +100,7 @@ function App() {
         <Separator>
           <Wave/>
         </Separator>
-        <div className="fixed top-10 right-10 z-50 shadow-sm shadow-grey-100 ">
+        <div className="fixed top-12 right-10 z-50 shadow-sm shadow-grey-100 ">
         <DropDown/>
         </div>
         <Route exact path="/"  component={Home} />
@@ -137,7 +137,7 @@ const Wave = styled.div`
   ::before{
     width: 55%;
     height: 109%;
-    background-color: #fff;
+    background-color: rgb(251, 251, 251);
     right: -1.5%;
     top: 60%;
   }

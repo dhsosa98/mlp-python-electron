@@ -65,6 +65,9 @@
     "Model Info": "Información del Modelo",
     "Back": "Regresar",
     "Home": "Inicio",
-    "Dataset not found": "Conjunto de Datos no encontrado"
+    "Dataset not found": "Conjunto de Datos no encontrado",
+    "with a probability of": "con una probabilidad de",
+    "Warning": "Advertencia",
+    "Bad prediction from 30%": "Mala predicción a partir del 30%"
     }
 }

@@ -65,6 +65,9 @@
       "Model Info": "Model Info",
       "Back": "Back",
       "Home": "Home",
-      "Dataset not found": "Dataset not found"
+      "Dataset not found": "Dataset not found",
+      "with a probability of": "with a probability of",
+      "Warning": "Warning",
+      "Bad prediction from 30%": "Bad prediction from 30%"
 }
 }

@@ -50,6 +50,10 @@ ul.rtc-translator {
     position: relative;
     display: inline-block;
   }
+
+  div.rtc-dropdown:hover {
+    opacity: 0.8;
+  }
   
   div.rtc-dropdown .rtc-dropdown-toggle {
     color: #000;

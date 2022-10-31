@@ -48,7 +48,7 @@ const DistortionComponent: FC<any> = ({ percentage }) => {
     <div className="flex justify-center">
       <div className="p-5 m-2 max-w-max">
         <div>
-          {T("Distortion")}: <span className="font-bold">{percentage}%</span>
+          {T("Distortion")}: <span className={`font-bold`}>{percentage}%</span>
         </div>
       </div>
     </div>
@@ -67,6 +67,8 @@ const Predict: FC<IRoute> = () => {
   const [tooltipMessage, setTooltipMessage] = useState<string>("");
 
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+
+  const [warning, setWarning] = useState(false);
 
   const { t: T } = useTranslation();
 
@@ -88,7 +90,10 @@ const Predict: FC<IRoute> = () => {
   const [actualMatrixKey, setActualMatrixKey] =
     useState<keyof typeof defaultMatrixes>("_");
 
-  const [answer, setAnswer] = useState("");
+  const [answer, setAnswer] = useState({
+    class: '',
+    probability: 0
+  });
 
   const handleChangeMatrix = (row: number, cell: number) => {
     const newMatrix = createMatrix(matrix, row, cell);
@@ -104,13 +109,16 @@ const Predict: FC<IRoute> = () => {
     setMatrix(initialMatrix);
     setPercentage(0);
     setDistortion(0);
-    setAnswer("");
+    setAnswer({
+      class: '',
+      probability: 0
+    });
     setActualMatrixKey("_");
   };
 
   const handleSubmitDistortion = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const matrixDistorted = await Api.getMatrixDistortioned(matrix, distortion);
+    const matrixDistorted = await Api.getMatrixDistortioned(defaultMatrixes[actualMatrixKey], distortion);
     setMatrix(matrixDistorted);
     const distortionPercentage = calculateDistortion(
       matrixDistorted,
@@ -124,7 +132,7 @@ const Predict: FC<IRoute> = () => {
     e.preventDefault();
     const answer = await Api.getMLPAnswer(matrix, model);
     console.log(answer);
-    setAnswer(answer.class);
+    setAnswer(answer);
     }catch(e){
       console.log(e);
     }
@@ -143,6 +151,11 @@ const Predict: FC<IRoute> = () => {
   const handleChangeDistortion = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setDistortion(Number(e.currentTarget.value));
+    if (Number(e.currentTarget.value) > 30) {
+      setWarning(true);
+      return
+    }
+    setWarning(false);
   };
 
   const handleChangeModel = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -194,16 +207,20 @@ const Predict: FC<IRoute> = () => {
                 distortion={distortion}
                 handleChangeDistortion={handleChangeDistortion}
                 onSubmit={handleSubmitDistortion}
+                warning={warning}
               />
               <DistortionComponent percentage={percentage} />
             </div>
           )}
         </div>
-        {answer !== "" && (
+        {answer.class !== "" && (
           <StyledCard>
             <h3 className="font-bold text-xl text-center">{T("Answer")}</h3>
             <h4>
-              {T("The prediction is")} <span className="font-bold">{answer}</span>
+              {T("The prediction is")} <span className="font-bold">{answer.class}</span>
+            </h4>
+            <h4>
+            {T("with a probability of")} <span className="font-bold">{answer.probability}%</span>
             </h4>
           </StyledCard>
         )}
@@ -211,7 +228,7 @@ const Predict: FC<IRoute> = () => {
           <div className="bg-white shadow-md shadow-gray-100 rounded-md p-5 flex flex-col gap-5">
             {models.length > 0 ? (
               <>
-                <div className="flex gap-4">
+                <div className="flex flex-col sm:flex-row gap-4">
                   <div className="flex flex-col gap-2">
                     <label className="font-bold inline-flex">
                       {T("Select a Model")}{" "}
@@ -286,8 +303,10 @@ const DistortionInputComponent: FC<any> = ({
   distortion,
   handleChangeDistortion,
   onSubmit,
+  warning
 }) => {
   const { t: T } = useTranslation();
+
   return (
     <StyledCard onSubmit={onSubmit}>
       <div className="flex flex-col gap-2 justify-center items-center">
@@ -296,11 +315,14 @@ const DistortionInputComponent: FC<any> = ({
           className="w-full"
           value={distortion}
           min={0}
-          max={30}
+          max={100}
           type="range"
           onChange={handleChangeDistortion}
         />
-        <strong>{distortion}</strong>
+        {
+          warning && <p className="text-red-500 text-xs"><span className="font-bold">{T("Warning")}</span>{": "}{T("Bad prediction from 30%")}</p>
+        }
+        <strong className={`${distortion>30 && "text-red-500"}`}>{distortion}{"%"}</strong>
       </div>
       <StyledDefaultButton
         className="bg-sky-500 hover:bg-sky-700"
