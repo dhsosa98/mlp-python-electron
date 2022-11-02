@@ -49,6 +49,7 @@ def trainModel(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percentage=0
         result_v = model.predict(X_val, Y_val)
         plot_v.append({'y': round(cost(result_v, Y_val), 4), 'x': i+1})
         plot_train.append({'y': round(cost(result, Y_train), 4), 'x': i+1})
+        splitDatasets(data, n, val_percentage, True)
 
     result_v = model.predict(X_val, Y_val)
     prediction_v = model.get_prediction(result_v)
