@@ -1,7 +1,7 @@
 import axios from 'axios'
 // import { getSock } from '../utils/sock'
 
-const baseUrl = 'http://localhost:8000'
+const baseUrl = 'http://localhost:8000/'
 const headers = {
    'Content-Type': 'application/json',
 }
