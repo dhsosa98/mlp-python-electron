@@ -25,7 +25,7 @@ class Train_Model(BaseModel):
     lr: Optional[float] = 0.5
     momentum: Optional[float] = 0.5
     epochs: Optional[int] = 20
-    hl_topology: Optional[list[int]] = [5]
+    hl_topology: Optional[Any] = [5]
     val_percentage: Optional[float] = 0.3
     save: Optional[bool] = False
 

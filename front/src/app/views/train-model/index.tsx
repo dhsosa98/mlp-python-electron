@@ -50,7 +50,6 @@ const TrainModel: FC<IRoute> = () => {
     MSE_train: "",
     MSE_val: "",
   });
-
   const [isLoaded, setIsLoaded] = useState(false);
 
   const addRate = (num: number, callback: any) => {
@@ -116,14 +115,43 @@ const TrainModel: FC<IRoute> = () => {
     }
   };
 
+  const handleReset = () => {
+    window.scrollTo({ top: 9999, behavior: "smooth" });
+  }
+
   return (
     <StyledContainer>
       <StyledBackLink to="/">{T("Home")}</StyledBackLink>
       {plotData.val.length > 0 && (
+        <>
         <TwoColsContainer>
           <TrainResults result={result} />
           <MSEPlot plotData={plotData} />
         </TwoColsContainer>
+        <StyledCard onSubmit={handleSubmit}>
+        <TwoColsContainer>
+        <FormItem>
+          <StyledDefaultButton
+            type="submit"
+            onClick={() => setSave(true)}
+            className="bg-gradient-to-br from-green-700 to-green-300 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={isLoaded}
+          >
+            {T("Save Model")} {isLoaded && <ButtonLoader />}
+          </StyledDefaultButton>
+        </FormItem>
+        <FormItem>
+        <StyledDefaultButton
+        type="button"
+        onClick={handleReset}
+        className="bg-gradient-to-br from-sky-900 to-sky-500 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {T("Generate other")}
+      </StyledDefaultButton>
+      </FormItem>
+      </TwoColsContainer>
+        </StyledCard>
+        </>
       )}
       <StyledCard onSubmit={handleSubmit}>
         <TitleContainer>{T("Generate and Train Model")}</TitleContainer>
@@ -158,7 +186,7 @@ const TrainModel: FC<IRoute> = () => {
                 name="epochs"
                 id="epochs"
                 value={epochs || 1}
-                min={1}
+                min={0}
                 onChange={(e) => setEpochs(Number(e.target.value))}
               />
             </FormItem>
@@ -238,16 +266,6 @@ const TrainModel: FC<IRoute> = () => {
             disabled={isLoaded}
           >
             {T("Train Model")} {isLoaded && <ButtonLoader />}
-          </StyledDefaultButton>
-        </FormItem>
-        <FormItem>
-          <StyledDefaultButton
-            type="submit"
-            onClick={() => setSave(true)}
-            className="bg-gradient-to-br from-gray-700 to-gray-300 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-            disabled={isLoaded}
-          >
-            {T("Save Model")} {isLoaded && <ButtonLoader />}
           </StyledDefaultButton>
         </FormItem>
       </StyledCard>
