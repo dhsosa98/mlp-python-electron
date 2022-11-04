@@ -48,6 +48,8 @@ app.on("ready", function () {
       icon: path.join(__dirname, assetsPath),
       height: 600,
       width: 800,
+      maxWidth:800,
+      maxHeight:600,
       fullscreenable:false,
       fullscreen: false,
       maximizable: false,
