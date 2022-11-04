@@ -185,7 +185,7 @@ const TrainModel: FC<IRoute> = () => {
                 type="number"
                 name="epochs"
                 id="epochs"
-                value={epochs || 1}
+                value={epochs}
                 min={0}
                 onChange={(e) => setEpochs(Number(e.target.value))}
               />
