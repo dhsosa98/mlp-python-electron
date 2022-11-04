@@ -48,7 +48,9 @@ app.on("ready", function () {
       icon: path.join(__dirname, assetsPath),
       height: 600,
       width: 800,
-      fullscreenable: false,
+      fullscreenable:false,
+      fullscreen: false,
+      maximizable: false,
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
