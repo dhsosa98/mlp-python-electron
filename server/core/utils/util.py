@@ -12,13 +12,15 @@ def loadDatasets(path):
     return pd.read_csv(path)
 
 
-def splitDatasets(data, n=102, val_percentage=0.1):
-    print(data.shape)
+def splitDatasets(data, n=102, val_percentage=0.1, test=False):
     test_percentage = 0.1
     test_limit = int(test_percentage * data[:, 1].size)
     data_test = data[0:test_limit].T
     Y_test = one_hot(data_test[0])
     X_test = data_test[2:n].T
+
+    if test==True:
+        return X_test, Y_test
 
     validation_limit = int((1 - val_percentage) * data[:, 1].size)
     data_train = data[test_limit:validation_limit].T

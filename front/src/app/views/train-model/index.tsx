@@ -14,6 +14,7 @@ import StyledCard from "../../components/shared/cards/Card";
 import StyledSelect from "../../components/inputs/Select";
 import ButtonLoader from "../../components/shared/loaders/ButtonLoader";
 import { useTranslation } from 'react-i18next';
+import TestResults from "../../components/TestResults";
 
 
 interface IRoute {
@@ -49,8 +50,18 @@ const TrainModel: FC<IRoute> = () => {
     accuracy_val: "",
     MSE_train: "",
     MSE_val: "",
+    accuracy_test: "",
+    MSE_test: "",
+    test_cases: "",
   });
   const [isLoaded, setIsLoaded] = useState(false);
+
+  const [testResults, setTestResults] = useState({
+    model_name: "",
+    accuracy_test: "",
+    MSE_test: "",
+    test_cases: "",
+  });
 
   const addRate = (num: number, callback: any) => {
     if (typeof num !== "number" || isNaN(num) || num > 1) {
@@ -100,6 +111,7 @@ const TrainModel: FC<IRoute> = () => {
       await constructMessage(trainMessage);
       if (trainMessage.results) {
         setResult(trainMessage.results);
+        setTestResults(trainMessage.results.test);
         setPlotData(trainMessage.plot_data);
         setTimeout(() => {
           window.scrollTo({ top: 0, behavior: "smooth" });
@@ -129,12 +141,13 @@ const TrainModel: FC<IRoute> = () => {
           <MSEPlot plotData={plotData} />
         </TwoColsContainer>
         <StyledCard onSubmit={handleSubmit}>
+        <TestResults result={testResults} />
         <TwoColsContainer>
         <FormItem>
           <StyledDefaultButton
             type="submit"
             onClick={() => setSave(true)}
-            className="bg-gradient-to-br from-green-700 to-green-300 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+            className="bg-green-500 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
             disabled={isLoaded}
           >
             {T("Save Model")} {isLoaded && <ButtonLoader />}
@@ -144,7 +157,7 @@ const TrainModel: FC<IRoute> = () => {
         <StyledDefaultButton
         type="button"
         onClick={handleReset}
-        className="bg-gradient-to-br from-sky-900 to-sky-500 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+        className="bg-sky-500 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {T("Generate other")}
       </StyledDefaultButton>
@@ -262,7 +275,7 @@ const TrainModel: FC<IRoute> = () => {
         <FormItem>
           <StyledDefaultButton
             type="submit"
-            className="bg-gradient-to-br from-sky-900 to-sky-500 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+            className="bg-sky-500 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
             disabled={isLoaded}
           >
             {T("Train Model")} {isLoaded && <ButtonLoader />}

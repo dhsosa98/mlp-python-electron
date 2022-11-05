@@ -51,12 +51,32 @@ def mlp_answer(matrix, model="A"):
 
     model = model.predict(matrix, np.zeros((1, 3)))
 
+    def addClass(x, y):
+        return {"class": y, "probability": round(x*100, 2)}
+
+    model_with_probs = list(map(addClass, model[0], classes.values()))
+
+    print(model_with_probs)
+
     prediction = np.argmax(model, 1)
-    print(model)
+
     class_prediction = prediction[0]
 
+    print(classes[class_prediction])
+
+    other_classes = list(filter(
+        lambda x: x["class"] != classes[class_prediction],
+        model_with_probs
+    ))
+
+    print(other_classes)
+
+    # print(prediction)
+
     return {"class": classes[class_prediction],
-            "probability": round(model[0][class_prediction]*100, 2)}
+            "probability": model_with_probs[class_prediction]["probability"],
+            "other_classes": other_classes
+            }
 
 
 dirname = os.path.dirname(__file__)+'/../models/saves/'

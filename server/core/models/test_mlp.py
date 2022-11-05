@@ -24,7 +24,7 @@ def test(model, model_type, val_percentage):
 
     data = np.array(data)
 
-    X_test, Y_test, X_train, Y_train, X_val, Y_val = splitDatasets(data, n, val_percentage)
+    X_test, Y_test = splitDatasets(data, n, val_percentage, True)
 
     saved_model = get_savedModel(model)
 
@@ -33,7 +33,11 @@ def test(model, model_type, val_percentage):
 
     result_t = saved_model.predict(X_test, Y_test)
 
+    history = saved_model.history
+
     prediction_t = saved_model.get_prediction(result_t)
+
+    print(prediction_t, Y_test)
     return {
         'data': {
             'model_name': model,
@@ -42,4 +46,5 @@ def test(model, model_type, val_percentage):
             'test_cases': len(Y_test),
         },
         'plot_data': saved_model.plot_data,
+        'history': history
   }

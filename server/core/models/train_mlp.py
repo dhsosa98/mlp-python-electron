@@ -39,7 +39,7 @@ def trainModel(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percentage=0
 
     data = np.array(data)
 
-    _X, _Y, X_train, Y_train, X_val, Y_val = splitDatasets(data, n, val_percentage)
+    X_test, Y_test, X_train, Y_train, X_val, Y_val = splitDatasets(data, n, val_percentage)
 
     print(X_train.shape, Y_train.shape, X_val.shape, Y_val.shape)
     
@@ -54,11 +54,26 @@ def trainModel(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percentage=0
         plot_v.append({'y': round(cost(result_v, Y_val), 4), 'x': i+1})
         plot_train.append({'y': round(cost(result, Y_train), 4), 'x': i+1})
 
-    result_v = model.predict(X_val, Y_val)
     prediction_v = model.get_prediction(result_v)
+    result_t = model.predict(X_test, Y_test)
+    prediction_t = model.get_prediction(result_t)
 
     if save == True:
         model.plot_data = {'val': plot_v, 'train': plot_train}
+        model.history = {"results": {
+            'model_name': model_name,
+            'accuracy_val': round(model.accuracy(prediction_v, Y_val), 2),
+            'MSE_train': round(cost(result, Y_train), 4),
+            'MSE_val': round(cost(result_v, Y_val), 4),
+            'training_cases': len(Y_train),
+            'validation_cases': len(Y_val),
+            'amount_of_epochs': epoch,
+            'val_percentage': val_percentage,
+            'learning_rate': lr,
+            'momentum': momentum,
+            'topology': topology,
+        }
+        }
         outfile = os.path.dirname(__file__)+'/saves/'+model_name+'.pickle'
         # Save the trained model as a pickle string.
         with open(outfile, 'wb') as pickle_file:
@@ -72,7 +87,7 @@ def trainModel(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percentage=0
     return {
         "results": {
             'model_name': model_name,
-            'accuracy_val': round(model.accuracy(prediction_v, Y_val), 2),
+            'accuracy_val': round(model.accuracy(prediction_v, Y_val), 4),
             'MSE_train': round(cost(result, Y_train), 4),
             'MSE_val': round(cost(result_v, Y_val), 4),
             'training_cases': len(Y_train),
@@ -82,6 +97,12 @@ def trainModel(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percentage=0
             'learning_rate': lr,
             'momentum': momentum,
             'topology': topology,
+            'test': {
+                'accuracy_test': round(model.accuracy(prediction_t, Y_test), 4),
+                'MSE_test': round(cost(result_t, Y_test), 4),
+                'test_cases': len(Y_test),
+            }
         },
         'plot_data': {'val': plot_v, 'train': plot_train},
+
     }

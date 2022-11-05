@@ -14,6 +14,7 @@ import TwoColsContainer from "../../../components/shared/containers/TwoColsConta
 import TooltipIcon from "../../../components/TooltipIcon";
 import Loader from "../../../components/shared/loaders/Loader";
 import { useTranslation } from "react-i18next";
+import TrainResults from "../../../components/TrainResults";
 
 interface IRoute {
   path: string;
@@ -43,6 +44,24 @@ const TrainModel: FC<IRoute> = () => {
     "test_cases": "",
   });
 
+  const [history, setHistory] = useState({
+    model_name: "",
+    learning_rate: "",
+    momentum: "",
+    amount_of_epochs: "",
+    val_percentage: "",
+    topology: [],
+    training_cases: "",
+    validation_cases: "",
+    accuracy_train: "",
+    accuracy_val: "",
+    MSE_train: "",
+    MSE_val: "",
+    accuracy_test: "",
+    MSE_test: "",
+    test_cases: "",
+  });
+
   useEffect(() => {
     setIsLoaded(true);
     Api.getMLPModels().then((res) => {
@@ -69,6 +88,7 @@ const TrainModel: FC<IRoute> = () => {
     const response = await Api.testMLPModel(model)
     if (response.data) {
       setResult(response.data);
+      setHistory(response.history.results);
       setTooltipMessage(constructTooltipMessage(model, T));
       setPlotData(response.plot_data);
       await successAlert(T('Model Successfully Tested'));
@@ -104,12 +124,15 @@ const TrainModel: FC<IRoute> = () => {
         {T("Back")}
       </StyledBackLink>
       {plotData?.val.length > 0 &&
+      <>
         <TwoColsContainer>
           <MSEPlot plotData={plotData} />
-          <StyledCard>
-            <TestResults result={result} />
-          </StyledCard>
+          <TrainResults result={history} />
         </TwoColsContainer>
+        <StyledCard>
+        <TestResults result={result} />
+        </StyledCard>
+      </>
       }
       <StyledCard onSubmit={handleTestModel}>
         {models.length > 0 ?

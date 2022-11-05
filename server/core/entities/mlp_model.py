@@ -6,6 +6,7 @@ from ..utils.functions import sigm, lineal, cost
 class Red_Neuronal:
     def __init__(self, hl_topology):
         self.plot_data = {'val': [], 'train': []}
+        self.history = {}
         self.W = []
         self.b = []
         self.prevDeltaW = []

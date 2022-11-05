@@ -92,7 +92,8 @@ const Predict: FC<IRoute> = () => {
 
   const [answer, setAnswer] = useState({
     class: '',
-    probability: 0
+    probability: 0,
+    other_classes: []
   });
 
   const handleChangeMatrix = (row: number, cell: number) => {
@@ -111,7 +112,8 @@ const Predict: FC<IRoute> = () => {
     setDistortion(0);
     setAnswer({
       class: '',
-      probability: 0
+      probability: 0,
+      other_classes: []
     });
     setActualMatrixKey("_");
   };
@@ -222,6 +224,18 @@ const Predict: FC<IRoute> = () => {
             <h4>
             {T("with a probability of")} <span className="font-bold">{answer.probability}%</span>
             </h4>
+            {answer.other_classes.length > 0 && (
+              <>
+              <div className="font-bold">
+                {T("Other possible classes are")} 
+              </div>
+              {answer.other_classes.map((otherClass) => (
+                <div>
+                  <span className="font-bold">{otherClass.class}</span> {T("with a probability of")} <span className="font-bold">{otherClass.probability}%</span>
+                </div>
+              ))}
+              </>
+              )}
           </StyledCard>
         )}
         <div className="w-full flex flex-col items-center justify-center gap-3 ">
