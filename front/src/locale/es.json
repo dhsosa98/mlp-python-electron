@@ -70,6 +70,7 @@
     "Warning": "Advertencia",
     "Bad prediction from 30%": "Mala predicción a partir del 30%",
     "Generate other": "Generar otro",
-    "Epoch must be greater than 0": "Las Épocas deben ser mayor a 0"
+    "Epoch must be greater than 0": "Las Épocas deben ser mayor a 0",
+    "Other possible classes are": "Otras clases posibles son"
     }
 }

@@ -70,6 +70,7 @@
       "Warning": "Warning",
       "Bad prediction from 30%": "Bad prediction from 30%",
       "Generate other": "Generate other",
-      "Epoch must be greater than 0": "Epoch must be greater than 0"
+      "Epoch must be greater than 0": "Epoch must be greater than 0",
+      "Other possible classes are": "Other possible classes are"
 }
 }

@@ -51,27 +51,25 @@ def mlp_answer(matrix, model="A"):
 
     model = model.predict(matrix, np.zeros((1, 3)))
 
+    sum = 0
+
+    for i in range(len(model[0])):
+        sum += model[0][i]
+
     def addClass(x, y):
-        return {"class": y, "probability": round(x*100, 2)}
+        return {"class": y, "probability": round(x*100/sum, 2)}
 
     model_with_probs = list(map(addClass, model[0], classes.values()))
-
-    print(model_with_probs)
-
+  
     prediction = np.argmax(model, 1)
 
     class_prediction = prediction[0]
 
-    print(classes[class_prediction])
 
     other_classes = list(filter(
         lambda x: x["class"] != classes[class_prediction],
         model_with_probs
     ))
-
-    print(other_classes)
-
-    # print(prediction)
 
     return {"class": classes[class_prediction],
             "probability": model_with_probs[class_prediction]["probability"],
