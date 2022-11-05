@@ -15,21 +15,21 @@ class Red_Neuronal:
 
         # W de la primera capa oculta (cuyas entradas son X)
         self.W.append(np.random.uniform(-0.5, 0.5, (100, hl_topology[0])))
-        self.b.append(np.random.uniform(-0.5, 0.5, (1, hl_topology[0])))
+        self.b.append(np.zeros((1, hl_topology[0])))
         self.prevDeltaW.append(np.zeros((100, hl_topology[0])))
 
         # W de las capas ocultas del medio.
         for i in range(len(hl_topology) - 1):
             self.W.append(np.random.uniform(-0.5, 0.5,
                           (hl_topology[i], hl_topology[i+1])))
-            self.b.append(np.random.uniform(-0.5, 0.5, (1, hl_topology[i+1])))
+            self.b.append(np.zeros((1, hl_topology[i+1])))
             self.prevDeltaW.append(
                 np.zeros((hl_topology[i], hl_topology[i+1])))
 
         # W de la capa de salida
 
         self.W.append(np.random.uniform(-0.5, 0.5, (hl_topology[-1], 3)))
-        self.b.append(np.random.uniform(-0.5, 0.5, (1, 3)))
+        self.b.append(np.zeros((1, 3)))
         self.prevDeltaW.append(np.zeros((hl_topology[-1], 3)))
 
     # Forward propagation

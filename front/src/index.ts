@@ -15,96 +15,86 @@ if (require("electron-squirrel-startup")) {
 
 const isDev = require("electron-is-dev");
 
-const assetsPath =
-  !isDev
-    ? '../../../assets/icon.png'
-    : '../../assets/icon.png';
-
-const createWindow = (): void => {
-  // Create the browser window.
-  const mainWindow: BrowserWindow = new BrowserWindow({
-    icon: path.join(__dirname, assetsPath),
-    height: 600,
-    width: 800,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-    },
-  });
-
-  // mainWindow.setBackgroundColor("#343B38");
-  mainWindow.removeMenu();
-
-  // and load the index.html of the app.
-  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY + "#/");
-
-  // Open the DevTools.
-  
-  if (isDev) {
-    mainWindow.webContents.openDevTools();
-  }
-
-  ipcMain.handle("OPEN_MODAL", (_event) => {
-    let win = new BrowserWindow({
-      title: "Modal",
-      width: 400,
-      height: 400,
-      modal: true,
-    });
-
-    win.setHasShadow(true);
-    win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY + "#/test");
-    win.on("closed", () => {
-      win = null;
-    });
-    win.show();
-  });
-};
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on("ready", createWindow);
-
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
-
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
-let python: any = null;
-const startPython = () => {
-if (isDev) {
-    const options = {
-      scriptPath: path.join(__dirname, "../../../server"),
-    };
-    python = new PythonShell("main.py", options);
-    return python;
-} 
-    const options = {
-      pythonPath: path.join(
-        __dirname,
-        "../../../../../../py/server.exe"
-      ),
-    };
-    python = new PythonShell(".", options);
-    return python;
-};
-app.on('ready', ()=> startPython() );
-
-app.on("will-quit", () => python.kill())
-
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
 });
 
-app.on("activate", () => {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+app.on("ready", function () {
+  const options = {
+    scriptPath: isDev ? path.join(__dirname, "../../../server") : undefined,
+    pythonPath: !isDev ? path.join(__dirname, "/../../../../../../py/server.exe") : undefined,
   }
+  const apiUrl = "http://localhost:8000/";
+  var subpy = new PythonShell('main.py', options);
+  // if (isDev) {
+  //   var subpy = new PythonShell('main.py', options);
+  // } else {
+  //   var subpy = new PythonShell('.', options);
+  // }
+
+  var rq = require("request-promise");
+
+  const createWindow = (): void => {
+    const assetsPath = !isDev
+      ? "../../../assets/icon.png"
+      : "../../assets/icon.png";
+    // Create the browser window.
+    let mainWindow: BrowserWindow = new BrowserWindow({
+      icon: path.join(__dirname, assetsPath),
+      height: 600,
+      width: 800,
+      // maxWidth:800,
+      // maxHeight:800,
+      // fullscreenable:false,
+      // fullscreen: false,
+      // maximizable: false,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+      },
+    });
+
+    // mainWindow.setBackgroundColor("#343B38");
+    mainWindow.removeMenu();
+
+    // and load the index.html of the app.
+    mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY + "#/");
+
+    // Open the DevTools.
+
+    if (isDev) {
+      mainWindow.webContents.openDevTools();
+    }
+
+    mainWindow.on("closed", function () {
+      subpy.kill("SIGKILL");
+      mainWindow = null;
+    });
+  };
+
+  var startUp = function () {
+    rq(apiUrl)
+      .then(function (htmlString: string) {
+        console.log("server started!");
+        createWindow();
+      })
+      .catch(function (err: any) {
+        console.log('waiting for the server start...');
+        startUp();
+      });
+  };
+
+  startUp();
 });
+
+// Quit when all windows are closed, except on macOS. There, it's common
+// for applications and their menu bar to stay active until the user quits
+// explicitly with Cmd + Q.
+
+// In this file you can include the rest of your app's specific main process
+// code. You can also put them in separate files and import them here.

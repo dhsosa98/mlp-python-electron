@@ -9,6 +9,10 @@ import pandas as pd
 
 def trainModel(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percentage=0.1, save=False, dataset='letras_distorsionadas1000.csv'):
 
+    if epoch < 1:
+        raise HTTPException(status_code=400, detail="Epoch must be greater than 0")
+        
+
     models = {
         'letras_distorsionadas100.csv': 'model100',
         'letras_distorsionadas500.csv': 'model500',

@@ -68,6 +68,8 @@
       "Dataset not found": "Dataset not found",
       "with a probability of": "with a probability of",
       "Warning": "Warning",
-      "Bad prediction from 30%": "Bad prediction from 30%"
+      "Bad prediction from 30%": "Bad prediction from 30%",
+      "Generate other": "Generate other",
+      "Epoch must be greater than 0": "Epoch must be greater than 0"
 }
 }

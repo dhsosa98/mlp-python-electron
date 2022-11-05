@@ -182,7 +182,7 @@ const Predict: FC<IRoute> = () => {
     <StyledContainer>
       <StyledBackLink to="/models">{T("Back")}</StyledBackLink>
       <div className="flex flex-col gap-5">
-        <div className="flex sm:flex-row flex-col justify-center gap-10">
+        <div className="flex lg:flex-row flex-col justify-center gap-10">
           <div className="grid justify-center">
             <div className=" grid grid-rows-10 grid-cols-10 sm:h-[370px] h-[300px] aspect-square gap-2">
               {matrix.map((row: number[], rowIndex: number) => (
@@ -225,7 +225,7 @@ const Predict: FC<IRoute> = () => {
           </StyledCard>
         )}
         <div className="w-full flex flex-col items-center justify-center gap-3 ">
-          <div className="bg-white shadow-md shadow-gray-100 rounded-md p-5 max-w-[300px] flex flex-col gap-5">
+          <div className="bg-white shadow-md shadow-gray-100 rounded-md p-5 flex flex-col gap-5">
             {models.length > 0 ? (
               <>
                 <div className="flex flex-col sm:flex-row gap-4">

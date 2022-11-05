@@ -14,15 +14,6 @@ export class Api {
    }
 
    public static async getMLPAnswer(matrix: any, model: string){
-      if (model ==='model100.pickle'){
-         model = 'A'
-      }
-      else if (model ==='model500.pickle'){
-         model = 'B'
-      }
-      else if (model ==='model1000.pickle'){
-         model = 'C'
-      }
       const response = await axios.post(baseUrl+'mlp_answer', { matrix, model }, {headers})
       console.log(model)
       return response.data

@@ -68,6 +68,8 @@
     "Dataset not found": "Conjunto de Datos no encontrado",
     "with a probability of": "con una probabilidad de",
     "Warning": "Advertencia",
-    "Bad prediction from 30%": "Mala predicción a partir del 30%"
+    "Bad prediction from 30%": "Mala predicción a partir del 30%",
+    "Generate other": "Generar otro",
+    "Epoch must be greater than 0": "Las Épocas deben ser mayor a 0"
     }
 }
