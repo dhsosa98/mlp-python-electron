@@ -38,8 +38,10 @@ def trainModel(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percentage=0
     data = loadDatasets(path)
 
     data = np.array(data)
-
-    _X, _Y, X_train, Y_train, X_val, Y_val = splitDatasets(data, n, val_percentage)
+    tamanio = int(data[:,1].size * 0.10)
+    cantPatrones = data[:,1].size
+    data = data[tamanio:cantPatrones]
+    X_train, Y_train, X_val, Y_val = splitDatasets(data, cantPatrones, n, val_percentage)
 
     print(X_train.shape, Y_train.shape, X_val.shape, Y_val.shape)
     
@@ -73,8 +75,8 @@ def trainModel(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percentage=0
         "results": {
             'model_name': model_name,
             'accuracy_val': round(model.accuracy(prediction_v, Y_val), 2),
-            'MSE_train': round(cost(result, Y_train), 4),
-            'MSE_val': round(cost(result_v, Y_val), 4),
+            'MSE_train': round(cost(result, Y_train), 6),
+            'MSE_val': round(cost(result_v, Y_val), 6),
             'training_cases': len(Y_train),
             'validation_cases': len(Y_val),
             'amount_of_epochs': epoch,

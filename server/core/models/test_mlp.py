@@ -1,7 +1,7 @@
 
 import os
 import numpy as np
-from ..utils.util import loadDatasets, splitDatasets 
+from ..utils.util import loadDatasets, tratarDataTest
 from ..utils.functions import cost
 from fastapi import FastAPI, HTTPException
 from ..api.main import get_savedModel
@@ -23,8 +23,9 @@ def test(model, model_type, val_percentage):
     data = loadDatasets(path)
 
     data = np.array(data)
-
-    X_test, Y_test, X_train, Y_train, X_val, Y_val = splitDatasets(data, n, val_percentage)
+    tamanio = int(data[:,1].size * 0.10)
+    data = data[0:tamanio]
+    X_test, Y_test = tratarDataTest(data, n)
 
     saved_model = get_savedModel(model)
 
@@ -38,7 +39,7 @@ def test(model, model_type, val_percentage):
         'data': {
             'model_name': model,
             'accuracy_test': round(saved_model.accuracy(prediction_t, Y_test), 2),
-            'MSE_test': round(cost(result_t, Y_test), 4),
+            'MSE_test': round(cost(result_t, Y_test), 6),
             'test_cases': len(Y_test),
         },
         'plot_data': saved_model.plot_data,
