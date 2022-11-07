@@ -7,5 +7,6 @@
 /server/core/entities/__pycache__
 /server/core/utils/__pycache__
 /server/core/models/__pycache__
-/server/api/__pycache__
+/server/core/api/__pycache__
+/server/core/services/__pycache__
 /mlp-perceptron

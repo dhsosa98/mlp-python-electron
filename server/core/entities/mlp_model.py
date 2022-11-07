@@ -3,23 +3,29 @@ from ..utils.functions import sigm, lineal, cost
 # Definimos el algoritmo de entrenamiento
 
 
-class Red_Neuronal:
+class Mlp_Model:
     def __init__(self, hl_topology):
+        # Plot Data es para luego graficar el MSE Global
         self.plot_data = {'val': [], 'train': []}
+        # Historial de resultados obtenidos en cada epoca
         self.history = {}
+        # Pesos de la red
         self.W = []
+        # Bias de la red
         self.b = []
+        # Pesos de la red en la epoca anterior para el momentum
         self.prevDeltaW = []
+        # Topologia de las capas ocultas
         self.hl_topology = hl_topology
 
-        ################# Inicializamos los pesos #################
+        # Inicializamos la capa de entrada
 
-        # W de la primera capa oculta (cuyas entradas son X)
         self.W.append(np.random.uniform(-0.5, 0.5, (100, hl_topology[0])))
         self.b.append(np.random.uniform(-0.5, 0.5, (1, hl_topology[0])))
         self.prevDeltaW.append(np.zeros((100, hl_topology[0])))
 
-        # W de las capas ocultas del medio.
+        # Inicializamos las capas ocultas
+
         for i in range(len(hl_topology) - 1):
             self.W.append(np.random.uniform(-0.5, 0.5,
                           (hl_topology[i], hl_topology[i+1])))
@@ -27,14 +33,13 @@ class Red_Neuronal:
             self.prevDeltaW.append(
                 np.zeros((hl_topology[i], hl_topology[i+1])))
 
-        # W de la capa de salida
+        # Inicializamos la ultima capa
 
         self.W.append(np.random.uniform(-0.5, 0.5, (hl_topology[-1], 3)))
         self.b.append(np.random.uniform(-0.5, 0.5, (1, 3)))
         self.prevDeltaW.append(np.zeros((hl_topology[-1], 3)))
 
     # Forward propagation
-
     def forward(self, X):
         self.z = []
         self.a = []
@@ -52,10 +57,11 @@ class Red_Neuronal:
         self.a.append(sigm(self.z[-1]))
         return self.a[-1]
 
+    # Backward propagation
     def backward(self, Y):
-        self.gradienteW = []
-        self.gradienteb = []
-        self.deltaPeso = []
+        self.gradientW = []
+        self.gradientb = []
+        self.deltaWeights = []
         self.deltas = []
 
         # TODO ESTO PARA LA CAPA DE SALIDA
@@ -66,10 +72,10 @@ class Red_Neuronal:
         # El cambio en el peso lo calculamos como el producto matricial de la salida
         # de la ultima capa oculta, por el delta anteriormente calculado
         # y tmb le agregamos el momentummmm
-        self.gradienteW.append(np.dot(self.a[-2].T, self.deltas[-1]))
+        self.gradientW.append(np.dot(self.a[-2].T, self.deltas[-1]))
 
         # Y bueno el parametro bayas es dsp actualizarlo a el mismo menos el delta por lr
-        self.gradienteb.append(self.deltas[-1])
+        self.gradientb.append(self.deltas[-1])
 
         # DESDE ACA LOS DELTAS PARA LAS CAPAS OCULTAS
 
@@ -85,32 +91,33 @@ class Red_Neuronal:
 
             # El cambio en el peso lo calculamos como la salida de la capa anterior a la que estamos ahora, por el ultimo delta calculado
             # print('segundo',self.a[i-1].T.shape, self.deltas[-1].shape, self.prevDeltaW[i-1].shape)
-            self.gradienteW.append(np.dot(self.a[i-1].T, self.deltas[-1]))
+            self.gradientW.append(np.dot(self.a[i-1].T, self.deltas[-1]))
             # 10x1 @ 1x10 = 10x10
             # 100x1 @ 1x10 = 100x10
 
             # Y bueno el parametro bayas es dsp actualizarlo a el mismo menos el delta por lr
-            self.gradienteb.append(self.deltas[-1])
+            self.gradientb.append(self.deltas[-1])
             # print('resguardo peso', self.W[i-1].shape)
 
         # Como nos movimos de atras para adelante, ahoras revertimos el orden (para actualizar pesos y bayas)
 
-        self.gradienteW.reverse()
-        self.gradienteb.reverse()
+        self.gradientW.reverse()
+        self.gradientb.reverse()
         self.deltas.reverse()
 
     # Actualizamos los W y b
     def update(self, lr, m):
         for i in range(len(self.hl_topology) + 1):
-            deltaWeight = self.gradienteW[i] * lr + self.prevDeltaW[i] * m
+            deltaWeight = self.gradientW[i] * lr + self.prevDeltaW[i] * m
             self.W[i] = self.W[i] - deltaWeight
             self.prevDeltaW[i] = deltaWeight
-            self.b[i] = self.b[i] - self.gradienteb[i] * lr
+            self.b[i] = self.b[i] - self.gradientb[i] * lr
 
     # Definimos la funcion para utilizar solo el forward (en realidad se usa al usar la funcion MSE)
     def predict(self, X, Y):
         return self.forward(X)
 
+    # Definimos la funcion para entrenar la red
     def train(self, X, Y, lr, m):
         for x, y in zip(X, Y):
             x.shape += (1,)
@@ -122,9 +129,11 @@ class Red_Neuronal:
             self.backward(y)
             self.update(lr, m)
 
+    # Definimos la funcion para obtener la neurona con mayor probabilidad
     def get_prediction(self, model):
         return np.argmax(model, 1)
 
-    def accuracy(self, prediction, Y):
+    # Definimos la funcion para obtener la precision de la red
+    def get_accuracy(self, prediction, Y):
         Y_arg = np.argmax(Y, 1)
         return (np.sum(prediction == Y_arg) / Y_arg.size)*100
