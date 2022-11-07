@@ -21,7 +21,7 @@ class Mlp_Model:
         # Inicializamos la capa de entrada
 
         self.W.append(np.random.uniform(-0.5, 0.5, (100, hl_topology[0])))
-        self.b.append(np.random.uniform(-0.5, 0.5, (1, hl_topology[0])))
+        self.b.append(np.zeros((1, hl_topology[0])))
         self.prevDeltaW.append(np.zeros((100, hl_topology[0])))
 
         # Inicializamos las capas ocultas
@@ -29,14 +29,14 @@ class Mlp_Model:
         for i in range(len(hl_topology) - 1):
             self.W.append(np.random.uniform(-0.5, 0.5,
                           (hl_topology[i], hl_topology[i+1])))
-            self.b.append(np.random.uniform(-0.5, 0.5, (1, hl_topology[i+1])))
+            self.b.append(np.zeros((1, hl_topology[i+1])))
             self.prevDeltaW.append(
                 np.zeros((hl_topology[i], hl_topology[i+1])))
 
         # Inicializamos la ultima capa
 
         self.W.append(np.random.uniform(-0.5, 0.5, (hl_topology[-1], 3)))
-        self.b.append(np.random.uniform(-0.5, 0.5, (1, 3)))
+        self.b.append(np.zeros((1, 3)))
         self.prevDeltaW.append(np.zeros((hl_topology[-1], 3)))
 
     # Forward propagation
