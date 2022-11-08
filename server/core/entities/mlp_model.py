@@ -20,7 +20,9 @@ class Mlp_Model:
 
         # Inicializamos la capa de entrada
 
-        self.W.append(np.random.uniform(-0.5, 0.5, (100, hl_topology[0])))
+        # Los pesos de la capa de entrada los inicializamos con valores aleatorios
+        # Se utilizo esta tecnica de generacion de pesos aleatorios para mejorar los gradientes: https://towardsdatascience.com/weight-initialization-techniques-in-neural-networks-26c649eb3b78
+        self.W.append(np.random.rand(100,hl_topology[0])*np.sqrt(1/(100+hl_topology[0])))
         self.b.append(np.zeros((1, hl_topology[0])))
         self.prevDeltaW.append(np.zeros((100, hl_topology[0])))
 
@@ -29,13 +31,13 @@ class Mlp_Model:
         for i in range(len(hl_topology) - 1):
             self.W.append(np.random.uniform(-0.5, 0.5,
                           (hl_topology[i], hl_topology[i+1])))
-            self.b.append(np.zeros((1, hl_topology[i+1])))
+            self.W.append(np.random.rand(hl_topology[i],hl_topology[i+1])*np.sqrt(1/(hl_topology[i]+hl_topology[i+1])))
             self.prevDeltaW.append(
                 np.zeros((hl_topology[i], hl_topology[i+1])))
 
         # Inicializamos la ultima capa
 
-        self.W.append(np.random.uniform(-0.5, 0.5, (hl_topology[-1], 3)))
+        self.W.append(np.random.rand(hl_topology[-1],3)*np.sqrt(1/(hl_topology[-1]+3)))
         self.b.append(np.zeros((1, 3)))
         self.prevDeltaW.append(np.zeros((hl_topology[-1], 3)))
 
@@ -122,9 +124,8 @@ class Mlp_Model:
         for x, y in zip(X, Y):
             x.shape += (1,)
             y.shape += (1,)
-            y = y.T  # 1x3
-            # 1x100 #lr es el hiperparametro learning rate en el descenso del gradiente (factor por el cual multiplicamos al vector gradiente y te permite saber en q grado estas actualizando tu parametro en base a la inf q nos otorga el gradiente)
-            x = x.T
+            y = y.T  # 1x3 
+            x = x.T # 1x100
             self.forward(x)
             self.backward(y)
             self.update(lr, m)
