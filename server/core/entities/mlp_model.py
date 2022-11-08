@@ -20,22 +20,23 @@ class Mlp_Model:
 
         # Inicializamos la capa de entrada
 
-        self.W.append(np.random.uniform(-0.5, 0.5, (100, hl_topology[0])))
+        # Los pesos de la capa de entrada los inicializamos con valores aleatorios
+        # Se utilizo esta tecnica de generacion de pesos aleatorios: https://towardsdatascience.com/weight-initialization-techniques-in-neural-networks-26c649eb3b78
+        self.W.append(np.random.rand(100,hl_topology[0])*np.sqrt(1/(100+hl_topology[0])))
+        # Los bias de la capa de entrada los inicializamos en 0
         self.b.append(np.zeros((1, hl_topology[0])))
+        # Los pesos de la capa de entrada en la iteracion anterior los inicializamos en 0
         self.prevDeltaW.append(np.zeros((100, hl_topology[0])))
 
         # Inicializamos las capas ocultas
-
         for i in range(len(hl_topology) - 1):
-            self.W.append(np.random.uniform(-0.5, 0.5,
-                          (hl_topology[i], hl_topology[i+1])))
+            self.W.append(np.random.rand(hl_topology[i],hl_topology[i+1])*np.sqrt(1/(hl_topology[i]+hl_topology[i+1])))
             self.b.append(np.zeros((1, hl_topology[i+1])))
             self.prevDeltaW.append(
                 np.zeros((hl_topology[i], hl_topology[i+1])))
 
         # Inicializamos la ultima capa
-
-        self.W.append(np.random.uniform(-0.5, 0.5, (hl_topology[-1], 3)))
+        self.W.append(np.random.rand(hl_topology[-1],3)*np.sqrt(1/(hl_topology[-1]+3)))
         self.b.append(np.zeros((1, 3)))
         self.prevDeltaW.append(np.zeros((hl_topology[-1], 3)))
 
@@ -47,7 +48,6 @@ class Mlp_Model:
         self.a.append(X)
 
         for i in range(len(self.hl_topology)):
-            # 1x100 @ 100x5 = 1x5
             self.z.append(np.dot(self.a[-1], self.W[i]) + self.b[i])
             self.a.append(lineal(self.z[-1]))
 
@@ -128,10 +128,11 @@ class Mlp_Model:
             self.backward(y)
             self.update(lr, m)
 
-    # Definimos la funcion para obtener la neurona con mayor probabilidad
+    # Definimos la funcion para obtener la neurona con mayor probabilidad (model devuelve la prediccion)
     def get_prediction(self, model):
         return np.argmax(model, 1)
 
+    # Lo de arriba devuelve prediction, que se usa en la func de abajo (parametro)
     # Definimos la funcion para obtener la precision de la red
     def get_accuracy(self, prediction, Y):
         Y_arg = np.argmax(Y, 1)
