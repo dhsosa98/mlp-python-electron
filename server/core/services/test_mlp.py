@@ -52,8 +52,8 @@ def test_mlp_model(model, model_type, val_percentage):
     return {
         'data': {
             'model_name': model,
-            'accuracy_test': round(saved_model.get_accuracy(prediction_test, Y_test), 6),
-            'MSE_test': round(cost(result_test, Y_test), 6),
+            'accuracy_test': round(saved_model.get_accuracy(prediction_test, Y_test), 8),
+            'MSE_test': round(cost(result_test, Y_test), 8),
             'test_cases': len(Y_test),
         },
         'plot_data': saved_model.plot_data,

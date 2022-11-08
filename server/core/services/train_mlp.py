@@ -124,8 +124,8 @@ def train_mlp_model(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percent
             'momentum': momentum,
             'topology': topology,
             'test': {
-                'accuracy_test': round(model.get_accuracy(prediction_test, Y_test), 6),
-                'MSE_test': round(cost(result_test, Y_test), 6),
+                'accuracy_test': round(model.get_accuracy(prediction_test, Y_test), 8),
+                'MSE_test': round(cost(result_test, Y_test), 8),
                 'test_cases': len(Y_test),
             }
         },

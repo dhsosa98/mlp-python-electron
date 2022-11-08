@@ -4,6 +4,7 @@ import random
 import copy
 import numpy as np
 import os
+from random import shuffle
 
 
 letterB = [
@@ -97,6 +98,8 @@ def generate_dataset(amount_datasets):
             currentLetterIndex = 0
 
     np.random.shuffle(df)
+    shuffle(df)
+    
     # Una vez que finalizamos el bucle, cargamos este arreglo de salida a un .csv
     df_letras_distorsionadas = pd.DataFrame(df)
     df_letras_distorsionadas.to_csv(
