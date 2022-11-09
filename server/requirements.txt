@@ -4,4 +4,3 @@ pyinstaller
 pandas
 numpy
 dill
-faker
