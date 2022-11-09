@@ -21,9 +21,9 @@ const Models: FC<IRoute> = () => {
             <StyledBackLink to="/">{T("Home")}</StyledBackLink>
             <StyledCard>
                 <TitleContainer>{T("Models")}</TitleContainer>
-                    <StyledLink className='bg-sky-700 hover:bg-sky-800' to="models/test">{T("Charts and Test")}</StyledLink>
-                    <StyledLink className='bg-sky-500 hover:bg-sky-600' to="models/predict">{T("Predict")}</StyledLink>
-                    <StyledLink className='bg-red-500 hover:bg-red-700' to="models/delete">{T("Delete Models")}</StyledLink>
+                    <StyledLink className='bg-sky-700 hover:bg-sky-800 dark:bg-blue-700 dark:hover:bg-blue-800' to="models/test">{T("Charts and Test")}</StyledLink>
+                    <StyledLink className='bg-sky-500 hover:bg-sky-600 dark:bg-blue-500 dark:hover:bg-blue-600' to="models/predict">{T("Predict")}</StyledLink>
+                    <StyledLink className='bg-red-500 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800' to="models/delete">{T("Delete Models")}</StyledLink>
             </StyledCard>
         </StyledContainer>
     )

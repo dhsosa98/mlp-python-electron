@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { successAlert } from "../../../utils/sweetalert";
 import { Api } from "../../../services/Api";
@@ -14,6 +14,7 @@ import StyledBackLink from "../../../components/buttons/BackLink";
 import TooltipIcon from "../../../components/TooltipIcon";
 import Loader from "../../../components/shared/loaders/Loader";
 import { useTranslation } from 'react-i18next';
+import ThemeContext from "../../../../theme";
 
 interface IRoute {
   path: string;
@@ -35,6 +36,8 @@ const DeleteModel: FC<IRoute> = () => {
   const [tooltipMessage, setTooltipMessage] = useState<string>("");
 
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+
+  const {theme} = useContext(ThemeContext)
 
 
   useEffect(() => {
@@ -62,7 +65,7 @@ const DeleteModel: FC<IRoute> = () => {
     Api.deleteMLPModel(model).then((res) => {
       console.log(res);
       setUpdate((update) => !update);
-      successAlert(T('Model Successfully Deleted'));
+      successAlert(T('Model Successfully Deleted'), '', theme);
     }).finally(() => setIsLoaded(false));
   };
 
@@ -86,7 +89,7 @@ const DeleteModel: FC<IRoute> = () => {
           <>
             <label className="font-bold inline-flex">{T("Select a Model")} <TooltipIcon tooltipMessage={tooltipMessage} /></label>
             <StyledSelect list={models} onChange={handleChangeModel} />
-            <BigButton className="bg-red-500 hover:bg-red-700" type="submit">{T("Delete")}</BigButton>
+            <BigButton className="bg-red-500 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800" type="submit">{T("Delete")}</BigButton>
           </>) : (
           <NotFoundModels />)}
       </StyledCard>

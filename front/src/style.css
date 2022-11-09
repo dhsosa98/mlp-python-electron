@@ -2,53 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Standart */
 
-ul.rtc-translator {
-    list-style: none;
-    font-size: 13px;
-    text-align: left;
-    padding-inline-start: unset;
-    display: inline-block;
-  }
-  
-  ul.rtc-translator li {
-    display: flex;
-    line-height: 16px;
-    padding: 2px 5px;
-    cursor: pointer;
-  }
-  
-  ul.rtc-translator li button {
-    background-color: transparent;
-    border: none;
-    color: #fff;
-    outline: none;
-    width: 100%;
-    display: inline-block;
-    text-align: left;
-  }
-  
-  ul.rtc-translator li[data-selected="true"] {
-    box-shadow: inset 0 0 1px 1px rgb(146, 146, 146);
-    border-radius: 5px;
-  }
-  
-  ul.rtc-translator li:hover {
-    box-shadow: inset 0 0 1px 1px rgb(146, 146, 146);
-    border-radius: 5px;
-  }
-  
-  ul.rtc-translator li img.rtc-flag {
-    height: 16px;
-    margin-right: 0.3em;
-  }
-  
-  /* Dropdown */
-  
   div.rtc-dropdown {
     position: relative;
     display: inline-block;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   }
 
   button.rtc-dropdown-toggle:hover {
@@ -60,8 +18,6 @@ ul.rtc-translator {
   }
   
   div.rtc-dropdown .rtc-dropdown-toggle {
-    color: #000;
-    background-color: #fff;
     border-color: #6c757d;
     border-radius: 3px;
     font-size: 14px;
@@ -95,7 +51,6 @@ ul.rtc-translator {
   }
   
   div.rtc-dropdown .rtc-dropdown-menu {
-    background-color: #fff;
     border-radius: 0 3px 3px 3px;
     position: absolute;
     will-change: transform;
@@ -106,6 +61,7 @@ ul.rtc-translator {
     min-width: 120px;
     padding: 4px 6px;
     border-color: #e9ecef;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
     margin: 0;
     display: none;
   }
@@ -115,8 +71,6 @@ ul.rtc-translator {
   }
   
   .rtc-dropdown .rtc-dropdown-menu .rtc-btn {
-    color: #000;
-    background-color: transparent;
     font-size: 14px;
     border: 1px solid transparent;
     padding: 4px 15px;
@@ -125,11 +79,6 @@ ul.rtc-translator {
     cursor: pointer;
     width: 100%;
     outline: 0;
-  }
-  
-  .rtc-dropdown .rtc-dropdown-menu .rtc-btn:hover,
-  .rtc-dropdown .rtc-dropdown-menu .rtc-btn[data-selected="true"] {
-    background-color: #dcdcdc;
   }
   
   .rtc-dropdown .rtc-dropdown-menu .rtc-btn img {

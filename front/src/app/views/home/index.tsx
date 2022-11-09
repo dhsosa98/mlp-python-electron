@@ -20,9 +20,9 @@ const Home: FC<IRoute> = () => {
                 <TitleContainer>
                   {T("MLP Perceptron")}
                 </TitleContainer>
-                <StyledLink className="bg-sky-700" to="/generate-datasets">{T("Generate Datasets")}</StyledLink>
-                <StyledLink className="bg-sky-500" to="/train-model">{T("Generate and Train Model")}</StyledLink>
-                <StyledLink className="bg-sky-300" to="/models">{T("Models")}</StyledLink>
+                <StyledLink className="bg-sky-700 dark:bg-blue-900" to="/generate-datasets">{T("Generate Datasets")}</StyledLink>
+                <StyledLink className="bg-sky-500 dark:bg-blue-800" to="/train-model">{T("Generate and Train Model")}</StyledLink>
+                <StyledLink className="bg-sky-300 dark:bg-blue-700" to="/models">{T("Models")}</StyledLink>
             </StyledCard>
         </StyledContainer>
     )

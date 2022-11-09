@@ -28,8 +28,8 @@ const Cell: FC<any> = ({
     <RotateComponent
       rotating={isRotating}
       cell={cell}
-      className={` justify-center items-center shadow-sm shadow-gray-300 flex ${
-        cell ? "bg-sky-300" : "bg-white"
+      className={` justify-center items-center shadow-sm shadow-gray-300 dark:shadow-slate-900 flex ${
+        cell ? "bg-sky-300 dark:bg-blue-700" : "bg-white dark:bg-slate-800"
       }`}
       key={cellIndex}
       onClick={handleRotate}

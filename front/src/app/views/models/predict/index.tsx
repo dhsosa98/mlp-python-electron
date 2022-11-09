@@ -46,9 +46,9 @@ const DistortionComponent: FC<any> = ({ percentage }) => {
   const { t: T } = useTranslation();
   return (
     <div className="flex justify-center">
-      <div className="p-5 m-2 max-w-max">
+      <div className="p-5 m-2 max-w-max dark:text-slate-200">
         <div>
-          {T("Distortion")}: <span className={`font-bold`}>{percentage}%</span>
+          {T("Distortion")}: <span className={`font-bold dark:text-white`}>{percentage}%</span>
         </div>
       </div>
     </div>
@@ -219,19 +219,19 @@ const Predict: FC<IRoute> = () => {
           <StyledCard>
             <h3 className="font-bold text-xl text-center">{T("Answer")}</h3>
             <h4>
-              {T("The prediction is")} <span className="font-bold">{answer.class}</span>
+              {T("The prediction is")} <span className="font-bold dark:text-white">{answer.class}</span>
             </h4>
             <h4>
-            {T("with a probability of")} <span className="font-bold">{answer.probability}%</span>
+            {T("with a probability of")} <span className="font-bold dark:text-white">{answer.probability}%</span>
             </h4>
             {answer.other_classes.length > 0 && (
               <>
-              <div className="font-bold">
+              <div className="font-bold dark:text-white">
                 {T("Other possible classes are")} 
               </div>
               {answer.other_classes.map((otherClass) => (
                 <div>
-                  <span className="font-bold">{otherClass.class}</span> {T("with a probability of")} <span className="font-bold">{otherClass.probability}%</span>
+                  <span className="font-bold dark:text-white">{otherClass.class}</span> {T("with a probability of")} <span className="font-bold dark:text-white">{otherClass.probability}%</span>
                 </div>
               ))}
               </>
@@ -239,7 +239,7 @@ const Predict: FC<IRoute> = () => {
           </StyledCard>
         )}
         <div className="w-full flex flex-col items-center justify-center gap-3 ">
-          <div className="bg-white shadow-md shadow-gray-100 rounded-md p-5 flex flex-col gap-5">
+          <div className="bg-white shadow-md shadow-gray-100 dark:bg-slate-800 dark:shadow-slate-900 dark:text-slate-200 rounded-md p-5 flex flex-col gap-5">
             {models.length > 0 ? (
               <>
                 <div className="flex flex-col sm:flex-row gap-4">
@@ -249,7 +249,7 @@ const Predict: FC<IRoute> = () => {
                       <TooltipIcon tooltipMessage={tooltipMessage} />
                     </label>
                     <select
-                      className=" outline-1 outline-stone-100 border border-gray-100 p-2"
+                      className=" outline-1 outline-stone-100 border border-gray-100 p-2 dark:text-slate-800 dark:bg-slate-100 dark:border-slate-200 dark:rounded-sm"
                       onChange={handleChangeModel}
                     >
                       {models.map((model) => (
@@ -260,7 +260,7 @@ const Predict: FC<IRoute> = () => {
                   <div className="flex flex-col gap-2">
                     <label className="font-bold">{T("Select a Matrix")}</label>
                     <select
-                      className=" outline-1 outline-stone-100 border border-gray-100 p-2"
+                      className=" outline-1 outline-stone-100 border border-gray-100 p-2 dark:text-slate-800 dark:bg-slate-100 dark:border-slate-200 dark:rounded-sm"
                       onChange={handleChangeDefaultMatrixes}
                     >
                       {Object.keys(defaultMatrixes).map((key) => {
@@ -339,7 +339,7 @@ const DistortionInputComponent: FC<any> = ({
         <strong className={`${distortion>30 && "text-red-500"}`}>{distortion}{"%"}</strong>
       </div>
       <StyledDefaultButton
-        className="bg-sky-500 hover:bg-sky-700"
+        className="bg-sky-500 hover:bg-sky-700 dark:bg-blue-700 dark:hover:bg-blue-800"
         type="submit"
       >
         {T("Distort")}

@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useContext, useState } from "react";
 import { errorAlert, infoAlert, successAlert } from "../../utils/sweetalert";
 import { Api } from "../../services/Api";
 import TrainResults from "../../components/TrainResults";
@@ -15,6 +15,7 @@ import StyledSelect from "../../components/inputs/Select";
 import ButtonLoader from "../../components/shared/loaders/ButtonLoader";
 import { useTranslation } from 'react-i18next';
 import TestResults from "../../components/TestResults";
+import ThemeContext from "../../../theme";
 
 
 interface IRoute {
@@ -35,6 +36,7 @@ const TrainModel: FC<IRoute> = () => {
   const [hidden_nodes1, setHidden_nodes1] = useState(5);
   const [hidden_nodes2, setHidden_nodes2] = useState(5);
   const [plotData, setPlotData] = useState({ val: [], train: [] });
+  const { theme } = useContext(ThemeContext);
   const [save, setSave] = useState(false);
   const { t: T } = useTranslation();
   const [result, setResult] = useState({
@@ -84,10 +86,10 @@ const TrainModel: FC<IRoute> = () => {
     let messageString = "";
     if (message.saved) {
       messageString = message.message;
-      await successAlert(T(messageString));
+      await successAlert(T(messageString), '', theme);
       return;
     }
-    await successAlert(T("Model Successfully Trained"));
+    await successAlert(T("Model Successfully Trained"), '', theme);
   };
 
   const handleSubmit = async (e: any) => {
@@ -119,7 +121,7 @@ const TrainModel: FC<IRoute> = () => {
       }
     } catch (err) {
       if (err.response.data.detail){
-      await errorAlert(T(err.response.data.detail));
+      await errorAlert(T(err.response.data.detail), '', theme);
       }
     } finally {
       setIsLoaded(false);
@@ -147,7 +149,7 @@ const TrainModel: FC<IRoute> = () => {
           <StyledDefaultButton
             type="submit"
             onClick={() => setSave(true)}
-            className="bg-green-500 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+            className="bg-green-500 dark:bg-green-700 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
             disabled={isLoaded}
           >
             {T("Save Model")} {isLoaded && <ButtonLoader />}
@@ -157,7 +159,7 @@ const TrainModel: FC<IRoute> = () => {
         <StyledDefaultButton
         type="button"
         onClick={handleReset}
-        className="bg-sky-500 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+        className="bg-sky-500 dark:bg-blue-700 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {T("Generate other")}
       </StyledDefaultButton>
@@ -194,7 +196,7 @@ const TrainModel: FC<IRoute> = () => {
             </FormItem>
             <FormItem label={T("Epochs")}>
               <input
-                className=" outline-1 outline-stone-100 p-2 border border-gray-100"
+                className=" outline-1 outline-stone-100 p-2 border border-gray-100 dark:text-slate-800 dark:bg-slate-100 dark:border-slate-200 dark:rounded-sm"
                 type="number"
                 name="epochs"
                 id="epochs"
@@ -205,7 +207,7 @@ const TrainModel: FC<IRoute> = () => {
             </FormItem>
             <FormItem label={T("Learning Rate")}>
               <input
-                className=" outline-1 outline-stone-100 p-2 border border-gray-100"
+                className=" outline-1 outline-stone-100 p-2 border border-gray-100 dark:text-slate-800 dark:bg-slate-100 dark:border-slate-200 dark:rounded-sm"
                 type="range"
                 min={0}
                 max={1}
@@ -219,7 +221,7 @@ const TrainModel: FC<IRoute> = () => {
           <FormColumn>
             <FormItem label={T("Momentum")}>
               <input
-                className=" outline-1 outline-stone-100 p-2 border border-gray-100"
+                className=" outline-1 outline-stone-100 p-2 border border-gray-100 dark:text-slate-800 dark:bg-slate-100 dark:border-slate-200 dark:rounded-sm"
                 type="range"
                 min={0}
                 max={1}
@@ -242,7 +244,7 @@ const TrainModel: FC<IRoute> = () => {
             </FormItem>
             <FormItem label={T("Hidden Nodes for Layer 1")}>
               <input
-                className=" outline-1 outline-stone-100 p-2 border border-gray-100"
+                className=" outline-1 outline-stone-100 p-2 border border-gray-100 dark:text-slate-800 dark:bg-slate-100 dark:border-slate-200 dark:rounded-sm"
                 type="number"
                 name="hidden_nodes1"
                 id="hidden_nodes1"
@@ -257,7 +259,7 @@ const TrainModel: FC<IRoute> = () => {
             {hidden_layers === 2 && (
               <FormItem label={T("Hidden Nodes for Layer 2")}>
                 <input
-                  className=" outline-1 outline-stone-100 p-2 border border-gray-100"
+                  className=" outline-1 outline-stone-100 p-2 border border-gray-100dark:text-slate-800 dark:bg-slate-100 dark:border-slate-200 dark:rounded-sm"
                   type="number"
                   name="hidden_nodes2"
                   id="hidden_nodes2"
@@ -275,7 +277,7 @@ const TrainModel: FC<IRoute> = () => {
         <FormItem>
           <StyledDefaultButton
             type="submit"
-            className="bg-sky-500 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+            className="bg-sky-500 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-700"
             disabled={isLoaded}
           >
             {T("Train Model")} {isLoaded && <ButtonLoader />}

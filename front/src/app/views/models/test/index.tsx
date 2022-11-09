@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { infoAlert, successAlert } from "../../../utils/sweetalert";
 import { Api } from "../../../services/Api";
 import constructTooltipMessage from "../../../utils/tooltipMessage";
@@ -15,6 +15,8 @@ import TooltipIcon from "../../../components/TooltipIcon";
 import Loader from "../../../components/shared/loaders/Loader";
 import { useTranslation } from "react-i18next";
 import TrainResults from "../../../components/TrainResults";
+import ThemeContext from "../../../../theme";
+
 
 interface IRoute {
   path: string;
@@ -34,6 +36,8 @@ const TrainModel: FC<IRoute> = () => {
   const [tooltipMessage, setTooltipMessage] = useState<string>("");
 
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+
+  const {theme} = useContext(ThemeContext)
 
   const { t: T } = useTranslation();
 
@@ -91,7 +95,7 @@ const TrainModel: FC<IRoute> = () => {
       setHistory(response.history.results);
       setTooltipMessage(constructTooltipMessage(model, T));
       setPlotData(response.plot_data);
-      await successAlert(T('Model Successfully Tested'));
+      await successAlert(T('Model Successfully Tested'), '', theme);
       setTimeout(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }, 500)
@@ -140,7 +144,7 @@ const TrainModel: FC<IRoute> = () => {
             <>
               <label className="font-bold inline-flex">{T("Select a Model")} <TooltipIcon tooltipMessage={tooltipMessage}/></label>
               <StyledSelect list={models} onChange={handleChangeModel} />
-              <BigButton type="submit" className=" bg-green-500 hover:bg-green-700">{T("Test")}</BigButton>
+              <BigButton type="submit" className=" bg-green-500 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-900">{T("Test")}</BigButton>
             </>
           ) : (
             <NotFoundModels />
