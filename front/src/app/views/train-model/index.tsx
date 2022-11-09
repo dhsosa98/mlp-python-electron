@@ -259,7 +259,7 @@ const TrainModel: FC<IRoute> = () => {
             {hidden_layers === 2 && (
               <FormItem label={T("Hidden Nodes for Layer 2")}>
                 <input
-                  className=" outline-1 outline-stone-100 p-2 border border-gray-100dark:text-slate-800 dark:bg-slate-100 dark:border-slate-200 dark:rounded-sm"
+                  className=" outline-1 outline-stone-100 p-2 border border-gray-100 dark:text-slate-800 dark:bg-slate-100 dark:border-slate-200 dark:rounded-sm"
                   type="number"
                   name="hidden_nodes2"
                   id="hidden_nodes2"

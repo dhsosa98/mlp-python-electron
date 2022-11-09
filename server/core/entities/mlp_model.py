@@ -72,7 +72,7 @@ class Mlp_Model:
         # Definimos la lista de deltas
         self.deltas = []
 
-        # TODO ESTO PARA LA CAPA DE SALIDA
+        # LO DE ABAJO PARA LA CAPA DE SALIDA
         # El error lo calculamos restando la clase predecida con la clase real y multiplicando por la derivada de sigm de esa salida
         self.deltas.append(
             (cost(self.a[-1], Y, True)) * sigm(self.a[-1], True))
@@ -93,13 +93,8 @@ class Mlp_Model:
             # por la derivada de sus funciones de activacion
             self.deltas.append(
                 np.dot(self.deltas[-1], self.W[i].T) * lineal(self.a[i], True))
-            # 1x3 @ 3x10 = 1x10
-            # 1x10 @ 10x10 = 1x10
-
             # El cambio en el peso lo calculamos como la salida de la capa anterior a la que estamos ahora, por el ultimo delta calculado
             self.gradientW.append(np.dot(self.a[i-1].T, self.deltas[-1]))
-            # 10x1 @ 1x10 = 10x10
-            # 100x1 @ 1x10 = 100x10
 
             # Y bueno el parametro bayas es dsp actualizarlo a el mismo menos el delta por lr
             self.gradientb.append(self.deltas[-1])

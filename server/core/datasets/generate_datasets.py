@@ -99,7 +99,7 @@ def generate_dataset(amount_datasets):
 
     # Aleatorizamos el dataset
     np.random.shuffle(df)
-    shuffle(df)
+    np.random.shuffle(df)
 
     # Una vez que finalizamos el bucle, cargamos este arreglo de salida a un .csv
     df_letras_distorsionadas = pd.DataFrame(df)
