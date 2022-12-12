@@ -67,7 +67,6 @@ def train_mlp_model(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percent
         plot_validation.append({'y': round(cost(result_validation, Y_val), 6), 'x': i+1})
         plot_train.append({'y': round(cost(result_train, Y_train), 6), 'x': i+1})
 
-
     # Obtenemos la neurona con mayor probabilidad de cada patron (Validacion)
     prediction_validation = model.get_prediction(result_validation)
 

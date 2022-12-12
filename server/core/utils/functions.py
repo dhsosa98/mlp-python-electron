@@ -16,5 +16,5 @@ def lineal(X, deriv=False):
 #Definimos el mean square error, error cuadratico medio
 def cost(Y, X, deriv=False):
         if (deriv==True):
-                return Y - X
+                return (Y - X)
         return np.mean(np.power(Y - X, 2))

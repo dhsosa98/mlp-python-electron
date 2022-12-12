@@ -36,8 +36,8 @@ class Mlp_Model:
         # Inicializamos los pesos y bias de la ultima capa
         self.W.append(np.random.rand(hl_topology[-1],3)*np.sqrt(1/(hl_topology[-1]+3)))
         self.b.append(np.zeros((1, 3)))
-        self.prevW = self.W.copy()
-        self.resPrevW = self.W.copy()
+        self.prevW = self.W
+        self.resPrevW = self.W
 
     # Propagacion hacia adelante
     def forward(self, X):
@@ -135,10 +135,8 @@ class Mlp_Model:
             x.shape += (1,)
             # Se le agrega una dimension a la clase para que sea un vector 3x1 donde 3 es la cantidad de clases
             y.shape += (1,)
-            y = y.T 
-            x = x.T
-            self.forward(x)
-            self.backward(y)
+            self.forward(x.T)
+            self.backward(y.T)
             self.update(lr, m)
 
     # Definimos la funcion para obtener la neurona con mayor probabilidad
