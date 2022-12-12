@@ -56,11 +56,11 @@ class Mlp_Model:
         # Se recorren las capas ocultas obteniendo los valores de salida de cada una
         for i in range(len(self.hl_topology)):
             # Calculo a y z para las capas ocultas
-            self.z.append(np.dot(self.a[-1], self.W[i]) - self.b[i])
+            self.z.append(np.dot(self.a[-1], self.W[i]) + self.b[i])
             self.a.append(lineal(self.z[-1]))
 
         # Calculo a y z para la ULTIMA capa
-        self.z.append(np.dot(self.a[-1], self.W[-1]) - self.b[-1])
+        self.z.append(np.dot(self.a[-1], self.W[-1]) + self.b[-1])
         self.a.append(sigm(self.z[-1]))
 
         # Se retorna el valor de salida de la ultima capa
