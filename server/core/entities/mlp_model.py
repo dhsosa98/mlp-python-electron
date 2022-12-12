@@ -1,5 +1,6 @@
 import numpy as np
 from ..utils.functions import sigm, lineal, cost
+np.random.seed(42)
 # Definimos el algoritmo de entrenamiento
 
 
@@ -25,16 +26,19 @@ class Mlp_Model:
         # Los pesos de la capa de entrada los inicializamos con valores aleatorios
         # Se utilizo esta tecnica de generacion de pesos aleatorios para mejorar los gradientes: https://towardsdatascience.com/weight-initialization-techniques-in-neural-networks-26c649eb3b78
        
-        self.W.append(np.random.rand(100,hl_topology[0])*np.sqrt(1/(100+hl_topology[0])))
+        # self.W.append(np.random.rand(100,hl_topology[0])*np.sqrt(1/(100+hl_topology[0])))
+        self.W.append(np.random.normal(loc=0.0, scale = np.sqrt(1/(100+hl_topology[0])), size = (100,hl_topology[0])))
         self.b.append(np.zeros((1, hl_topology[0])))
 
         # Inicializamos los pesos y bias de las capas ocultas
         for i in range(len(hl_topology) - 1):
-            self.W.append(np.random.rand(hl_topology[i],hl_topology[i+1])*np.sqrt(1/(hl_topology[i]+hl_topology[i+1])))
+            self.W.append(np.random.normal(loc=0.0, scale = np.sqrt(1/(hl_topology[i]+hl_topology[i+1])), size = (hl_topology[i],hl_topology[i+1])))
+            # self.W.append(np.random.rand(hl_topology[i],hl_topology[i+1])*np.sqrt(1/(hl_topology[i]+hl_topology[i+1])))
             self.b.append(np.zeros((1, hl_topology[i+1])))
 
         # Inicializamos los pesos y bias de la ultima capa
-        self.W.append(np.random.rand(hl_topology[-1],3)*np.sqrt(1/(hl_topology[-1]+3)))
+        self.W.append(np.random.normal(loc=0.0, scale = np.sqrt(1/(hl_topology[-1]+3)), size = (hl_topology[-1],3)))
+        # self.W.append(np.random.rand(hl_topology[-1],3)*np.sqrt(1/(hl_topology[-1]+3)))
         self.b.append(np.zeros((1, 3)))
         self.prevW = self.W
         self.resPrevW = self.W
