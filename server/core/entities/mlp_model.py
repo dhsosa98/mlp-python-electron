@@ -13,6 +13,8 @@ class Mlp_Model:
         self.W = []
         # Peso anterior de la red para el momentum
         self.prevW = []
+        # Resguardo peso anterior de la red para el momentum
+        self.resPrevW = []
         # Bias de la red
         self.b = []
         # Topologia de las capas ocultas
@@ -35,6 +37,7 @@ class Mlp_Model:
         self.W.append(np.random.rand(hl_topology[-1],3)*np.sqrt(1/(hl_topology[-1]+3)))
         self.b.append(np.zeros((1, 3)))
         self.prevW = self.W.copy()
+        self.resPrevW = self.W.copy()
 
     # Propagacion hacia adelante
     def forward(self, X):
@@ -101,15 +104,19 @@ class Mlp_Model:
         self.gradientb.reverse()
         self.deltas.reverse()
 
-    # Actualizamos pesos y bias
+    #Actualizamos pesos y bias
     def update(self, lr, m):
         # Recorremos las capas
         for i in range(len(self.hl_topology) + 1):
-            # Calculamos el cambio en los pesos y actualizamos los valores de todos los W
-            self.W[i] = self.W[i] + self.gradientW[i] * lr + m * (self.W[i] - self.prevW[i])
+            
+            #Resguardo el peso (t-1)
+            self.resPrevW[i] = self.W[i]
 
-            #Resguardo el peso anterior para usarlo en el momentum
-            self.prevW[i] = self.W[i]
+            # Calculamos los pesos W(t+1)
+            self.W[i] = self.W[i] + lr*self.gradientW[i] + m*(self.W[i] - self.prevW[i])
+            
+            #Resguardo el peso anterior al nuevo calculado (t-1)
+            self.prevW[i] = self.resPrevW[i]
 
             #Actualizamos los bias
             self.b[i] = self.b[i] + self.gradientb[i] * lr
