@@ -5,7 +5,13 @@ np.random.seed(42)
 
 
 class Mlp_Model:
-    def __init__(self, hl_topology):
+    def __init__(self, hl_topology, model_name=None, val_percentage=None, dataset_type=None):
+        # Nombre del modelo
+        self.model_name = model_name
+        # Porcentaje de validacion
+        self.val_percentage = val_percentage
+        # Tipo de dataset
+        self.dataset_type = dataset_type
         # Plot Data es para luego graficar el MSE Global
         self.plot_data = {'val': [], 'train': []}
         # Historial de resultados obtenidos en cada epoca

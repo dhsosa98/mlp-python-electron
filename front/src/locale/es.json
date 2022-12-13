@@ -69,8 +69,97 @@
     "with a probability of": "con una probabilidad de",
     "Warning": "Advertencia",
     "Bad prediction from 30%": "Mala predicción a partir del 30%",
-    "Generate other": "Generar otro",
+    "Generate Another Model": "Generar Otro Modelo",
     "Epoch must be greater than 0": "Las Épocas deben ser mayor a 0",
-    "Other possible classes are": "Otras clases posibles son"
+    "Other possible classes are": "Otras clases posibles son",
+
+    "Help?": "¿Necesitas Ayuda?",
+    "Help Center": "Centro de Ayuda",
+    "What is a Dataset?": "¿Qué es un conjunto de datos?",
+    "Dataset is a collection of data.": "Un conjunto de datos es una colección de datos.",
+    "What is a Validation Dataset?": "¿Qué es un conjunto de datos de validación?",
+    "Validation Dataset is a subset of the Dataset used to validate the model.": "Un conjunto de datos de validación es un subconjunto del conjunto de datos utilizado para validar el modelo.",
+    "What is a Testing Dataset?": "¿Qué es un conjunto de datos de prueba?",
+    "Testing Dataset is a subset of the Dataset used to test the model.": "Un conjunto de datos de prueba es un subconjunto del conjunto de datos utilizado para probar el modelo.",
+    "What is the Validation Dataset Percentage?": "¿Qué es el porcentaje de conjunto de datos de validación?",
+    "Validation Dataset Percentage is a percentage of the dataset used to validate the model.": "El porcentaje de conjunto de datos de validación es el porcentaje del conjunto de datos utilizado para validar el modelo.",
+    "What is an Epoch?": "¿Qué es una Época?",
+    "Epoch is a number of iterations.": "Las Épocas son un número de iteraciones.",
+    "What is a Learning Rate?": "¿Qué es la Tasa de Aprendizaje?",
+    "Learning Rate is a term used to train the model.": "La Tasa de Aprendizaje es un término utilizado para entrenar el modelo.",
+    "What is Momentum?": "¿Qué es el Momentum?",
+    "Momentum is a term used to train the model.": "Momentum es un término utilizado para entrenar el modelo.",
+    "What is a Hidden Layer?": "¿Qué es una Capa Oculta?",
+    "Hidden Layer is a layer of neurons.": "Una Capa Oculta es una capa de neuronas.",
+
+    "What is a Hidden Node?": "¿Qué es una Neurona?",
+    "Hidden Node is a neuron.": "Una neunona oculta es una neurona que se encuentra en una capa oculta.",
+    "What is the MSE Function?": "¿Qué es la función MSE?",
+    "MSE Function is a function used to calculate the error.": "La función MSE es una función utilizada para calcular el error.",
+    "Is calculated as the average of the squares of the errors.": "Se calcula como el promedio de los cuadrados de los errores.",
+
+    "What is the accuracy?": "¿Qué es la precisión?",
+    "Accuracy is a percentage of correct predictions.": "La precisión es un porcentaje de predicciones correctas.",
+
+    "How to train?": "¿Cómo entrenar un modelo?",
+    "To train a model, you need to fill in all the fields and click on the Train Model button.": "Para entrenar un modelo, necesitas llenar todos los campos y dar clic en el botón Entrenar Modelo.",
+
+    "How to save a trained model?": "¿Cómo guardar un modelo entrenado?",
+    "Once you trained the model, you need to click on the Save Model button.": "Una vez que entrenaste el modelo, necesitas dar clic en el botón Guardar Modelo.",
+
+    "What I see in the chart?": "¿Qué veo en el gráfico?",
+    "You can see the evolution MSE of the validation dataset and the testing dataset of the model in the chart.": "Puedes ver la evolución del MSE del conjunto de datos de validación y el conjunto de datos de prueba del modelo en el gráfico.",
+
+    "How to generate another model?": "¿Cómo generar otro modelo?",
+    "Once you saved the model, you can generate another model by clicking on the Generate Another Model button and fill in all fields again." : "Una vez que guardaste el modelo, puedes generar otro modelo dando clic en el botón Generar Otro Modelo y llenando todos los campos de nuevo.",
+    "How to Generate Datasets?": "¿Cómo generar conjuntos de datos?",
+    "Click on the button 'Generate 100 Datasets' to generate 100 datasets.": "Da clic en el botón 'Generar 100 Conjuntos de Datos' para generar 100 conjuntos de datos.",
+    "Click on the button 'Generate 500 Datasets' to generate 500 datasets.": "Da clic en el botón 'Generar 500 Conjuntos de Datos' para generar 500 conjuntos de datos.",
+    "Click on the button 'Generate 1000 Datasets' to generate 1000 datasets.": "Da clic en el botón 'Generar 1000 Conjuntos de Datos' para generar 1000 conjuntos de datos.",
+    "How is a dataset made up?": "¿Cómo se compone un conjunto de datos?",
+    "Each row in been made up by this format: [letter, distortion, x1, x2, ... xn].": "Cada fila está compuesta con este formato: [letra, distorsión, x1, x2, ... xn].",
+    "The possible letters are b, d and f": "Las letras posibles son b, d y f",
+    "The possible distortion is a ramdom number between 0 and 30": "La distorsión posible es un número aleatorio entre 0 y 30",
+    "The values x1, x2, ... xn are a 10x10 matrix with the values 0 or 1": "Los valores x1, x2, ... xn son una matriz de 10x10 con los valores 0 o 1",
+    "How to test a Model?": "¿Cómo probar un modelo?",
+    "To test a model, you need to select a model from the list.": "Para probar un modelo, necesitas seleccionar un modelo de la lista.",
+    "Then click on the Test button.": "Luego da clic en el botón Probar.",
+    "How to see the Model Info?": "¿Cómo ver la información del modelo?",
+    "To see the model info, you need to select a model from the list.": "Para ver la información del modelo, necesitas seleccionar un modelo de la lista.",
+    "Then pass the mouse on the i tooltip button.": "Luego pasa el mouse sobre el botón i.",
+    "How to input a patern?": "¿Cómo ingresar un patrón?",
+    "You can input a patern by clicking on the cells of the matrix.": "Puedes ingresar un patrón dando clic en las celdas de la matriz.",
+
+    "If you want to change the value of a cell, just click on it.": "Si quieres cambiar el valor de una celda, solo da clic en ella.",
+
+    "If you want to start with a default matrix, you can select it on the 'Select a Matrix' select.": "Si quieres empezar con una matriz por defecto, puedes seleccionarla en el select 'Selecciona una Matriz'.",
+
+    "You can change the model in the 'Select a Model' select.": "Puedes cambiar el modelo en el select 'Selecciona un Modelo'.",
+
+    "Then, you can click on the 'Predict' button to get the prediction.": "Luego, puedes dar clic en el botón 'Predecir' para obtener la predicción.",
+
+    "How to reset the pattern?": "¿Cómo reiniciar el patrón?",
+    "You can reset the pattern by clicking on the 'Reset' button.": "Puedes reiniciar el patrón dando clic en el botón 'Reiniciar'.",
+
+    "This will reset the matrix and the distortion.": "Esto reiniciará la matriz y la distorsión.",
+
+    "What is the distortion?": "¿Qué es la distorsión?",
+    "The distortion is the percentage of the cells that will be changed according to the default letter selected.": "La distorsión es el porcentaje de las celdas que serán cambiadas de acuerdo a la letra por defecto seleccionada.",
+
+    "How to change the amount of distortion?": "¿Cómo cambiar la cantidad de distorsión?",
+    "You can change the amount of distortion by clicking on the slider and moving it.": "Puedes cambiar la cantidad de distorsión dando clic en el slider y moviéndolo.",
+
+    "The amount of distortion will be displayed in the text below the slider.": "La cantidad de distorsión se mostrará en el texto debajo del slider.",
+
+    "What the answers means?": "¿Qué significan las respuestas?",
+    "The answers means the prediction of the model.": "Las respuestas significan la predicción del modelo.",
+
+    "The prediction is the letter that the model thinks that the pattern represents.": "La predicción es la letra que el modelo piensa que el patrón representa.",
+    "The probability is the percentage of the model to be right.": "La probabilidad es el porcentaje del modelo de estar correcto.", 
+    "How to delete a Model?": "¿Cómo eliminar un modelo?",
+    "To delete a model, you need to select a model from the list.": "Para eliminar un modelo, necesitas seleccionar un modelo de la lista.",
+    "Then click on the Delete button.": "Luego da clic en el botón Eliminar.",
+    "No model info available": "No hay información disponible del modelo",
+    "Search": "Buscar Información"
     }
 }

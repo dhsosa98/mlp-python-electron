@@ -8,7 +8,7 @@ import dill
 import os
 
 
-def train_mlp_model(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percentage=0.1, save=False, dataset='letras_distorsionadas1000.csv'):
+def train_mlp_model(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percentage=0.1, save=False, dataset='letras_distorsionadas1000.csv', name=None):
 
     models = {
         'letras_distorsionadas100.csv': 'model100',
@@ -26,8 +26,11 @@ def train_mlp_model(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percent
     topology = initialLayer + hl_topology + outputLayer
 
     # Definimos el nombre del modelo (cantidad de datasets, coeficiente de aprendizaje, momentum, epocas, topologia, porcentaje de validacion)
-    model_name = models[dataset]+','+str(lr)+','+str(momentum)+','+str(epoch) + \
-        ','+'; '.join(list(map(str, topology)))+','+str(val_percentage)
+    if not name:
+        model_name = models[dataset]+','+str(lr)+','+str(momentum)+','+str(epoch) + \
+            ','+'; '.join(list(map(str, topology)))+','+str(val_percentage)
+    else:
+        model_name = name
 
     # Definimos el path del dataset
     path = os.path.dirname(__file__) + \
@@ -49,7 +52,7 @@ def train_mlp_model(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percent
 
 
     # Creamos el modelo
-    model = Mlp_Model(hl_topology)
+    model = Mlp_Model(hl_topology, model_name, val_percentage, dataset_type=models[dataset].split('model')[1])
 
     # Definimos los arreglos para graficar los datos
     plot_validation = []

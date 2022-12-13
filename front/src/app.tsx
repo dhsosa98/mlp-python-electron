@@ -20,6 +20,7 @@ import { useState, useRef, useEffect, useContext, SyntheticEvent } from "react";
 import ThemeContext from "./theme";
 import { ThemeProvider } from "./theme";
 import Toggle from "./app/components/buttons/Toggle";
+import HelpCenterWrapper from "./app/components/HelpCenter/HelpCenterWrapper";
 
 const resources = {
   en: EN,

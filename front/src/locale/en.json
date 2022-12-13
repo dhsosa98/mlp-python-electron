@@ -71,6 +71,94 @@
       "Bad prediction from 30%": "Bad prediction from 30%",
       "Generate other": "Generate other",
       "Epoch must be greater than 0": "Epoch must be greater than 0",
-      "Other possible classes are": "Other possible classes are"
+      "Other possible classes are": "Other possible classes are",
+      "Help?": "Help?",
+      "Help Center": "Help Center",
+      "What is a Dataset?": "What is a Dataset?",
+      "Dataset is a collection of data.": "Dataset is a collection of data.",
+      "What is a Validation Dataset?": "What is a Validation Dataset?",
+      "Validation Dataset is a subset of the Dataset used to validate the model.": "Validation Dataset is a subset of the Dataset used to validate the model.",
+      "What is a Testing Dataset?": "What is a Testing Dataset?",
+      "Testing Dataset is a subset of the Dataset used to test the model.": "Testing Dataset is a subset of the Dataset used to test the model.",
+      "What is the Validation Dataset Percentage?": "What is the Validation Dataset Percentage?",
+      "Validation Dataset Percentage is a percentage of the dataset used to validate the model.": "Validation Dataset Percentage is a percentage of the dataset used to validate the model.",
+      "What is an Epoch?": "What is an Epoch?",
+      "Epoch is a number of iterations.": "Epoch is a number of iterations.",
+      "What is a Learning Rate?": "What is a Learning Rate?",
+      "Learning Rate is a term used to train the model.": "Learning Rate is a term used to train the model.",
+      "What is Momentum?": "What is Momentum?",
+      "Momentum is a term used to train the model.": "Momentum is a term used to train the model.",
+      "What is a Hidden Layer?": "What is a Hidden Layer?",
+      "Hidden Layer is a layer of neurons.": "Hidden Layer is a layer of neurons.",
+  
+      "What is a Hidden Node?": "What is a Hidden Node?",
+      "Hidden Node is a neuron.": "Hidden Node is a neuron.",
+      "What is the MSE Function?": "What is the MSE Function?",
+      "MSE Function is a function used to calculate the error.": "MSE Function is a function used to calculate the error.",
+      "Is calculated as the average of the squares of the errors.": "Is calculated as the average of the squares of the errors.",
+  
+      "What is the accuracy?": "What is the accuracy?",
+      "Accuracy is a percentage of correct predictions.": "Accuracy is a percentage of correct predictions.",
+  
+      "How to train?": "How to train?",
+      "To train a model, you need to fill in all the fields and click on the Train Model button.": "To train a model, you need to fill in all the fields and click on the Train Model button.",
+  
+      "How to save a trained model?": "How to save a trained model?",
+      "Once you trained the model, you need to click on the Save Model button.": "Once you trained the model, you need to click on the Save Model button.",
+  
+      "What I see in the chart?": "What I see in the chart?",
+      "You can see the evolution MSE of the validation dataset and the testing dataset of the model in the chart.": "You can see the evolution MSE of the validation dataset and the testing dataset of the model in the chart.",
+  
+      "How to generate another model?": "How to generate another model?",
+      "Once you saved the model, you can generate another model by clicking on the Generate Another Model button and fill in all fields again." : "Once you saved the model, you can generate another model by clicking on the Generate Another Model button and fill in all fields again.",
+      "How to Generate Datasets?": "How to Generate Datasets?",
+      "Click on the button 'Generate 100 Datasets' to generate 100 datasets.": "Click on the button 'Generate 100 Datasets' to generate 100 datasets.",
+      "Click on the button 'Generate 500 Datasets' to generate 500 datasets.": "Click on the button 'Generate 500 Datasets' to generate 500 datasets.",
+      "Click on the button 'Generate 1000 Datasets' to generate 1000 datasets.": "Click on the button 'Generate 1000 Datasets' to generate 1000 datasets.",
+      "How is a dataset made up?": "How is a dataset made up?",
+      "Each row in been made up by this format: [letter, distortion, x1, x2, ... xn].": "Each row in been made up by this format: [letter, distortion, x1, x2, ... xn].",
+      "The possible letters are b, d and f": "The possible letters are b, d and f",
+      "The possible distortion is a ramdom number between 0 and 30": "The possible distortion is a ramdom number between 0 and 30",
+      "The values x1, x2, ... xn are a 10x10 matrix with the values 0 or 1": "The values x1, x2, ... xn are a 10x10 matrix with the values 0 or 1",
+      "How to test a Model?": "How to test a Model?",
+      "To test a model, you need to select a model from the list.": "To test a model, you need to select a model from the list.",
+      "Then click on the Test button.": "Then click on the Test button.",
+      "How to see the Model Info?": "How to see the Model Info?",
+      "To see the model info, you need to select a model from the list.": "To see the model info, you need to select a model from the list.",
+      "Then pass the mouse on the i tooltip button.": "Then pass the mouse on the i tooltip button.",
+      "How to input a patern?": "How to input a patern?",
+      "You can input a patern by clicking on the cells of the matrix.": "You can input a patern by clicking on the cells of the matrix.",
+  
+      "If you want to change the value of a cell, just click on it.": "If you want to change the value of a cell, just click on it.",
+  
+      "If you want to start with a default matrix, you can select it on the 'Select a Matrix' select.": "If you want to start with a default matrix, you can select it on the 'Select a Matrix' select.",
+  
+      "You can change the model in the 'Select a Model' select.": "You can change the model in the 'Select a Model' select.",
+  
+      "Then, you can click on the 'Predict' button to get the prediction.": "Then, click on the 'Predict' button to get the prediction.",
+  
+      "How to reset the pattern?": "How to reset the pattern?",
+      "You can reset the pattern by clicking on the 'Reset' button.": "You can reset the pattern by clicking on the 'Reset' button.",
+  
+      "This will reset the matrix and the distortion.": "This will reset the matrix and the distortion.",
+  
+      "What is the distortion?": "What is the distortion?",
+      "The distortion is the percentage of the cells that will be changed according to the default letter selected.": "The distortion is the percentage of the cells that will be changed according to the default letter selected.",
+  
+      "How to change the amount of distortion?": "How to change the amount of distortion?",
+      "You can change the amount of distortion by clicking on the slider and moving it.": "You can change the amount of distortion by clicking on the slider and moving it.",
+  
+      "The amount of distortion will be displayed in the text below the slider.": "The amount of distortion will be displayed in the text below the slider.",
+  
+      "What the answers means?": "What the answers means?",
+      "The answers means the prediction of the model.": "The answers means the prediction of the model.",
+  
+      "The prediction is the letter that the model thinks that the pattern represents.": "The prediction is the letter that the model thinks that the pattern represents.",
+      "The probability is the percentage of the model to be right.": "The probability is the percentage of the model to be right.", 
+      "How to delete a Model?": "How to delete a Model?",
+      "To delete a model, you need to select a model from the list.": "To delete a model, you need to select a model from the list.",
+      "Then click on the Delete button.": "Then click on the Delete button.",
+      "No model info available": "No model info available",
+      "Search": "Search"
 }
 }

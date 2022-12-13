@@ -16,6 +16,15 @@ import Loader from "../../../components/shared/loaders/Loader";
 import { useTranslation } from 'react-i18next';
 import ThemeContext from "../../../../theme";
 
+import HelpCenterWrapper from "../../../components/HelpCenter/HelpCenterWrapper";
+import HelpCenterItemTitle from "../../../components/HelpCenter/HelpCenterItemTitle";
+import HelpCenterItem from "../../../components/HelpCenter/HelpCenterItem";
+import HelpCenterContent from "../../../components/HelpCenter/HelpCenterContent";
+import HelpCenterTitle from "../../../components/HelpCenter/HelpCenterTitle";
+import HelpCenterItemContent from "../../../components/HelpCenter/HelpCenterItemContent";
+
+
+
 interface IRoute {
   path: string;
   name: string;
@@ -25,7 +34,7 @@ interface IRoute {
 }
 
 const DeleteModel: FC<IRoute> = () => {
-  const { t: T } = useTranslation();
+  const { t: T, i18n } = useTranslation();
 
   const [models, setModels] = useState<any[]>([]);
 
@@ -38,6 +47,11 @@ const DeleteModel: FC<IRoute> = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   const {theme} = useContext(ThemeContext)
+
+  useEffect(() => {
+    setTooltipMessage(constructTooltipMessage(model, T));
+  },[i18n.language]);
+
 
 
   useEffect(() => {
@@ -87,12 +101,34 @@ const DeleteModel: FC<IRoute> = () => {
       <StyledCard onSubmit={handleDeleteModel}>
         {models.length > 0 ? (
           <>
-            <label className="font-bold inline-flex">{T("Select a Model")} <TooltipIcon tooltipMessage={tooltipMessage} /></label>
+            <label className="font-bold inline-flex items-center">{T("Select a Model")} <TooltipIcon tooltipMessage={tooltipMessage} /></label>
             <StyledSelect list={models} onChange={handleChangeModel} />
             <BigButton className="bg-red-500 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800" type="submit">{T("Delete")}</BigButton>
           </>) : (
           <NotFoundModels />)}
       </StyledCard>
+      <HelpCenterWrapper>
+        <HelpCenterContent>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("How to delete a Model?")}</HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("To delete a model, you need to select a model from the list.")}
+            </HelpCenterItemContent>
+            <HelpCenterItemContent>
+              {T("Then click on the Delete button.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("How to see the Model Info?")}</HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("To see the model info, you need to select a model from the list.")}
+            </HelpCenterItemContent>
+            <HelpCenterItemContent>
+              {T("Then pass the mouse on the i tooltip button.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+        </HelpCenterContent>
+      </HelpCenterWrapper>
     </StyledContainer>
   )
 }

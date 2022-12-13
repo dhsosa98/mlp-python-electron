@@ -9,15 +9,24 @@ from .crud import get_savedModel
 
 
 # Definimos la funcion para testear el modelo
-def test_mlp_model(model, model_type, val_percentage):
+def test_mlp_model(model, model_type, val_percentage, dataset_type=None):
     datasets = {
         'model100': '../datasets/letras_distorsionadas100.csv',
         'model500': '../datasets/letras_distorsionadas500.csv',
         'model1000': '../datasets/letras_distorsionadas1000.csv'
     }
 
-    # Definimos el path del dataset
-    path = os.path.dirname(__file__)+'/'+datasets[model_type]
+    if dataset_type:
+        datasets = {
+        '100': '../datasets/letras_distorsionadas100.csv',
+        '500': '../datasets/letras_distorsionadas500.csv',
+        '1000': '../datasets/letras_distorsionadas1000.csv'
+        }
+        # Definimos el path del dataset
+        path = os.path.dirname(__file__)+'/'+datasets[dataset_type]
+    else:
+        # Definimos el path del dataset
+        path = os.path.dirname(__file__)+'/'+datasets[model_type]
 
     # Si el dataset no existe, lanzamos un error
     if not os.path.isfile(path):

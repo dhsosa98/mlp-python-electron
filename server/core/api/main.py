@@ -4,7 +4,7 @@ from typing import Any, Optional
 from pydantic import BaseModel
 from ..services.train_mlp import train_mlp_model
 from ..services.prediction import prediction
-from ..services.crud import list_savedModels, delete_savedModel, get_savedModelAttr
+from ..services.crud import list_savedModels, delete_savedModel, get_savedModel, get_savedModelAttr
 from ..utils.shuffle_matrix import shuffle_matrix
 from ..datasets.generate_datasets import generate_dataset
 from ..services.test_mlp import test_mlp_model
@@ -28,6 +28,7 @@ class Train_Model(BaseModel):
     hl_topology: Optional[Any] = [5]
     val_percentage: Optional[float] = 0.3
     save: Optional[bool] = False
+    name: Optional[str] = None
 
 
 class Generate_Dataset(BaseModel):
@@ -74,15 +75,14 @@ def generate_datasets(data: Generate_Dataset):
 @app.post("/test_model")
 def test_model(model: Test_Model):
     atrr = get_savedModelAttr(model.model)
-    print(atrr)
-    if not atrr:
+    saved_model = get_savedModel(model.model)
+    if not saved_model:
         raise HTTPException(status_code=404, detail="Model not found")
 
     if (atrr['val_percentage'] and atrr['model_name']):
         return test_mlp_model(model.model, atrr['model_name'], atrr['val_percentage'])
-
-    raise HTTPException(status_code=404, detail="Model not found")
-
+    
+    return test_mlp_model(model.model, saved_model.model_name, saved_model.val_percentage, saved_model.dataset_type)
 
 
 @app.post("/train_model")
@@ -98,7 +98,7 @@ def train_model(model: Train_Model):
         dataset = 'letras_distorsionadas500.csv'
     else:
         dataset = 'letras_distorsionadas1000.csv'
-    return train_mlp_model(model.lr, model.momentum, model.epochs, model.hl_topology, model.val_percentage, model.save, dataset)
+    return train_mlp_model(model.lr, model.momentum, model.epochs, model.hl_topology, model.val_percentage, model.save, dataset, model.name)
 
 
 @app.post("/distort_matrix")

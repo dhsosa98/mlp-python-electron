@@ -18,8 +18,8 @@ const TooltipIcon: FC<Props> = ({ tooltipMessage, tooltipId }) => {
           xmlns="http://www.w3.org/2000/svg"
           x="0px"
           y="0px"
-          width="25"
-          height="25"
+          width="20"
+          height="20"
           viewBox="0 0 30 30"
           className="fill-current text-sky-500 dark:text-blue-700"
         >
@@ -27,11 +27,11 @@ const TooltipIcon: FC<Props> = ({ tooltipMessage, tooltipId }) => {
         </svg>
       </span>
       <ReactTooltip
-        multiline={true}
         id={tooltipId}
-        className=" !bg-sky-500 w-[150px] !font-normal dark:!bg-blue-900 dark:text-slate-200"
+        className=" !bg-sky-500 w-[180px] !font-normal dark:!bg-blue-900 dark:text-slate-200"
         effect="solid"
         type="info"
+        html={true}
       />
     </>
   );

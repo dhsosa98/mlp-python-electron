@@ -16,6 +16,12 @@ import ButtonLoader from "../../components/shared/loaders/ButtonLoader";
 import { useTranslation } from 'react-i18next';
 import TestResults from "../../components/TestResults";
 import ThemeContext from "../../../theme";
+import HelpCenterWrapper from "../../components/HelpCenter/HelpCenterWrapper";
+import HelpCenterItemTitle from "../../components/HelpCenter/HelpCenterItemTitle";
+import HelpCenterItem from "../../components/HelpCenter/HelpCenterItem";
+import HelpCenterContent from "../../components/HelpCenter/HelpCenterContent";
+import HelpCenterTitle from "../../components/HelpCenter/HelpCenterTitle";
+import HelpCenterItemContent from "../../components/HelpCenter/HelpCenterItemContent";
 
 
 interface IRoute {
@@ -56,6 +62,7 @@ const TrainModel: FC<IRoute> = () => {
     MSE_test: "",
     test_cases: "",
   });
+  const [modelName, setModelName] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
 
   const [testResults, setTestResults] = useState({
@@ -108,6 +115,7 @@ const TrainModel: FC<IRoute> = () => {
         val_percentage: valPercentage,
         hl_topology,
         save,
+        name: modelName,
       };
       const trainMessage = await Api.trainMLP(train);
       await constructMessage(trainMessage);
@@ -146,6 +154,15 @@ const TrainModel: FC<IRoute> = () => {
         <TestResults result={testResults} />
         <TwoColsContainer>
         <FormItem>
+          <div className="flex flex-col gap-2">
+          <label className="text-white">Insert the model Name</label>
+          <input
+            type="text"
+            className=" outline-1 outline-stone-100 p-2 border border-gray-100 dark:text-slate-800 dark:bg-slate-100 dark:border-slate-200 dark:rounded-sm"
+            value={modelName}
+            onChange={(e) => setModelName(e.target.value)}
+            placeholder="Model Name (optional)"
+          />
           <StyledDefaultButton
             type="submit"
             onClick={() => setSave(true)}
@@ -154,6 +171,7 @@ const TrainModel: FC<IRoute> = () => {
           >
             {T("Save Model")} {isLoaded && <ButtonLoader />}
           </StyledDefaultButton>
+          </div>
         </FormItem>
         <FormItem>
         <StyledDefaultButton
@@ -161,7 +179,7 @@ const TrainModel: FC<IRoute> = () => {
         onClick={handleReset}
         className="bg-sky-500 dark:bg-blue-700 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {T("Generate other")}
+        {T("Generate Another Model")}
       </StyledDefaultButton>
       </FormItem>
       </TwoColsContainer>
@@ -284,6 +302,109 @@ const TrainModel: FC<IRoute> = () => {
           </StyledDefaultButton>
         </FormItem>
       </StyledCard>
+      <HelpCenterWrapper >
+        <HelpCenterContent>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("What is a Dataset?")}</HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("Dataset is a collection of data.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>
+              {T("What is a Validation Dataset?")}
+            </HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("Validation Dataset is a subset of the Dataset used to validate the model.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>
+              {T("What is a Testing Dataset?")}
+            </HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("Testing Dataset is a subset of the Dataset used to test the model.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>
+              {T("What is the Validation Dataset Percentage?")}
+            </HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("Validation Dataset Percentage is a percentage of the dataset used to validate the model.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("What is an Epoch?")}</HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("Epoch is a number of iterations.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("What is a Learning Rate?")}</HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("Learning Rate is a rate of learning.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("What is Momentum?")}</HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("Momentum is a term used to train the model.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("What is a Hidden Layer?")}</HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("Hidden Layer is a layer of neurons.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("What is a Hidden Node?")}</HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("Hidden Node is a neuron.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("What is the MSE Function?")}</HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("MSE Function is a function used to calculate the error.")}
+            </HelpCenterItemContent>
+            <HelpCenterItemContent>
+              {T("Is calculated as the average of the squares of the errors.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("What is the accuracy?")}</HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("Accuracy is a percentage of correct predictions.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("How to train?")}</HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("To train a model, you need to fill in all the fields and click on the Train Model button.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("How to save a trained model?")}</HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("Once you trained the model, you need to click on the Save Model button.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("What I see in the chart?")}</HelpCenterItemTitle>
+              <HelpCenterItemContent>
+                {T("You can see the evolution MSE of the validation dataset and the testing dataset of the model in the chart.")}
+              </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("How to generate another model?")}</HelpCenterItemTitle>
+              <HelpCenterItemContent>
+                {T("Once you saved the model, you can generate another model by clicking on the Generate Another Model button and fill in all fields again.")}
+              </HelpCenterItemContent>
+          </HelpCenterItem>
+        </HelpCenterContent>
+      </HelpCenterWrapper>
     </StyledContainer>
   );
 };

@@ -4,6 +4,8 @@ import StyledContainer from '../../components/shared/containers/Container';
 import TitleContainer from '../../components/shared/containers/TittleContainer';
 import StyledLink from '../../components/buttons/Link';
 import { useTranslation } from 'react-i18next';
+import HelpCenterWrapper from '../../components/HelpCenter/HelpCenterWrapper';
+
 interface IRoute {
     path: string;
     name: string;

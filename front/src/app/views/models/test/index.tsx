@@ -16,6 +16,12 @@ import Loader from "../../../components/shared/loaders/Loader";
 import { useTranslation } from "react-i18next";
 import TrainResults from "../../../components/TrainResults";
 import ThemeContext from "../../../../theme";
+import HelpCenterWrapper from "../../../components/HelpCenter/HelpCenterWrapper";
+import HelpCenterItemTitle from "../../../components/HelpCenter/HelpCenterItemTitle";
+import HelpCenterItem from "../../../components/HelpCenter/HelpCenterItem";
+import HelpCenterContent from "../../../components/HelpCenter/HelpCenterContent";
+import HelpCenterTitle from "../../../components/HelpCenter/HelpCenterTitle";
+import HelpCenterItemContent from "../../../components/HelpCenter/HelpCenterItemContent";
 
 
 interface IRoute {
@@ -39,7 +45,7 @@ const TrainModel: FC<IRoute> = () => {
 
   const {theme} = useContext(ThemeContext)
 
-  const { t: T } = useTranslation();
+  const { t: T, i18n } = useTranslation();
 
   const [result, setResult] = useState({
     "model_name": "",
@@ -65,6 +71,11 @@ const TrainModel: FC<IRoute> = () => {
     MSE_test: "",
     test_cases: "",
   });
+
+  useEffect(() => {
+    setTooltipMessage(constructTooltipMessage(model, T));
+  },[i18n.language]);
+
 
   useEffect(() => {
     setIsLoaded(true);
@@ -93,7 +104,6 @@ const TrainModel: FC<IRoute> = () => {
     if (response.data) {
       setResult(response.data);
       setHistory(response.history.results);
-      setTooltipMessage(constructTooltipMessage(model, T));
       setPlotData(response.plot_data);
       await successAlert(T('Model Successfully Tested'), '', theme);
       setTimeout(() => {
@@ -142,7 +152,7 @@ const TrainModel: FC<IRoute> = () => {
         {models.length > 0 ?
           (
             <>
-              <label className="font-bold inline-flex">{T("Select a Model")} <TooltipIcon tooltipMessage={tooltipMessage}/></label>
+              <label className="font-bold inline-flex items-center">{T("Select a Model")} <TooltipIcon tooltipMessage={tooltipMessage}/></label>
               <StyledSelect list={models} onChange={handleChangeModel} />
               <BigButton type="submit" className=" bg-green-500 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-900">{T("Test")}</BigButton>
             </>
@@ -150,6 +160,71 @@ const TrainModel: FC<IRoute> = () => {
             <NotFoundModels />
           )}
       </StyledCard>
+      <HelpCenterWrapper>
+        <HelpCenterContent>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("What is a Dataset?")}</HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("Dataset is a collection of data.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>
+              {T("What is a Validation Dataset?")}
+            </HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("Validation Dataset is a subset of the Dataset used to validate the model.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>
+              {T("What is a Testing Dataset?")}
+            </HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("Testing Dataset is a subset of the Dataset used to test the model.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("What is the MSE Function?")}</HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("MSE Function is a function used to calculate the error.")}
+            </HelpCenterItemContent>
+            <HelpCenterItemContent>
+              {T("Is calculated as the average of the squares of the errors.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("What is the accuracy?")}</HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("Accuracy is a percentage of correct predictions.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("How to test a Model?")}</HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("To test a model, you need to select a model from the list.")}
+            </HelpCenterItemContent>
+            <HelpCenterItemContent>
+              {T("Then click on the Test button.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("How to see the Model Info?")}</HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("To see the model info, you need to select a model from the list.")}
+            </HelpCenterItemContent>
+            <HelpCenterItemContent>
+              {T("Then pass the mouse on the i tooltip button.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("What I see in the chart?")}</HelpCenterItemTitle>
+              <HelpCenterItemContent>
+                {T("You can see the evolution MSE of the validation dataset and the testing dataset of the model in the chart.")}
+              </HelpCenterItemContent>
+          </HelpCenterItem>
+        </HelpCenterContent>
+      </HelpCenterWrapper>
     </StyledContainer>
   );
 };

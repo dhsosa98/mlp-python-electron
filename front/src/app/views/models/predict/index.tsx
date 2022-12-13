@@ -21,6 +21,15 @@ import { calculateDistortion } from "../../../utils/calculateDistortion";
 import Loader from "../../../components/shared/loaders/Loader";
 import { useTranslation } from 'react-i18next';
 
+import HelpCenterWrapper from "../../../components/HelpCenter/HelpCenterWrapper";
+import HelpCenterItemTitle from "../../../components/HelpCenter/HelpCenterItemTitle";
+import HelpCenterItem from "../../../components/HelpCenter/HelpCenterItem";
+import HelpCenterContent from "../../../components/HelpCenter/HelpCenterContent";
+import HelpCenterTitle from "../../../components/HelpCenter/HelpCenterTitle";
+import HelpCenterItemContent from "../../../components/HelpCenter/HelpCenterItemContent";
+
+
+
 
 interface IRoute {
   path: string;
@@ -70,7 +79,12 @@ const Predict: FC<IRoute> = () => {
 
   const [warning, setWarning] = useState(false);
 
-  const { t: T } = useTranslation();
+  const { t: T, i18n } = useTranslation();
+
+  useEffect(() => {
+    setTooltipMessage(constructTooltipMessage(model, T));
+  },[i18n.language]);
+
 
   useEffect(() => {
     setIsLoaded(true);
@@ -244,7 +258,7 @@ const Predict: FC<IRoute> = () => {
               <>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <div className="flex flex-col gap-2">
-                    <label className="font-bold inline-flex">
+                    <label className="font-bold inline-flex items-center">
                       {T("Select a Model")}{" "}
                       <TooltipIcon tooltipMessage={tooltipMessage} />
                     </label>
@@ -307,6 +321,83 @@ const Predict: FC<IRoute> = () => {
           </div>
         </div>
       </div>
+      <HelpCenterWrapper>
+        <HelpCenterContent>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("How to input a patern?")}</HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("You can input a patern by clicking on the cells of the matrix.")}
+            </HelpCenterItemContent>
+            <HelpCenterItemContent>
+              {T("If you want to change the value of a cell, just click on it.")}
+            </HelpCenterItemContent>
+            <HelpCenterItemContent>
+              {T("If you want to start with a default matrix, you can select it on the 'Select a Matrix' select.")}
+            </HelpCenterItemContent>
+            <HelpCenterItemContent>
+              {T("You can change the model in the 'Select a Model' select.")}
+            </HelpCenterItemContent>
+            <HelpCenterItemContent>
+              {T("Then, you can click on the 'Predict' button to get the prediction.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>
+              {T("How to reset the pattern?")}
+            </HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("You can reset the pattern by clicking on the 'Reset' button.")}
+            </HelpCenterItemContent>
+            <HelpCenterItemContent>
+              {T("This will reset the matrix and the distortion.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>
+              {T("What is the distortion?")}
+            </HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("The distortion is the percentage of the cells that will be changed according to the default letter selected.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>
+              {T("How to change the amount of distortion?")}
+            </HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("You can change the amount of distortion by clicking on the slider and moving it.")}
+            </HelpCenterItemContent>
+            <HelpCenterItemContent>
+              {T("The amount of distortion will be displayed in the text below the slider.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>{T("How to see the Model Info?")}</HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("To see the model info, you need to select a model from the list.")}
+            </HelpCenterItemContent>
+            <HelpCenterItemContent>
+              {T("Then pass the mouse on the i tooltip button.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+          <HelpCenterItem>
+            <HelpCenterItemTitle>
+              {T("What the answers means?")}
+            </HelpCenterItemTitle>
+            <HelpCenterItemContent>
+              {T("The answers means the prediction of the model.")}
+            </HelpCenterItemContent>
+            <HelpCenterItemContent>
+              {T("The prediction is the letter that the model thinks that the pattern represents.")}
+            </HelpCenterItemContent>
+            <HelpCenterItemContent>
+              {T("The probability is the percentage of the model to be right.")}
+            </HelpCenterItemContent>
+          </HelpCenterItem>
+        </HelpCenterContent>
+          
+
+      </HelpCenterWrapper>
     </StyledContainer>
   );
 };
