@@ -152,38 +152,36 @@ const TrainModel: FC<IRoute> = () => {
         </TwoColsContainer>
         <StyledCard onSubmit={handleSubmit}>
         <TestResults result={testResults} />
-        <TwoColsContainer>
+        <div className="flex flex-col gap-2">
+          <FormItem label={T("Insert the model Name")}>
+            <input
+              type="text"
+              className=" outline-1 outline-stone-100 p-2 border border-gray-100 dark:text-slate-800 dark:bg-slate-100 dark:border-slate-200 dark:rounded-sm"
+              value={modelName}
+              onChange={(e) => setModelName(e.target.value)}
+              placeholder={T("Model Name (optional)")}
+            />
+            <StyledDefaultButton
+              type="submit"
+              onClick={() => setSave(true)}
+              className="bg-green-500 dark:bg-green-700 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={isLoaded}
+            >
+              {T("Save Model")} {isLoaded && <ButtonLoader />}
+            </StyledDefaultButton>
+          </FormItem>
+        </div>
         <FormItem>
-          <div className="flex flex-col gap-2">
-          <label className="text-white">Insert the model Name</label>
-          <input
-            type="text"
-            className=" outline-1 outline-stone-100 p-2 border border-gray-100 dark:text-slate-800 dark:bg-slate-100 dark:border-slate-200 dark:rounded-sm"
-            value={modelName}
-            onChange={(e) => setModelName(e.target.value)}
-            placeholder="Model Name (optional)"
-          />
+          <span className="text-center">{T("Or")}</span>
           <StyledDefaultButton
-            type="submit"
-            onClick={() => setSave(true)}
-            className="bg-green-500 dark:bg-green-700 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-            disabled={isLoaded}
-          >
-            {T("Save Model")} {isLoaded && <ButtonLoader />}
-          </StyledDefaultButton>
-          </div>
-        </FormItem>
-        <FormItem>
-        <StyledDefaultButton
-        type="button"
-        onClick={handleReset}
-        className="bg-sky-500 dark:bg-blue-700 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        {T("Generate Another Model")}
-      </StyledDefaultButton>
+          type="button"
+          onClick={handleReset}
+          className="bg-sky-500 dark:bg-blue-700 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {T("Generate Another Model")}
+        </StyledDefaultButton>
       </FormItem>
-      </TwoColsContainer>
-        </StyledCard>
+      </StyledCard>
         </>
       )}
       <StyledCard onSubmit={handleSubmit}>

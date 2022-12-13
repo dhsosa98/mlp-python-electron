@@ -160,6 +160,9 @@
     "To delete a model, you need to select a model from the list.": "Para eliminar un modelo, necesitas seleccionar un modelo de la lista.",
     "Then click on the Delete button.": "Luego da clic en el botón Eliminar.",
     "No model info available": "No hay información disponible del modelo",
-    "Search": "Buscar Información"
+    "Search": "Buscar Información",
+    "Insert the model Name": "Ingresa el nombre del modelo",
+    "Model Name (optional)": "Nombre del Modelo (opcional)",
+    "Or": "O"
     }
 }

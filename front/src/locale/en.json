@@ -159,6 +159,9 @@
       "To delete a model, you need to select a model from the list.": "To delete a model, you need to select a model from the list.",
       "Then click on the Delete button.": "Then click on the Delete button.",
       "No model info available": "No model info available",
-      "Search": "Search"
+      "Search": "Search",
+      "Insert the model Name": "Insert the model Name",
+      "Model Name (optional)": "Model Name (optional)",
+      "Or": "Or"
 }
 }
