@@ -326,7 +326,7 @@ const Predict: FC<IRoute> = () => {
           <HelpCenterItem>
             <HelpCenterItemTitle>{T("How to input a pattern?")}</HelpCenterItemTitle>
             <HelpCenterItemContent>
-              {T("You can input a patern by clicking on the cells of the matrix.")}
+              {T("You can input a pattern by clicking on the cells of the matrix.")}
             </HelpCenterItemContent>
             <HelpCenterItemContent>
               {T("If you want to change the value of a cell, just click on it.")}
