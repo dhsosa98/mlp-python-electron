@@ -45,26 +45,29 @@ def prediction(matrix, model):
     if not model:
         raise HTTPException(status_code=404, detail="Model not found")
 
-    # Obtenemos la prediccion
+    # Obtenemos la prediccion [[0.99, 0.1, 0.0001]]
     X_prediction = model.predict(matrix, np.zeros((1, 3)))
 
     # Normalizamos los valores de la prediccion
     prediction_with_class = normalize(X_prediction)
 
-    # Obtenemos la neurona de salida con mayor probabilidad
+    # [{class: "b", probability: 99%}, {class: "d", probability: 0.89%}, {class: "f", probability: 0.11%}]
+
+    # Obtenemos la neurona de salida con mayor probabilidad 0, 1 o 2
+    # 1x3 -> [[0.99, 0.1, 0.0001]] -> [0]
     prediction = model.get_prediction(X_prediction)
 
-    # Obtenemos la clase de la neurona con mayor probabilidad
-    class_prediction = prediction[0]
+    # Obtenemos el índice de la neurona con mayor probabilidad
+    class_prediction_index = prediction[0]
 
     # Obtenemos las otras dos clases con su probabilidad
     other_classes_with_probability = list(filter(
-        lambda x: x["class"] != classes[class_prediction],
+        lambda x: x["class"] != classes[class_prediction_index],
         prediction_with_class
     ))
 
     # Retornamos la clase con mayor probabilidad y las otras dos clases
-    return {"class": classes[class_prediction],
-            "probability": prediction_with_class[class_prediction]["probability"],
+    return {"class": prediction_with_class[class_prediction_index]["class"],
+            "probability": prediction_with_class[class_prediction_index]["probability"],
             "other_classes": other_classes_with_probability
             }

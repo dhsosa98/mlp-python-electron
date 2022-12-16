@@ -1,5 +1,6 @@
 import numpy as np
 from ..utils.functions import sigm, lineal, cost
+import copy
 np.random.seed(42)
 # Definimos el algoritmo de entrenamiento
 
@@ -46,8 +47,8 @@ class Mlp_Model:
         self.W.append(np.random.normal(loc=0.0, scale = np.sqrt(1/(hl_topology[-1]+3)), size = (hl_topology[-1],3)))
         # self.W.append(np.random.rand(hl_topology[-1],3)*np.sqrt(1/(hl_topology[-1]+3)))
         self.b.append(np.zeros((1, 3)))
-        self.prevW = self.W
-        self.resPrevW = self.W
+        self.prevW = copy.deepcopy(self.W)
+        self.resPrevW = copy.deepcopy(self.W)
 
     # Propagacion hacia adelante
     def forward(self, X):
@@ -124,13 +125,13 @@ class Mlp_Model:
         for i in range(len(self.hl_topology) + 1):
             
             #Resguardo el peso (t-1)
-            self.resPrevW[i] = self.W[i]
+            self.resPrevW[i] = copy.deepcopy(self.W[i])
 
             # Calculamos los pesos W(t+1)
             self.W[i] = self.W[i] + lr*self.gradientW[i] + m*(self.W[i] - self.prevW[i])
             
             #Resguardo el peso anterior al nuevo calculado (t-1)
-            self.prevW[i] = self.resPrevW[i]
+            self.prevW[i] = copy.deepcopy(self.resPrevW[i])
 
             #Actualizamos los bias
             self.b[i] = self.b[i] + self.gradientb[i] * lr
