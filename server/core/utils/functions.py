@@ -17,4 +17,4 @@ def lineal(X, deriv=False):
 def cost(Y, X, deriv=False):
         if (deriv==True):
                 return (Y - X)
-        return np.mean(np.power(Y - X, 2))
+        return (1/2) * np.mean(np.power(Y - X, 2))

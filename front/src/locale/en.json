@@ -86,8 +86,10 @@
       "Epoch is a number of iterations.": "Epoch is a number of iterations.",
       "What is a Learning Rate?": "What is a Learning Rate?",
       "Learning Rate is a term used to train the model.": "Learning Rate is a term used to train the model.",
+      "Determines the step size at which the model's weights are updated during training.": "Determines the step size at which the model's weights are updated during training.",
       "What is Momentum?": "What is Momentum?",
       "Momentum is a term used to train the model.": "Momentum is a term used to train the model.",
+      "Determines the amount by which the model's weights are updated based on the accumulated gradient from previous training iterations": "Determines the amount by which the model's weights are updated based on the accumulated gradient from previous training iterations",
       "What is a Hidden Layer?": "What is a Hidden Layer?",
       "Hidden Layer is a layer of neurons.": "Hidden Layer is a layer of neurons.",
   

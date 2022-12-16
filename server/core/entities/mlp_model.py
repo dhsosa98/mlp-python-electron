@@ -27,16 +27,16 @@ class Mlp_Model:
         # Topologia de las capas ocultas
         self.hl_topology = hl_topology
 
-        # Inicializamos los pesos y bias de la capa de entrada
+        # Inicializamos los pesos y bias de la primera capa oculta
 
         # Los pesos de la capa de entrada los inicializamos con valores aleatorios
         # Se utilizo esta tecnica de generacion de pesos aleatorios para mejorar los gradientes: https://towardsdatascience.com/weight-initialization-techniques-in-neural-networks-26c649eb3b78
        
         # self.W.append(np.random.rand(100,hl_topology[0])*np.sqrt(1/(100+hl_topology[0])))
-        self.W.append(np.random.normal(loc=0.0, scale = np.sqrt(1/(100+hl_topology[0])), size = (100,hl_topology[0])))
+        self.W.append(np.random.normal(loc=0.0, scale = np.sqrt(1/(100+hl_topology[0])), size = (100, hl_topology[0])))
         self.b.append(np.zeros((1, hl_topology[0])))
 
-        # Inicializamos los pesos y bias de las capas ocultas
+        # Inicializamos los pesos y bias de las capas ocultas posteriores
         for i in range(len(hl_topology) - 1):
             self.W.append(np.random.normal(loc=0.0, scale = np.sqrt(1/(hl_topology[i]+hl_topology[i+1])), size = (hl_topology[i],hl_topology[i+1])))
             # self.W.append(np.random.rand(hl_topology[i],hl_topology[i+1])*np.sqrt(1/(hl_topology[i]+hl_topology[i+1])))
@@ -59,12 +59,16 @@ class Mlp_Model:
         self.z.append(X)
         self.a.append(X)
         
+        # [0,0,0,0,..] -> X
         # Se recorren las capas ocultas obteniendo los valores de salida de cada una
         for i in range(len(self.hl_topology)):
             # Calculo a y z para las capas ocultas
             self.z.append(np.dot(self.a[-1], self.W[i]) + self.b[i])
             self.a.append(lineal(self.z[-1]))
+            # a -> [(X), 1x5, 1x5]
 
+        # a -> [(X), 1x5, 1x5, 1x2, 1x3]
+        #1x2 * 2x3 = 1x3  
         # Calculo a y z para la ULTIMA capa
         self.z.append(np.dot(self.a[-1], self.W[-1]) + self.b[-1])
         self.a.append(sigm(self.z[-1]))
@@ -140,6 +144,10 @@ class Mlp_Model:
 
         # Se recorre por patrones individuales con
         # zip, que relaciona cada patron con su clase correspondiente
+        #[[0,0,0,0..], [0,1,0,..]]
+        #[[1,0,0], [1,0,0] ]
+        #[[0,0,0,0..]]
+        #[[1,0,0]]
         for x, y in zip(X, Y):
             # Se le agrega una dimension al patron para que sea un vector nx1 donde n es la cantidad de atributos
             x.shape += (1,)

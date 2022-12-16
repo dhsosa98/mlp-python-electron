@@ -341,13 +341,19 @@ const TrainModel: FC<IRoute> = () => {
           <HelpCenterItem>
             <HelpCenterItemTitle>{T("What is a Learning Rate?")}</HelpCenterItemTitle>
             <HelpCenterItemContent>
-              {T("Learning Rate is a rate of learning.")}
+              {T("Learning Rate is a term used to train the model.")}
+            </HelpCenterItemContent>
+            <HelpCenterItemContent>
+              {T("Determines the step size at which the model's weights are updated during training.")}
             </HelpCenterItemContent>
           </HelpCenterItem>
           <HelpCenterItem>
             <HelpCenterItemTitle>{T("What is Momentum?")}</HelpCenterItemTitle>
             <HelpCenterItemContent>
               {T("Momentum is a term used to train the model.")}
+            </HelpCenterItemContent>
+            <HelpCenterItemContent>
+              {T("Determines the amount by which the model's weights are updated based on the accumulated gradient from previous training iterations.")}
             </HelpCenterItemContent>
           </HelpCenterItem>
           <HelpCenterItem>

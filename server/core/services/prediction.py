@@ -12,6 +12,7 @@ classes = {
 # Definimos la funcion para normalizar los valores de la predicción
 def normalize(X_prediction):
     sum = 0
+    #Ex: X_prediction -> [0.2, 0.3, 0.5] -> 1.0
 
     # Sumamos los valores de la predicción
     for i in range(len(X_prediction[0])):
@@ -56,8 +57,8 @@ def prediction(matrix, model):
     # Obtenemos la clase de la neurona con mayor probabilidad
     class_prediction = prediction[0]
 
-    # Obtenemos las otras dos clases
-    other_classes = list(filter(
+    # Obtenemos las otras dos clases con su probabilidad
+    other_classes_with_probability = list(filter(
         lambda x: x["class"] != classes[class_prediction],
         prediction_with_class
     ))
@@ -65,5 +66,5 @@ def prediction(matrix, model):
     # Retornamos la clase con mayor probabilidad y las otras dos clases
     return {"class": classes[class_prediction],
             "probability": prediction_with_class[class_prediction]["probability"],
-            "other_classes": other_classes
+            "other_classes": other_classes_with_probability
             }
