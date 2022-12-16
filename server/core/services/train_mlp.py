@@ -58,7 +58,7 @@ def train_mlp_model(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percent
     plot_validation = []
     plot_train = []
 
-    min = 10000
+    # min = 10000
 
     # Entrenamos el modelo en cada epoca
     for i in range(epoch):
@@ -70,10 +70,10 @@ def train_mlp_model(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percent
 
         # Si el error de validacion es menor al minimo, actualizamos el minimo
 
-        if min>cost(result_validation, Y_val):
-            min = cost(result_validation, Y_val)
-        else: 
-            break
+        # if min>cost(result_validation, Y_val):
+        #     min = cost(result_validation, Y_val)
+        # else: 
+        #     break
 
         # Agregamos los datos para graficar
         plot_validation.append({'y': round(cost(result_validation, Y_val), 6), 'x': i+1})
@@ -82,7 +82,7 @@ def train_mlp_model(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percent
     # Obtenemos la neurona con mayor probabilidad de cada patron (Validacion) [0, 1, 2]
     prediction_validation = model.get_prediction(result_validation)
 
-    epoch = len(plot_train)
+    # epoch = len(plot_train)
 
     #Obtenemos el resultado de la prediccion (Test) 
     result_test = model.predict(X_test, Y_test)

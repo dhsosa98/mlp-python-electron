@@ -9,7 +9,7 @@ classes = {
     2: "f",
 }
 
-# Definimos la funcion para normalizar los valores de la predicción
+# Definimos la funcion para normalizar los valores de la predicción 
 def normalize(X_prediction):
     sum = 0
     #Ex: X_prediction -> [0.2, 0.3, 0.5] -> 1.0
@@ -17,10 +17,10 @@ def normalize(X_prediction):
     # Sumamos los valores de la predicción
     for i in range(len(X_prediction[0])):
         sum += X_prediction[0][i]
-
+    # Devuelve la clase y la probabilidad asociada a la clase
     def addClass(x, y):
         return {"class": y, "probability": round(x*100/sum, 6)}
-
+    # Mapeamos la función addClass a cada valor de la predicción
     return list(map(addClass, X_prediction[0], classes.values()))
 
 
