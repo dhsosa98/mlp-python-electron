@@ -112,7 +112,7 @@ def train_mlp_model(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percent
         }
         outfile = os.path.dirname(__file__)+'/../models/'+model_name+'.pickle'
 
-        # Guardamos el modelo
+        # Guardamos el modelo entrenado
         with open(outfile, 'wb') as pickle_file:
             dill.dump(model, pickle_file)
 

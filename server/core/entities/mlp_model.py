@@ -158,9 +158,9 @@ class Mlp_Model:
             self.backward(y.T)
             self.update(lr, m)
 
-    # Definimos la funcion para obtener la neurona con mayor probabilidad
-    def get_prediction(self, model):
-        return np.argmax(model, 1)
+    # Definimos la funcion para obtener el indice de la neurona con mayor probabilidad
+    def get_prediction(self, modelPrediction):
+        return np.argmax(modelPrediction, 1)
 
     # Definimos la funcion para obtener la precision de la red
     def get_accuracy(self, prediction, Y):
