@@ -7,43 +7,56 @@ from random import shuffle
 
 
 letterB = [
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
-    [1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
-    [1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
-    [1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
-    [1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+    [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
 letterD = [
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-    [2, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0],
-    [2, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
-    [2, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
-    [2, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
-    [2, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0],
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 1, 1, 1, 1, 1, 0, 0],
+    [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 1, 1, 1, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
 letterF = [
-    [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [3, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0],
-    [3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-    [3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-    [3, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
-    [3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-    [3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-    [3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-    [3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-    [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 1, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+    [0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
-letters = [letterB, letterD, letterF]
+
+available_letters = [{
+    "letter": "b",
+    "data": letterB
+}, {
+    "letter": "d",
+    "data": letterD
+}, 
+{
+    "letter": "f",
+    "data": letterF
+}, 
+]
+
+default_csv_name = 'letras_distorsionadas'
 
 
 def generate_dataset(amount_datasets):
@@ -64,14 +77,14 @@ def generate_dataset(amount_datasets):
             distortion = random.randint(1, 30)
 
         # Elegimos las letras del array de letras en orden
-        currentLetter = copy.deepcopy(letters[currentLetterIndex])
+        currentLetter = copy.deepcopy(available_letters[currentLetterIndex]["data"])
 
         # No voy a cambiar la celda 2 veces (disminuye distorsion)
         memo = []
         i = 1
         while i <= distortion:
             # Bit aleatorio en X (columnas de la 1 a la 10)
-            distX = random.randint(2, 11)
+            distX = random.randint(0, 9)
             # Bit aleatorio en Y (filas de la 0 a la 9)
             distY = random.randint(0, 9)
             if (distY, distX) not in memo:
@@ -86,12 +99,12 @@ def generate_dataset(amount_datasets):
 
         # pasamos la letra en forma de matriz a una simple fila
         auxLetter = np.array(currentLetter)
-        auxLetter = auxLetter.T[2:12].T.flatten()
-        currentLetter = copy.deepcopy(letters[currentLetterIndex][0][0])
+        auxLetter = auxLetter.flatten()
+        currentLetter = currentLetterIndex + 1
         auxLetter = np.append([currentLetter, distortion], auxLetter, axis=0)
         df.append(auxLetter)
         # Pasamos a la siguiente letra
-        if currentLetterIndex < (len(letters) - 1):
+        if currentLetterIndex < (len(available_letters) - 1):
             currentLetterIndex = currentLetterIndex + 1
         else:
             currentLetterIndex = 0
@@ -101,5 +114,5 @@ def generate_dataset(amount_datasets):
     # Una vez que finalizamos el bucle, cargamos este arreglo de salida a un .csv
     df_letras_distorsionadas = pd.DataFrame(df)
     df_letras_distorsionadas.to_csv(
-        rf'{os.path.dirname(__file__)}/letras_distorsionadas' + str(amount_datasets) + '.csv', index=False)
+        rf'{os.path.dirname(__file__)}/{default_csv_name}' + str(amount_datasets) + '.csv', index=False)
     return True

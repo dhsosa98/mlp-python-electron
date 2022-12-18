@@ -164,6 +164,7 @@
       "Search": "Search",
       "Insert the model Name": "Insert the model Name",
       "Model Name (optional)": "Model Name (optional)",
-      "Or": "Or"
+      "Or": "Or",
+      "Model name can't contain": "Model name can't contain"
 }
 }

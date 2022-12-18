@@ -47,13 +47,6 @@ const TrainModel: FC<IRoute> = () => {
 
   const { t: T, i18n } = useTranslation();
 
-  const [result, setResult] = useState({
-    "model_name": "",
-    "accuracy_test": "",
-    "MSE_test": "",
-    "test_cases": "",
-  });
-
   const [history, setHistory] = useState({
     model_name: "",
     learning_rate: "",
@@ -70,11 +63,13 @@ const TrainModel: FC<IRoute> = () => {
     accuracy_test: "",
     MSE_test: "",
     test_cases: "",
+    test: {
+      model_name: "",
+      accuracy_test: "",
+      MSE_test: "",
+      test_cases: "",
+    }
   });
-
-  useEffect(() => {
-    setTooltipMessage(constructTooltipMessage(model, T));
-  },[i18n.language]);
 
 
   useEffect(() => {
@@ -83,17 +78,27 @@ const TrainModel: FC<IRoute> = () => {
       if (res.models.length > 0) {
         setModels(res.models);
         setModel(res.models[0]);
-        setTooltipMessage(constructTooltipMessage(res.models[0], T));
         return;
       }
       setModels([]);
     }).finally(() => setIsLoaded(false));
   }, []);
 
+  useEffect(() => {
+    if (model) {
+      const getModelData = async () => {
+      const modelInfo = await Api.getMLPModelInfo(model)
+      if (modelInfo) {
+        setTooltipMessage(constructTooltipMessage(modelInfo, T))
+      }
+    }
+    getModelData();
+    }
+  }, [model, i18n.language]);
+      
   const handleChangeModel = (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
     setModel(e.currentTarget.value);
-    setTooltipMessage(constructTooltipMessage(e.currentTarget.value, T));
   };
 
   const handleTestModel = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -101,9 +106,8 @@ const TrainModel: FC<IRoute> = () => {
     e.preventDefault();
     setIsLoaded(true);
     const response = await Api.testMLPModel(model)
-    if (response.data) {
-      setResult(response.data);
-      setHistory(response.history.results);
+    if (response?.history) {
+      setHistory(response?.history?.results);
       setPlotData(response.plot_data);
       await successAlert(T('Model Successfully Tested'), '', theme);
       setTimeout(() => {
@@ -122,7 +126,7 @@ const TrainModel: FC<IRoute> = () => {
     return (
     <StyledContainer>
         <StyledCard>
-          <div className="p-10">
+          <div className="p-10 flex justify-center">
           <Loader/>
           </div>
           </StyledCard>
@@ -144,7 +148,7 @@ const TrainModel: FC<IRoute> = () => {
           <TrainResults result={history} />
         </TwoColsContainer>
         <StyledCard>
-        <TestResults result={result} />
+        <TestResults result={history?.test} />
         </StyledCard>
       </>
       }

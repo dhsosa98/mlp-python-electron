@@ -21,7 +21,6 @@ export class Api {
 
    public static async getMLPModels(){
       const response = await axios.get(baseUrl+'models', {headers})
-      console.log(response.data)
       return response.data
    }
 
@@ -43,6 +42,16 @@ export class Api {
 
    public static async testMLPModel(model: string){
       const response = await axios.post(baseUrl+'test_model', { model }, {headers})
+      return response.data
+   }
+
+   public static async getMLPModelInfo(model: string){
+      const response = await axios.post(baseUrl+'model_attr', { model }, {headers})
+      return response.data
+   }
+
+   public static async getAvailableMatrixes(){
+      const response = await axios.get(baseUrl+'default_matrixes', {headers})
       return response.data
    }
 }

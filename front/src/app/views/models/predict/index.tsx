@@ -1,22 +1,13 @@
 import React, { FC, SyntheticEvent, useState, useEffect } from "react";
 import { Api } from "../../../services/Api";
-import styled, { keyframes, css } from "styled-components";
-import { Link } from "react-router-dom";
 import constructTooltipMessage from "../../../utils/tooltipMessage";
-import ReactTooltip from "react-tooltip";
 import StyledContainer from "../../../components/shared/containers/Container";
 import StyledCard from "../../../components/shared/cards/Card";
 import NotFoundModels from "../../../components/NotFoundModels";
-import StyledSelect from "../../../components/inputs/Select";
 import Cell from "../../../components/RotatedCell";
-import BigButton from "../../../components/buttons/BigButton";
 import StyledBackLink from "../../../components/buttons/BackLink";
 import TooltipIcon from "../../../components/TooltipIcon";
 import StyledDefaultButton from "../../../components/buttons/DefaultButton";
-import {
-  initialMatrix,
-  defaultMatrixes
-} from "../../../constants/matrixes";
 import { calculateDistortion } from "../../../utils/calculateDistortion";
 import Loader from "../../../components/shared/loaders/Loader";
 import { useTranslation } from 'react-i18next';
@@ -25,12 +16,7 @@ import HelpCenterWrapper from "../../../components/HelpCenter/HelpCenterWrapper"
 import HelpCenterItemTitle from "../../../components/HelpCenter/HelpCenterItemTitle";
 import HelpCenterItem from "../../../components/HelpCenter/HelpCenterItem";
 import HelpCenterContent from "../../../components/HelpCenter/HelpCenterContent";
-import HelpCenterTitle from "../../../components/HelpCenter/HelpCenterTitle";
 import HelpCenterItemContent from "../../../components/HelpCenter/HelpCenterItemContent";
-
-
-
-
 interface IRoute {
   path: string;
   name: string;
@@ -38,6 +24,19 @@ interface IRoute {
   component: unknown;
   props?: unknown;
 }
+
+const initialMatrix = [
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+];
 
 
 const createMatrix = (matrix: number[][], row: number, cell: number) => {
@@ -65,7 +64,7 @@ const DistortionComponent: FC<any> = ({ percentage }) => {
 };
 
 const Predict: FC<IRoute> = () => {
-  const [model, setModel] = useState<string>("A");
+  const [model, setModel] = useState<string>("");
 
   const [distortion, setDistortion] = useState(0);
 
@@ -81,10 +80,17 @@ const Predict: FC<IRoute> = () => {
 
   const { t: T, i18n } = useTranslation();
 
-  useEffect(() => {
-    setTooltipMessage(constructTooltipMessage(model, T));
-  },[i18n.language]);
+  const [availableMatrixes, setAvailableMatrixes] = useState([]);
 
+  useEffect(() => {
+    const getAvailableMatrixes = async () => {
+      const matrixes = await Api.getAvailableMatrixes();
+      if (matrixes) {
+        setAvailableMatrixes(matrixes?.default_matrixes);
+      }
+    };
+    getAvailableMatrixes();
+  }, []);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -92,7 +98,6 @@ const Predict: FC<IRoute> = () => {
       if (res.models.length > 0) {
         setModels(res.models);
         setModel(res.models[0]);
-        setTooltipMessage(constructTooltipMessage(res.models[0], T));
         return;
       }
       setModels([]);
@@ -101,8 +106,26 @@ const Predict: FC<IRoute> = () => {
     });
   }, []);
 
-  const [actualMatrixKey, setActualMatrixKey] =
-    useState<keyof typeof defaultMatrixes>("_");
+  useEffect(() => {
+    if (model) {
+      const getModelData = async () => {
+      const modelInfo = await Api.getMLPModelInfo(model)
+      if (modelInfo) {
+        setTooltipMessage(constructTooltipMessage(modelInfo, T))
+      }
+    }
+    getModelData();
+    }
+  }, [model, i18n.language]);
+
+  const [actualMatrixKey, setActualMatrixKey] = useState<string>("");
+
+  useEffect(() => {
+    if (availableMatrixes.length > 0 && actualMatrixKey) {
+      const matrix = availableMatrixes.find((matrix) => matrix.letter === actualMatrixKey);
+      setMatrix(matrix?.data);
+    }
+  }, [availableMatrixes, actualMatrixKey]);
 
   const [answer, setAnswer] = useState({
     class: '',
@@ -113,9 +136,10 @@ const Predict: FC<IRoute> = () => {
   const handleChangeMatrix = (row: number, cell: number) => {
     const newMatrix = createMatrix(matrix, row, cell);
     setMatrix(newMatrix);
+    const actualMatrix = availableMatrixes.find((matrix) => matrix.letter === actualMatrixKey);
     const distortionPercentage = calculateDistortion(
       newMatrix,
-      actualMatrixKey
+      actualMatrix
     );
     setPercentage(distortionPercentage);
   };
@@ -129,18 +153,15 @@ const Predict: FC<IRoute> = () => {
       probability: 0,
       other_classes: []
     });
-    setActualMatrixKey("_");
+    setActualMatrixKey("");
   };
 
   const handleSubmitDistortion = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const matrixDistorted = await Api.getMatrixDistortioned(defaultMatrixes[actualMatrixKey], distortion);
+    const {data: actualMatrix} = availableMatrixes.find((matrix) => matrix.letter === actualMatrixKey);
+    const matrixDistorted = await Api.getMatrixDistortioned(actualMatrix, distortion);
     setMatrix(matrixDistorted);
-    const distortionPercentage = calculateDistortion(
-      matrixDistorted,
-      actualMatrixKey
-    );
-    setPercentage(distortionPercentage);
+    setPercentage(distortion);
   };
 
   const handleSubmitMLPAnswer = async (e: SyntheticEvent) => {
@@ -158,10 +179,7 @@ const Predict: FC<IRoute> = () => {
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     e.preventDefault();
-    setActualMatrixKey(e.currentTarget.value as keyof typeof defaultMatrixes);
-    setMatrix([
-      ...defaultMatrixes[e.currentTarget.value as keyof typeof defaultMatrixes],
-    ]);
+    setActualMatrixKey(e.currentTarget.value);
   };
 
   const handleChangeDistortion = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -177,7 +195,6 @@ const Predict: FC<IRoute> = () => {
   const handleChangeModel = (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
     setModel(e.currentTarget.value);
-    setTooltipMessage(constructTooltipMessage(e.currentTarget.value, T));
   };
 
   const [matrix, setMatrix] = useState<number[][]>([...initialMatrix]);
@@ -186,7 +203,7 @@ const Predict: FC<IRoute> = () => {
     return (
       <StyledContainer>
         <StyledCard>
-          <div className="p-10">
+          <div className="p-10 flex justify-center">
             <Loader />
           </div>
         </StyledCard>
@@ -201,7 +218,7 @@ const Predict: FC<IRoute> = () => {
         <div className="flex lg:flex-row flex-col justify-center gap-10">
           <div className="grid justify-center">
             <div className=" grid grid-rows-10 grid-cols-10 sm:h-[370px] h-[300px] aspect-square gap-2">
-              {matrix.map((row: number[], rowIndex: number) => (
+              {matrix?.map((row: number[], rowIndex: number) => (
                 <>
                   {row.map((cell: number, cellIndex: number) => {
                     return (
@@ -217,7 +234,7 @@ const Predict: FC<IRoute> = () => {
               ))}
             </div>
           </div>
-          {actualMatrixKey !== "_" && (
+          {actualMatrixKey && (
             <div>
               <DistortionInputComponent
                 distortion={distortion}
@@ -253,10 +270,10 @@ const Predict: FC<IRoute> = () => {
           </StyledCard>
         )}
         <div className="w-full flex flex-col items-center justify-center gap-3 ">
-          <div className="bg-white shadow-md shadow-gray-100 dark:bg-slate-800 dark:shadow-slate-900 dark:text-slate-200 rounded-md p-5 flex flex-col gap-5">
+          <div className="bg-white shadow-md shadow-gray-100 dark:bg-slate-800 dark:shadow-slate-900 dark:text-slate-200 rounded-md p-5 flex flex-col gap-5 sm:max-w-full max-w-[300px] min-w-[300px]">
             {models.length > 0 ? (
               <>
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col lg:flex-row gap-4">
                   <div className="flex flex-col gap-2">
                     <label className="font-bold inline-flex items-center">
                       {T("Select a Model")}{" "}
@@ -266,7 +283,7 @@ const Predict: FC<IRoute> = () => {
                       className=" outline-1 outline-stone-100 border border-gray-100 p-2 dark:text-slate-800 dark:bg-slate-100 dark:border-slate-200 dark:rounded-sm"
                       onChange={handleChangeModel}
                     >
-                      {models.map((model) => (
+                      {models?.map((model) => (
                         <option value={model}>{model}</option>
                       ))}
                     </select>
@@ -277,23 +294,13 @@ const Predict: FC<IRoute> = () => {
                       className=" outline-1 outline-stone-100 border border-gray-100 p-2 dark:text-slate-800 dark:bg-slate-100 dark:border-slate-200 dark:rounded-sm"
                       onChange={handleChangeDefaultMatrixes}
                     >
-                      {Object.keys(defaultMatrixes).map((key) => {
+                    <option value={actualMatrixKey} selected disabled>{T("Matrix")}</option>
+                      {availableMatrixes?.map((key) => {
                         return (
                           <>
-                            {key === "_" ? (
-                              <option
-                                key={key}
-                                disabled
-                                selected={actualMatrixKey === "_"}
-                                value={key}
-                              >
-                                {T("Matrix")}
+                              <option key={key["letter"]} value={key["letter"]}>
+                                {key["letter"]}
                               </option>
-                            ) : (
-                              <option key={key} value={key}>
-                                {key}
-                              </option>
-                            )}
                           </>
                         );
                       })}

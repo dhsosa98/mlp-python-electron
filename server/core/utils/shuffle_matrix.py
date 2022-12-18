@@ -3,6 +3,7 @@ import random
 
 # Definimos la funcion para distorsionar la matriz de los patrones
 def shuffle_matrix(matrix, percentage: int):
+    print(matrix)
     number_of_elemets_to_change = math.floor(percentage)
     memo = []
     i = 1

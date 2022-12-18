@@ -1,21 +1,16 @@
 import numpy as np
 from ..utils.functions import sigm, lineal, cost
 import copy
+from ..datasets.generate_datasets import available_letters
 np.random.seed(42)
 # Definimos el algoritmo de entrenamiento
 
 
 class Mlp_Model:
-    def __init__(self, hl_topology, model_name=None, val_percentage=None, dataset_type=None):
-        # Nombre del modelo
-        self.model_name = model_name
-        # Porcentaje de validacion
-        self.val_percentage = val_percentage
-        # Tipo de dataset
-        self.dataset_type = dataset_type
+    def __init__(self, hl_topology):
         # Plot Data es para luego graficar el MSE Global
         self.plot_data = {'val': [], 'train': []}
-        # Historial de resultados obtenidos en cada epoca
+        # Historial de resultados obtenidos
         self.history = {}
         # Pesos de la red
         self.W = []
@@ -44,9 +39,9 @@ class Mlp_Model:
             self.b.append(np.zeros((1, hl_topology[i+1])))
 
         # Inicializamos los pesos y bias de la ultima capa
-        self.W.append(np.random.normal(loc=0.0, scale = np.sqrt(1/(hl_topology[-1]+3)), size = (hl_topology[-1],3)))
+        self.W.append(np.random.normal(loc=0.0, scale = np.sqrt(1/(hl_topology[-1]+len(available_letters))), size = (hl_topology[-1],len(available_letters))))
         # self.W.append(np.random.rand(hl_topology[-1],3)*np.sqrt(1/(hl_topology[-1]+3)))
-        self.b.append(np.zeros((1, 3)))
+        self.b.append(np.zeros((1, len(available_letters))))
         self.prevW = copy.deepcopy(self.W)
         self.resPrevW = copy.deepcopy(self.W)
 
@@ -159,10 +154,10 @@ class Mlp_Model:
             self.update(lr, m)
 
     # Definimos la funcion para obtener la neurona con mayor probabilidad
-    def get_prediction(self, model):
-        return np.argmax(model, 1)
+    def get_predictionIndex(self, prediction):
+        return np.argmax(prediction, 1)
 
     # Definimos la funcion para obtener la precision de la red
-    def get_accuracy(self, prediction, Y):
-        Y_arg = np.argmax(Y, 1)
-        return (np.sum(prediction == Y_arg) / Y_arg.size)*100
+    def get_accuracy(self, prediction_index, Y):
+        Y_index = np.argmax(Y, 1)
+        return (np.sum(prediction_index == Y_index) / Y_index.size)*100

@@ -49,8 +49,16 @@ const DeleteModel: FC<IRoute> = () => {
   const {theme} = useContext(ThemeContext)
 
   useEffect(() => {
-    setTooltipMessage(constructTooltipMessage(model, T));
-  },[i18n.language]);
+    if (model) {
+      const getModelData = async () => {
+      const modelInfo = await Api.getMLPModelInfo(model)
+      if (modelInfo) {
+        setTooltipMessage(constructTooltipMessage(modelInfo, T))
+      }
+    }
+    getModelData();
+    }
+  }, [model, i18n.language]);
 
 
 
@@ -70,7 +78,6 @@ const DeleteModel: FC<IRoute> = () => {
   const handleChangeModel = (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
     setModel(e.currentTarget.value);
-    setTooltipMessage(constructTooltipMessage(e.currentTarget.value, T));
   };
 
   const handleDeleteModel = (e: React.FormEvent<HTMLFormElement>) => {
@@ -87,7 +94,7 @@ const DeleteModel: FC<IRoute> = () => {
     return (
       <StyledContainer>
         <StyledCard>
-          <div className="p-10">
+          <div className="p-10 flex justify-center">
           <Loader/>
           </div>
         </StyledCard>

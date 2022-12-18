@@ -165,6 +165,7 @@
     "Search": "Buscar Información",
     "Insert the model Name": "Ingresa el nombre del modelo",
     "Model Name (optional)": "Nombre del Modelo (opcional)",
-    "Or": "O"
+    "Or": "O",
+    "Model name can't contain": "El nombre del modelo no puede incluir"
     }
 }

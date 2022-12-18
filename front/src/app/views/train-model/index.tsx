@@ -22,8 +22,6 @@ import HelpCenterItem from "../../components/HelpCenter/HelpCenterItem";
 import HelpCenterContent from "../../components/HelpCenter/HelpCenterContent";
 import HelpCenterTitle from "../../components/HelpCenter/HelpCenterTitle";
 import HelpCenterItemContent from "../../components/HelpCenter/HelpCenterItemContent";
-
-
 interface IRoute {
   path: string;
   name: string;
@@ -36,7 +34,7 @@ const TrainModel: FC<IRoute> = () => {
   const [lr, setLr] = useState(0.5);
   const [momentum, setMomentum] = useState(0.5);
   const [epochs, setEpochs] = useState(20);
-  const [type, setType] = useState("A");
+  const [amountDatasets, setAmountDatasets] = useState(100);
   const [valPercentage, setValPercentage] = useState(0.1);
   const [hidden_layers, setHidden_layers] = useState(1);
   const [hidden_nodes1, setHidden_nodes1] = useState(5);
@@ -100,6 +98,10 @@ const TrainModel: FC<IRoute> = () => {
   };
 
   const handleSubmit = async (e: any) => {
+    if (save && modelName.match(/:|"/)) {
+      await errorAlert(T("Model name can't contain")+" ':' or \"", '', theme);
+      return;
+    };
     setIsLoaded(true);
     try {
       e.preventDefault();
@@ -107,11 +109,12 @@ const TrainModel: FC<IRoute> = () => {
       if (hidden_layers === 2) {
         hl_topology.push(hidden_nodes2);
       }
+      console.log(epochs)
       const train = {
         lr,
         momentum,
         epochs,
-        type,
+        amount_datasets: amountDatasets,
         val_percentage: valPercentage,
         hl_topology,
         save,
@@ -190,12 +193,12 @@ const TrainModel: FC<IRoute> = () => {
           <FormColumn>
             <FormItem label={T("Dataset")}>
               <StyledSelect
-                value={type}
-                onChange={(e) => setType(e.target.value)}
+                value={amountDatasets}
+                onChange={(e) => setAmountDatasets(Number(e.target.value))}
               >
-                <option value="A">A-100 {T("Datasets")}</option>
-                <option value="B">B-500 {T("Datasets")}</option>
-                <option value="C">C-1000 {T("Datasets")}</option>
+                <option value={100}>A-100 {T("Datasets")}</option>
+                <option value={500}>B-500 {T("Datasets")}</option>
+                <option value={1000}>C-1000 {T("Datasets")}</option>
               </StyledSelect>
             </FormItem>
             <FormItem label={T("Validation Dataset Percentage")}>

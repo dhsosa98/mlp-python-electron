@@ -1,4 +1,4 @@
-from http.client import HTTPException
+from fastapi import HTTPException
 from fastapi import FastAPI
 from typing import Any, Optional
 from pydantic import BaseModel
@@ -8,6 +8,7 @@ from ..services.crud import list_savedModels, delete_savedModel, get_savedModel,
 from ..utils.shuffle_matrix import shuffle_matrix
 from ..datasets.generate_datasets import generate_dataset
 from ..services.test_mlp import test_mlp_model
+from ..datasets.generate_datasets import available_letters
 
 app = FastAPI()
 
@@ -21,7 +22,7 @@ class Get_Prediction(BaseModel):
 
 
 class Train_Model(BaseModel):
-    type: str
+    amount_datasets: Optional[int] = 1000
     lr: Optional[float] = 0.5
     momentum: Optional[float] = 0.5
     epochs: Optional[int] = 20
@@ -30,15 +31,16 @@ class Train_Model(BaseModel):
     save: Optional[bool] = False
     name: Optional[str] = None
 
-
 class Generate_Dataset(BaseModel):
     type: str
-
 
 class Delete_Model(BaseModel):
     model: str
 
 class Test_Model(BaseModel):
+    model: str
+
+class Model_Attr(BaseModel):
     model: str
 
 
@@ -74,31 +76,21 @@ def generate_datasets(data: Generate_Dataset):
 
 @app.post("/test_model")
 def test_model(model: Test_Model):
-    atrr = get_savedModelAttr(model.model)
     saved_model = get_savedModel(model.model)
     if not saved_model:
         raise HTTPException(status_code=404, detail="Model not found")
-
-    if (atrr['val_percentage'] and atrr['model_name']):
-        return test_mlp_model(model.model, atrr['model_name'], atrr['val_percentage'])
     
-    return test_mlp_model(model.model, saved_model.model_name, saved_model.val_percentage, saved_model.dataset_type)
+    return test_mlp_model(saved_model)
 
 
 @app.post("/train_model")
 def train_model(model: Train_Model):
-    if model.epochs < 1:
+    print(model)
+    if (model.epochs < 1):
         raise HTTPException(
             status_code=400, detail="Epoch must be greater than 0")
 
-    dataset = ''
-    if model.type == 'A':
-        dataset = 'letras_distorsionadas100.csv'
-    elif model.type == 'B':
-        dataset = 'letras_distorsionadas500.csv'
-    else:
-        dataset = 'letras_distorsionadas1000.csv'
-    return train_mlp_model(model.lr, model.momentum, model.epochs, model.hl_topology, model.val_percentage, model.save, dataset, model.name)
+    return train_mlp_model(model.lr, model.momentum, model.epochs, model.hl_topology, model.val_percentage, model.save, model.amount_datasets, model.name)
 
 
 @app.post("/distort_matrix")
@@ -119,3 +111,16 @@ def delete_model(model: Delete_Model):
     return {
             'message': 'Model deleted'
         }   
+
+@app.post("/model_attr")
+def get_model_attr(model: Model_Attr):
+    saved_model = get_savedModel(model.model)
+    if not saved_model:
+        raise HTTPException(status_code=404, detail="Model not found")
+    return get_savedModelAttr(saved_model)
+
+@app.get("/default_matrixes")
+def get_default_matrixes():
+    return {
+        'default_matrixes': available_letters
+    }

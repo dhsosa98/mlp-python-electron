@@ -1,18 +1,10 @@
 
 
-import { defaultMatrixes } from "../constants/matrixes";
 
 export const calculateDistortion = (
     matrix: number[][],
-    actualMatrixKey: keyof typeof defaultMatrixes
+    actualMatrix: number[][],
   ) => {
-    if (typeof actualMatrixKey !== "string") {
-      return 0;
-    }
-    if (actualMatrixKey === "_") {
-      return 0;
-    }
-    const actualMatrix = defaultMatrixes[actualMatrixKey];
     return matrix.reduce((acc1, row, rowIndex) => {
       return (
         acc1 +
