@@ -1,0 +1,533 @@
+from .train_mlp import train_mlp_model
+import pandas as pd
+import numpy as np
+import os
+from ..datasets.generate_datasets import generate_dataset 
+
+tests =[{
+    'amount_datasets': 100,
+    'val_percentage': 0.1,
+    'hl_topology': [5],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.2,
+    'hl_topology': [5],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.3,
+    'hl_topology': [5],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.1,
+    'hl_topology': [5, 5],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.2,
+    'hl_topology': [5, 5],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.3,
+    'hl_topology': [5, 5],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.1,
+    'hl_topology': [10],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.2,
+    'hl_topology': [10],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.3,
+    'hl_topology': [10],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.1,
+    'hl_topology': [10, 10],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.2,
+    'hl_topology': [10, 10],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.3,
+    'hl_topology': [10, 10],
+    'lr': 0.5, 
+    'momentum': 0.5,
+},{
+    'amount_datasets': 100,
+    'val_percentage': 0.1,
+    'hl_topology': [5],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.2,
+    'hl_topology': [5],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.3,
+    'hl_topology': [5],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.1,
+    'hl_topology': [5, 5],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.2,
+    'hl_topology': [5, 5],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.3,
+    'hl_topology': [5, 5],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.1,
+    'hl_topology': [10],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.2,
+    'hl_topology': [10],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.3,
+    'hl_topology': [10],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.1,
+    'hl_topology': [10, 10],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.2,
+    'hl_topology': [10, 10],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 100,
+    'val_percentage': 0.3,
+    'hl_topology': [10, 10],
+    'lr': 0.5, 
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.1,
+    'hl_topology': [5],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.2,
+    'hl_topology': [5],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.3,
+    'hl_topology': [5],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.1,
+    'hl_topology': [5, 5],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.2,
+    'hl_topology': [5, 5],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.3,
+    'hl_topology': [5, 5],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.1,
+    'hl_topology': [10],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.2,
+    'hl_topology': [10],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.3,
+    'hl_topology': [10],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.1,
+    'hl_topology': [10, 10],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.2,
+    'hl_topology': [10, 10],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.3,
+    'hl_topology': [10, 10],
+    'lr': 0.5, 
+    'momentum': 0.5,
+},{
+    'amount_datasets': 500,
+    'val_percentage': 0.1,
+    'hl_topology': [5],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.2,
+    'hl_topology': [5],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.3,
+    'hl_topology': [5],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.1,
+    'hl_topology': [5, 5],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.2,
+    'hl_topology': [5, 5],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.3,
+    'hl_topology': [5, 5],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.1,
+    'hl_topology': [10],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.2,
+    'hl_topology': [10],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.3,
+    'hl_topology': [10],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.1,
+    'hl_topology': [10, 10],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.2,
+    'hl_topology': [10, 10],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 500,
+    'val_percentage': 0.3,
+    'hl_topology': [10, 10],
+    'lr': 0.5, 
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.1,
+    'hl_topology': [5],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.2,
+    'hl_topology': [5],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.3,
+    'hl_topology': [5],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.1,
+    'hl_topology': [5, 5],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.2,
+    'hl_topology': [5, 5],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.3,
+    'hl_topology': [5, 5],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.1,
+    'hl_topology': [10],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.2,
+    'hl_topology': [10],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.3,
+    'hl_topology': [10],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.1,
+    'hl_topology': [10, 10],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.2,
+    'hl_topology': [10, 10],
+    'lr': 0.5,
+    'momentum': 0.5,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.3,
+    'hl_topology': [10, 10],
+    'lr': 0.5, 
+    'momentum': 0.5,
+},{
+    'amount_datasets': 1000,
+    'val_percentage': 0.1,
+    'hl_topology': [5],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.2,
+    'hl_topology': [5],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.3,
+    'hl_topology': [5],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.1,
+    'hl_topology': [5, 5],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.2,
+    'hl_topology': [5, 5],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.3,
+    'hl_topology': [5, 5],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.1,
+    'hl_topology': [10],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.2,
+    'hl_topology': [10],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.3,
+    'hl_topology': [10],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.1,
+    'hl_topology': [10, 10],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.2,
+    'hl_topology': [10, 10],
+    'lr': 0.5,
+    'momentum': 0.9,
+},
+{
+    'amount_datasets': 1000,
+    'val_percentage': 0.3,
+    'hl_topology': [10, 10],
+    'lr': 0.5, 
+    'momentum': 0.9,
+},]
+
+def generate_simulations():
+    for j in range(0, 5):
+        for d in range(0, 3):
+            if d == 0:
+                generate_dataset(100)
+            elif d == 1:
+                generate_dataset(500)
+            else:
+                generate_dataset(1000)
+        df = []
+        for i in range(len(tests)):
+            print('Test: ', i)
+            r = []
+            test_results = train_mlp_model(amount_datasets=tests[i]['amount_datasets'], val_percentage=tests[i]['val_percentage'], hl_topology=tests[i]['hl_topology'], lr=tests[i]['lr'], momentum=tests[i]['momentum'], epoch=200)["results"]
+            r = [test_results['amount_datasets'], list(map(str, test_results['topology'])) ,test_results['val_percentage'], test_results['learning_rate'], test_results['momentum'], test_results['amount_of_epochs'], test_results['MSE_train'], test_results['MSE_val'], test_results['test']['MSE_test'], test_results['accuracy_val'], test_results['test']['accuracy_test']]
+            df.append(r)
+
+        df = pd.DataFrame(df)
+        header = ['amount_datasets', 'topology', 'val_percentage', 'learning_rate', 'momentum', 'amount_of_epochs', 'MSE_train', 'MSE_val', 'MSE_test', 'accuracy_val', 'accuracy_test']
+        df.to_excel(f'{os.path.dirname(__file__)}/../simulations/simulation{j+1}.xlsx', engine='openpyxl',  index=False, header=header)
+    return {
+        'message': 'All simulations generated'
+    }
+
+

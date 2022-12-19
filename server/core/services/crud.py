@@ -29,7 +29,7 @@ def get_savedModelAttr(saved_model):
     }
     return atrr
 
-# Definimos la funcion para optener todos los modelos guardados
+# Definimos la funcion para obtener todos los modelos guardados
 def list_savedModels():
     saved_models = []
     for file in os.listdir(dirname):

@@ -9,6 +9,7 @@ from ..utils.shuffle_matrix import shuffle_matrix
 from ..datasets.generate_datasets import generate_dataset
 from ..services.test_mlp import test_mlp_model
 from ..datasets.generate_datasets import available_letters
+from ..services.generate_simulations import generate_simulations
 
 app = FastAPI()
 
@@ -124,3 +125,7 @@ def get_default_matrixes():
     return {
         'default_matrixes': available_letters
     }
+
+@app.post("/generate_simulations")
+def post_generate_simulations():
+    return generate_simulations()

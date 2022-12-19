@@ -134,6 +134,7 @@ def train_mlp_model(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percent
     return { 
         "results": {
                 'model_name': model_name,
+                'amount_datasets': amount_datasets,
                 'accuracy_val': accuracy_val,
                 'MSE_train': MSE_train,
                 'MSE_val': MSE_val,
