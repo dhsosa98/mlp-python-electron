@@ -50,7 +50,6 @@ def train_mlp_model(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percent
     X_test, Y_test, X_train, Y_train, X_val, Y_val = splitDatasets(
         data, val_percentage)
 
-
     # Creamos el modelo
     model = Mlp_Model(hl_topology, model_name, val_percentage, dataset_type=models[dataset].split('model')[1])
 
@@ -58,15 +57,15 @@ def train_mlp_model(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percent
     plot_validation = []
     plot_train = []
 
-    # min = 10000
+    # min = 100000000
 
     # Entrenamos el modelo en cada epoca
     for i in range(epoch):
         model.train(X_train, Y_train, lr, momentum)
 
         # Obtenemos el resultado de la prediccion
-        result_train = model.predict(X_train, Y_train)
-        result_validation = model.predict(X_val, Y_val)
+        result_train = model.predict(X_train, ' ')
+        result_validation = model.predict(X_val, ' ')
 
         # Si el error de validacion es menor al minimo, actualizamos el minimo
 
@@ -75,20 +74,27 @@ def train_mlp_model(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percent
         # else: 
         #     break
 
-        # Agregamos los datos para graficar
-        plot_validation.append({'y': round(cost(result_validation, Y_val), 6), 'x': i+1})
-        plot_train.append({'y': round(cost(result_train, Y_train), 6), 'x': i+1})
+        # Agregamos los datos para graficar, utilizando la funcion costo
+        plot_validation.append({'y': round(cost(Y_val, result_validation), 6), 'x': i+1})
+        plot_train.append({'y': round(cost(Y_train, result_train), 6), 'x': i+1})
 
     # Obtenemos la neurona con mayor probabilidad de cada patron (Validacion) [0, 1, 2]
     prediction_validation = model.get_prediction(result_validation)
+    # Con esa prediccion de validacion, obtengo la presicion del conjunto de validacion
+    accuracy_validation = round(model.get_accuracy(prediction_validation, Y_val), 6)
 
     # epoch = len(plot_train)
 
-    #Obtenemos el resultado de la prediccion (Test) 
-    result_test = model.predict(X_test, Y_test)
+    # Ahora queremos obtener lo mismo, y el mse para los datos de test
 
-    # Obtenemos la neurona con mayor probabilidad de cada patron (Test)
+    #Obtenemos el resultado de la prediccion (Test) 
+    result_test = model.predict(X_test, ' ')
+
+    # Obtenemos la neurona con mayor probabilidad de cada patron (Test)>
     prediction_test = model.get_prediction(result_test)
+
+    # Con esa prediccion de test, obtengo la presicion del conjunto de test
+    accuracy_test = round(model.get_accuracy(prediction_test, Y_test), 6)
 
     # Si se desea guardar el modelo, lo guardamos
     if save == True:
@@ -98,7 +104,7 @@ def train_mlp_model(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percent
         # Guardamos el historial de la red
         model.history = {"results": {
             'model_name': model_name,
-            'accuracy_val': round(model.get_accuracy(prediction_validation, Y_val), 6),
+            'accuracy_val': accuracy_validation,
             'MSE_train': round(cost(result_train, Y_train), 6),
             'MSE_val': round(cost(result_validation, Y_val), 6),
             'training_cases': len(Y_train),
@@ -126,7 +132,7 @@ def train_mlp_model(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percent
     return {
         "results": {
             'model_name': model_name,
-            'accuracy_val': round(model.get_accuracy(prediction_validation, Y_val), 6),
+            'accuracy_val': accuracy_validation,
             'MSE_train': round(cost(result_train, Y_train), 6),
             'MSE_val': round(cost(result_validation, Y_val), 6),
             'training_cases': len(Y_train),
@@ -136,12 +142,14 @@ def train_mlp_model(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percent
             'learning_rate': lr,
             'momentum': momentum,
             'topology': topology,
+
             'test': {
-                'accuracy_test': round(model.get_accuracy(prediction_test, Y_test), 6),
+                'accuracy_test': accuracy_test,
                 'MSE_test': round(cost(result_test, Y_test), 6),
                 'test_cases': len(Y_test),
             }
         },
+        #Se grafica el error de validacion y entrenamiento
         'plot_data': {'val': plot_validation, 'train': plot_train},
 
     }

@@ -12,7 +12,7 @@ classes = {
 # Definimos la funcion para normalizar los valores de la predicción 
 def normalize(X_prediction):
     sum = 0
-    #Ex: X_prediction -> [0.2, 0.3, 0.5] -> 1.0
+    #Ex: X_prediction -> [0.2, 0.3, 0.5] -> 1.00
 
     # Sumamos los valores de la predicción
     for i in range(len(X_prediction[0])):
@@ -65,7 +65,7 @@ def prediction(matrix, model):
         lambda x: x["class"] != classes[class_prediction_index],
         prediction_with_class
     ))
-
+    
     # Retornamos la clase con mayor probabilidad y las otras dos clases
     return {"class": prediction_with_class[class_prediction_index]["class"],
             "probability": prediction_with_class[class_prediction_index]["probability"],

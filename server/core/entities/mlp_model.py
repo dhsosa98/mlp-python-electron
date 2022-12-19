@@ -29,24 +29,18 @@ class Mlp_Model:
         self.hl_topology = hl_topology
 
         # Inicializamos los pesos y bias de la primera capa oculta
-
-        # Los pesos de la capa de entrada los inicializamos con valores aleatorios
-        # Se utilizo esta tecnica de generacion de pesos aleatorios para mejorar los gradientes: https://towardsdatascience.com/weight-initialization-techniques-in-neural-networks-26c649eb3b78
-       
-        # self.W.append(np.random.rand(100,hl_topology[0])*np.sqrt(1/(100+hl_topology[0])))
         self.W.append(np.random.normal(loc=0.0, scale = np.sqrt(1/(100+hl_topology[0])), size = (100, hl_topology[0])))
         self.b.append(np.zeros((1, hl_topology[0])))
 
         # Inicializamos los pesos y bias de las capas ocultas posteriores
         for i in range(len(hl_topology) - 1):
             self.W.append(np.random.normal(loc=0.0, scale = np.sqrt(1/(hl_topology[i]+hl_topology[i+1])), size = (hl_topology[i],hl_topology[i+1])))
-            # self.W.append(np.random.rand(hl_topology[i],hl_topology[i+1])*np.sqrt(1/(hl_topology[i]+hl_topology[i+1])))
             self.b.append(np.zeros((1, hl_topology[i+1])))
 
-        # Inicializamos los pesos y bias de la ultima capa
+        # Inicializamos los pesos y bias de la ultima capa de salida
         self.W.append(np.random.normal(loc=0.0, scale = np.sqrt(1/(hl_topology[-1]+3)), size = (hl_topology[-1],3)))
-        # self.W.append(np.random.rand(hl_topology[-1],3)*np.sqrt(1/(hl_topology[-1]+3)))
         self.b.append(np.zeros((1, 3)))
+        # Resguardamos pesos para luego utilizarlos en el momento
         self.prevW = copy.deepcopy(self.W)
         self.resPrevW = copy.deepcopy(self.W)
 
@@ -81,13 +75,13 @@ class Mlp_Model:
     def backward(self, Y):
 
         # Definimos la lista de gradientes de los pesos
-        self.gradientW = []
+        self.gradientW = [] 
         # Definimos la lista de gradientes de los bias
         self.gradientb = []
         # Definimos la lista de deltas
         self.deltas = []
 
-        # LO DE ABAJO PARA LA CAPA DE SALIDA
+        ################3# LO DE ABAJO PARA LA CAPA DE SALIDA ##############################
 
         # El error lo calculamos restando la clase predecida con la clase real y multiplicando por la derivada de sigm de esa salida
         self.deltas.append((cost(Y, self.a[-1], True)) * sigm(self.a[-1], True))
@@ -137,7 +131,7 @@ class Mlp_Model:
             self.b[i] = self.b[i] + self.gradientb[i] * lr
 
     # Definimos la funcion para utilizar solo el forward (en realidad se usa al usar la funcion MSE)
-    def predict(self, X, Y):
+    def predict(self, X, _):
         return self.forward(X)
 
     # Definimos la funcion para entrenar la red
@@ -145,17 +139,17 @@ class Mlp_Model:
 
         # Se recorre por patrones individuales con
         # zip, que relaciona cada patron con su clase correspondiente
-        #[[0,0,0,0..], [0,1,0,..]]
-        #[[1,0,0], [1,0,0] ]
-        #[[0,0,0,0..]]
-        #[[1,0,0]]
+
         for x, y in zip(X, Y):
             # Se le agrega una dimension al patron para que sea un vector nx1 donde n es la cantidad de atributos
             x.shape += (1,)
             # Se le agrega una dimension a la clase para que sea un vector 3x1 donde 3 es la cantidad de clases
             y.shape += (1,)
+            # Realizamos la propagacion hacia adelante
             self.forward(x.T)
+            # Realizamos la propagacion hacia atras
             self.backward(y.T)
+            # Actualizamos los pesos y bias
             self.update(lr, m)
 
     # Definimos la funcion para obtener el indice de la neurona con mayor probabilidad
