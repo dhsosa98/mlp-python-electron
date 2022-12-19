@@ -39,7 +39,7 @@ def prediction(matrix, model):
         raise HTTPException(status_code=404, detail="Model not found")
 
     # Obtenemos la prediccion 
-    X_prediction = model.predict(matrix, np.zeros((1, 3)))
+    X_prediction = model.predict(matrix)
 
     # Normalizamos los valores de la prediccion
     prediction_with_class = normalize(X_prediction)

@@ -8,7 +8,7 @@ from ..datasets.generate_datasets import available_letters, default_csv_name
 import dill
 import os
 
-def train_mlp_model(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percentage=0.1, save=False, amount_datasets=1000, name=None):
+def train_mlp_model(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percentage=0.1, save=False, amount_datasets=1000, name=None, early_stoping=False):
 
     # Definimos la topologia de la capa de entrada
     initial_layer = [100]
@@ -50,34 +50,41 @@ def train_mlp_model(lr=0.5, momentum=0.5, epoch=20, hl_topology=[5], val_percent
     plot_validation = []
     plot_train = []
 
-    #min = 10000
+    # Definimos el minimo para el early stopping
+    if early_stoping:
+        min = 10000
 
     # Entrenamos el modelo en cada epoca
     for i in range(epoch):
         model.train(X_train, Y_train, lr, momentum)
 
         # Obtenemos el resultado de la prediccion
-        result_train = model.predict(X_train, Y_train)
-        result_validation = model.predict(X_val, Y_val)
+        result_train = model.predict(X_train)
+        result_validation = model.predict(X_val)
 
         # Si el error de validacion es menor al minimo, actualizamos el minimo
 
-        #if min>cost(result_validation, Y_val):
-            #min = cost(result_validation, Y_val)
-        #else: 
-            #break
+        if early_stoping:
+            if min>cost(result_validation, Y_val):
+                min = cost(result_validation, Y_val)
+            else: 
+                break
+        
+        # Obtenemos el error cuadratico medio del conjunto de validacion y entrenamiento
+        MSE_train = round(cost(Y_train, result_train), 6)
+        MSE_val = round(cost(Y_val, result_validation), 6)
 
         # Agregamos los datos para graficar
-        plot_validation.append({'y': round(cost(result_validation, Y_val), 6), 'x': i+1})
-        plot_train.append({'y': round(cost(result_train, Y_train), 6), 'x': i+1})
+        plot_train.append({'y': MSE_train, 'x': i+1})
+        plot_validation.append({'y': MSE_val, 'x': i+1})
 
     # Obtenemos la neurona con mayor probabilidad de cada patron (Validacion) 
     prediction_validation = model.get_predictionIndex(result_validation)
 
-    #epoch = len(plot_train)
+    epoch = len(plot_train)
 
     #Obtenemos el resultado de la prediccion (Test) 
-    result_test = model.predict(X_test, Y_test)
+    result_test = model.predict(X_test)
 
     # Obtenemos la neurona con mayor probabilidad de cada patron (Test)
     prediction_test = model.get_predictionIndex(result_test)

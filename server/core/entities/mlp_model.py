@@ -125,7 +125,7 @@ class Mlp_Model:
             self.b[i] = self.b[i] + self.gradientb[i] * lr
 
     # Definimos la funcion para utilizar solo el forward (en realidad se usa al usar la funcion MSE)
-    def predict(self, X, Y):
+    def predict(self, X):
         return self.forward(X)
 
     # Definimos la funcion para entrenar la red

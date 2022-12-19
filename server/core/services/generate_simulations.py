@@ -519,7 +519,7 @@ def generate_simulations():
         for i in range(len(tests)):
             print('Test: ', i)
             r = []
-            test_results = train_mlp_model(amount_datasets=tests[i]['amount_datasets'], val_percentage=tests[i]['val_percentage'], hl_topology=tests[i]['hl_topology'], lr=tests[i]['lr'], momentum=tests[i]['momentum'], epoch=200)["results"]
+            test_results = train_mlp_model(amount_datasets=tests[i]['amount_datasets'], val_percentage=tests[i]['val_percentage'], hl_topology=tests[i]['hl_topology'], lr=tests[i]['lr'], momentum=tests[i]['momentum'], epoch=200, early_stoping=True)["results"]
             r = [test_results['amount_datasets'], list(map(str, test_results['topology'])) ,test_results['val_percentage'], test_results['learning_rate'], test_results['momentum'], test_results['amount_of_epochs'], test_results['MSE_train'], test_results['MSE_val'], test_results['test']['MSE_test'], test_results['accuracy_val'], test_results['test']['accuracy_test']]
             df.append(r)
 
